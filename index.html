@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>ascii poster generator</title>
+  <link rel="stylesheet" type="text/css" href="/css/main.css">
+  <style type="text/css" media="screen">
+
+    /* Reset */
+
+    * { margin:0;padding:0;border:0;outline:0;text-decoration:none;font-weight:inherit;font-style:inherit;color:inherit;font-size:100%;font-family:inherit;vertical-align:baseline;list-style:none;border-collapse:collapse;border-spacing:0; -webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale; }
+    strong { font-weight: bolder; text-decoration: underline;}
+    body {
+      background-color: rgb(250, 250, 250);
+      margin: 0;
+      padding: 0;
+    }
+
+    canvas,
+    pre {
+      font-family: 'JetBrainsMono Nerd Font Mono';
+      line-height: 1.125;
+      position: absolute;
+      left: 0;
+      top: 0;
+      margin: 0;
+      overflow: hidden;
+      width: 100%;
+      height: 100%;
+      cursor: none;
+      /* background-color: red; */
+    }
+
+    /* -- main grid layout ---------------------------------------------- */
+
+    .grid {
+      display: grid;
+      width: 100%;
+      position: relative;
+    }
+
+    .cell1,
+    .cell3 {
+      height: 100vh;
+    }
+
+    .cell1,
+    .cell2,
+    .cell3 {
+      position: relative;
+    }
+
+    .cell1 {
+      /* width: 30%; */
+    }
+
+    .cell2 {
+      /* width: 80%; */
+    }
+
+    .grid.one {
+      grid-template-columns: 1fr;
+    }
+
+    .grid.one .cell2,
+    .grid.one .cell3 {
+      display: none;
+    }
+
+    .grid.two {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .grid.two .cell3 {
+      display: none;
+    }
+
+    .grid.three {
+      grid-template-columns: 1fr 4fr auto;
+    }
+
+    /* -- menu ---------------------------------------------------------- */
+
+    .menu {
+      font-weight: 100;
+      background-color: rgb(0, 0, 0);
+      color: white;
+      /* padding: 0 1ch 0  1ch; */
+      /* overflow-y: scroll; */
+      /* border-left: 1px solid #222222; */
+    }
+
+    .menu-grid-overflow-wrapper {
+      height: 100vh;
+      width: calc(100% + 15px);
+      overflow: hidden;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      grid-template-rows: auto;
+      font-weight: initial;
+      font-family: 'JetBrainsMono Nerd Font Mono';
+      font-size: 0.8rem;
+      line-height: 1.5rem;
+      padding: 1rem;
+      overflow-y: scroll;
+      height: 100%;
+      padding-bottom: 1rem;
+      /*max-width: 31ch;*/
+    }
+
+    .menu-grid:last-child {
+      box-sizing: border-box;
+    }
+
+    .usage div {
+      margin-bottom: 4px;
+    }
+
+    .usage strong {
+      font-weight: bolder;
+      background-color: white;
+      padding: 4px;
+      color: black;
+      border-radius: 4px;
+      margin-right: 0.5rem;
+      text-decoration: none;
+    }
+
+    .level2,
+    .hotkey {
+      color: #666;
+    }
+
+    .action-button {
+      cursor: pointer;
+    }
+
+    .action-button:hover:before {
+      content: ">";
+    }
+
+    .row-wrap {
+      display: contents;
+    }
+
+    .program-cathegory {
+      color: #666;
+      padding-left: 2ch;
+      display: block;
+    }
+
+    .project-grid a {
+      color: pink !important;
+      padding-left: 4ch;
+    }
+
+    .ruler {
+      grid-column: span 2;
+    }
+
+    .ruler:before {
+      content: "-----------------------------";
+    }
+
+    .menu-grid a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .menu-grid a:hover:before {
+      content: ">";
+    }
+
+
+    /* -------------- form ---------- */
+    .generator-form {
+      /* color: black; */
+    }
+
+    .generator-form input {
+      color: black;
+      width: 70%;
+      padding: 4px;
+    }
+
+    .generator-form button {
+      color: black;
+      padding: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .generator-form .input-size {
+      width: 50%;
+      display: flex;
+    }
+
+    /* ----------char table---------- */
+    .char-table {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .char-table p {
+      padding: 0px 4px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .char-table p:hover {
+      background-color: rgba(217, 217, 217, 0.5);
+    }
+
+    .usage strong[data-usage="draw"]  {
+      background-color: #aaff66;
+      color: #00cc55;
+    }
+
+    .usage strong[data-usage="erase"]  {
+      background-color: #eeee77;
+      color: #00cc55;
+    }
+
+    .usage strong[data-usage="drawBg"]  {
+      background-color: #b0b0b0;
+      color: #696969;
+    }
+
+    .usage strong[data-usage="drawTextColor"]  {
+      background-color: #344ffa;
+      color: #e2e2e2;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="grid three">
+    <div id="menu" class="cell1 menu">
+      <div class="menu-grid-overflow-wrapper">
+        <nav class="menu-grid">
+          <div class="usage">
+            <div><strong id="draw">d</strong><span>draw</span></div>
+            <div><strong id="drawTextColor">t</strong><span>drawTextColor</span></div>
+            <div><strong id="drawBg">b</strong><span>drawBg</span></div>
+            <div><strong id="erase">e</strong><span>erase</span></div>
+          </div>
+          <div class="ruler"></div> 
+  
+          <div>
+           <strong>Character set</strong> 
+           <div id="chars" class="char-table"></div>
+          </div>
+          
+          <div class="ruler"></div> <!-- --------------------------- -->
+          <div> 
+            <strong>Poster Generator</strong>
+            <form class="generator-form" action="/action_page.php">
+              <label for="title">title</label><br>
+              <input type="text" id="title" name="title" value="Sonic Thread III"><br>
+              <label for="artists">Artists</label><br>
+              <input type="text" id="artists" name="artists" value="CRSCRSCRS, Alex McLean, Kindohm"><br>
+              <label for="location">Location</label><br>
+              <input type="text" id="artists" name="artists" value="Tentacles Workshop"><br>
+              <label for="dates">Dates</label><br>
+              <input type="text" id="artists" name="artists" value="Sept 9 – Oct 30, 2021"><br>
+              <label for="times">Times</label><br>
+              <input type="text" id="artists" name="artists" value="17.00 ~ 19.00"><br>
+              <label for="notes">Notes</label><br>
+              <input type="text" id="artists" name="artists" value="Free Entry"><br>
+  
+              <div class="input-size">
+                <div>
+                  <label for="width">Width</label><br>
+                  <input type="text" id="artists" name="artists" value="900"><br>
+                </div>
+  
+                <div>
+                  <label for="height">Height</label><br>
+                  <input type="text" id="artists" name="artists" value="1200"><br>
+                </div>
+              </div>
+  
+              <button type="submit">generate</button>
+              <button type="download">download</button>
+            </form>
+  
+          </div>
+  
+        </nav>
+      </div>
+      
+    </div>
+    <pre id="output" class="cell2 output"></pre>
+  </div>
+
+  </div>
+  <script type="module">
+    import { run } from '/src/run.js'
+    import * as prog0 from '/src/programs/draw.js'
+    import Char, { charsList } from '/src/modules/chars.js'
+
+    const character = new Char();
+
+    const pre = document.querySelector('pre')
+    const chartable = document.getElementById("chars")
+    const drawBtn = document.getElementById("draw")
+
+    drawBtn.setAttribute("data-usage", "draw")
+
+    charsList.map(char => {
+      let c = document.createElement("p")
+      c.innerText = char
+      c.addEventListener("click", () => {
+        character.selectChar(char)
+      })
+      chartable.appendChild(c)
+    })
+
+    run(prog0, { element: pre }).catch(errorHandler)
+
+    function errorHandler(e) {
+      console.warn(e.message)
+      console.log(e.error)
+    }
+  </script>
+</body>
+
+</html>
