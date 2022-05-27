@@ -77,42 +77,48 @@
     }
 
     .grid.three {
-      grid-template-columns: 1fr 4fr auto;
+      grid-template-columns: 1fr 3fr auto;
     }
 
     /* -- menu ---------------------------------------------------------- */
 
     .menu {
       font-weight: 100;
-      background-color: rgb(0, 0, 0);
-      color: white;
+      background-color: rgb(255, 255, 255);
+      color: black;
+      opacity: 0;
+      transition: 400ms;
+      padding: 20px;
+      height: calc(100vh - 40px);
       /* padding: 0 1ch 0  1ch; */
       /* overflow-y: scroll; */
       /* border-left: 1px solid #222222; */
     }
 
-    .menu-grid-overflow-wrapper {
-      height: 100vh;
-      width: calc(100% + 15px);
+    .menu-flex-overflow-wrapper {
+      height: calc(100vh - 40px);
+      width: calc(100% + 35px);
       overflow: hidden;
+      background-color: beige;
     }
 
-    .menu-grid {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      grid-template-rows: auto;
+    .menu-flex {
+      display: flex;
+      flex-direction: column;
+      /* grid-template-columns: 1fr auto; */
+      /* grid-template-rows: auto; */
       font-weight: initial;
       font-family: 'JetBrainsMono Nerd Font Mono';
       font-size: 0.8rem;
       line-height: 1.5rem;
-      padding: 1rem;
+      padding: 2rem;
       overflow-y: scroll;
       height: 100%;
       padding-bottom: 1rem;
       /*max-width: 31ch;*/
     }
 
-    .menu-grid:last-child {
+    .menu-flex:last-child {
       box-sizing: border-box;
     }
 
@@ -166,12 +172,12 @@
       content: "-----------------------------";
     }
 
-    .menu-grid a {
+    .menu-flex a {
       color: inherit;
       text-decoration: none;
     }
 
-    .menu-grid a:hover:before {
+    .menu-flex a:hover:before {
       content: ">";
     }
 
@@ -201,8 +207,20 @@
     /* ----------char table---------- */
     .char-table {
       width: 100%;
+      padding-bottom: 33rem;
+      height: 0;
       display: flex;
       flex-wrap: wrap;
+      overflow: hidden;
+      transition: 400ms;
+    }
+
+    .collapse {
+      padding-bottom: 0;
+    }
+
+    .ready {
+      opacity: 1;
     }
 
     .char-table p {
@@ -212,7 +230,7 @@
     }
 
     .char-table p:hover {
-      background-color: rgba(217, 217, 217, 0.5);
+      background-color: rgba(103, 103, 103, 0.5);
     }
 
     .usage strong[data-usage="draw"]  {
@@ -235,14 +253,22 @@
       color: #e2e2e2;
     }
 
+    #charlist-title {
+      cursor: pointer;
+    }
+
+    #charlist-title:hover {
+      text-decoration: none;
+    }
+
   </style>
 </head>
 
 <body>
   <div class="grid three">
     <div id="menu" class="cell1 menu">
-      <div class="menu-grid-overflow-wrapper">
-        <nav class="menu-grid">
+      <div class="menu-flex-overflow-wrapper">
+        <nav class="menu-flex">
           <div class="usage">
             <div><strong id="draw">d</strong><span>draw</span></div>
             <div><strong id="drawTextColor">t</strong><span>drawTextColor</span></div>
@@ -252,7 +278,7 @@
           <div class="ruler"></div> 
   
           <div>
-           <strong>Character set</strong> 
+           <strong id="charlist-title">Character set</strong> 
            <div id="chars" class="char-table"></div>
           </div>
           
@@ -308,20 +334,27 @@
 
     const pre = document.querySelector('pre')
     const chartable = document.getElementById("chars")
+    const charListTitle = document.getElementById("charlist-title")
+    const menu = document.getElementById("menu")
     const drawBtn = document.getElementById("draw")
 
-    drawBtn.setAttribute("data-usage", "draw")
+    charListTitle.onclick = () => { chartable.classList.toggle("collapse") }
 
-    charsList.map(char => {
-      let c = document.createElement("p")
-      c.innerText = char
-      c.addEventListener("click", () => {
-        character.selectChar(char)
+    run(prog0, { element: pre })
+      .catch(errorHandler)
+      .then((res) => {
+        menu.className = "menu ready"
+        charsList.map(char => {
+        let c = document.createElement("p")
+        c.innerText = char
+        c.addEventListener("click", () => {
+          character.selectChar(char)
+        })
+        chartable.appendChild(c)
       })
-      chartable.appendChild(c)
-    })
 
-    run(prog0, { element: pre }).catch(errorHandler)
+      drawBtn.setAttribute("data-usage", "draw")
+    })
 
     function errorHandler(e) {
       console.warn(e.message)
