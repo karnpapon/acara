@@ -26,7 +26,7 @@ export function pre(context, cursor, buffer) {
   const { settings: { drawChar, mode  }} = context
 	const x = Math.floor(cursor.x) // column of the cell hovered
 	const y = Math.floor(cursor.y) // row of the cell hovered
-	
+
 	if (cols != context.cols || rows != context.rows) {
 		cols = context.cols
 		rows = context.rows
@@ -51,8 +51,10 @@ export function main(coord, context, cursor, buffer) {
     if (coord.x == x && coord.y == y) { 
       return { 
         char: drawChar.char, 
-        color: 'green', 
-        backgroundColor: mode === "erase" ? 'yellow' : 'lightgreen'
+        color: 'black', 
+        backgroundColor: 'white', 
+        // color: 'green', 
+        // backgroundColor: mode === "erase" ? 'yellow' : 'lightgreen'
       }
     }
     return { 
@@ -61,11 +63,12 @@ export function main(coord, context, cursor, buffer) {
     }
 	}
 	if (coord.x == x && coord.y == y) { 
-    if (drawChar.hide) return
     return { 
       char: drawChar.char, 
-      color: 'green', 
-      backgroundColor: mode === "erase" ? 'yellow' : 'lightgreen'
+      color: 'black', 
+      backgroundColor: 'white', 
+      // color: 'green', 
+      // backgroundColor: mode === "erase" ? 'yellow' : 'lightgreen'
     }
   }
 	return {

@@ -131,7 +131,7 @@ export function run(program, runSettings, userData = {}) {
 		})
 
     window.addEventListener('selectchar', e => {
-      settings.drawChar = e.detail
+      settings.drawChar.char = e.detail
     })
 
     window.addEventListener('generate', e => {
@@ -157,9 +157,7 @@ export function run(program, runSettings, userData = {}) {
 
     window.addEventListener('download', e => {
       const canvas = settings.element
-      settings.drawChar.hide = true
       canvas.toBlob( blob => saveBlobAsFile(blob, 'export.png'))
-      settings.drawChar.hide = false
     })
 
     document.addEventListener('keydown', e => {
