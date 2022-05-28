@@ -21,8 +21,7 @@ const defaultSettings = {
 	renderer        : 'text',  // can be 'canvas', anything else falls back to 'text'
 	allowSelect     : false,   // allows selection of the rendered element
 	restoreState    : false,   // will store the "state" object in local storage
-  cursorChar      : '*',
-  drawChar        : '#',
+  drawChar        : { char: '#', hide: false }, // hide cursor when downloading.
   mode            : 'draw',
   generateData    : { },
   generateBox  : { 
@@ -158,7 +157,9 @@ export function run(program, runSettings, userData = {}) {
 
     window.addEventListener('download', e => {
       const canvas = settings.element
+      settings.drawChar.hide = true
       canvas.toBlob( blob => saveBlobAsFile(blob, 'export.png'))
+      settings.drawChar.hide = false
     })
 
     document.addEventListener('keydown', e => {

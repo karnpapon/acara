@@ -35,7 +35,7 @@ export function pre(context, cursor, buffer) {
 	}
 
 	if (cursor.pressed) {
-		data[x + y * cols] = mode === "erase" ? {char: 0, color: 'black', backgroundColor: 'white'} : { char: drawChar, color: mode === 'drawTextColor' ?  'red' : data[x + y * cols]["color"], backgroundColor: mode === 'drawBg' ? 'lightblue' : data[x + y * cols]["backgroundColor"] }
+		data[x + y * cols] = mode === "erase" ? {char: 0, color: 'black', backgroundColor: 'white'} : { char: drawChar.char, color: mode === 'drawTextColor' ?  'red' : data[x + y * cols]["color"], backgroundColor: mode === 'drawBg' ? 'lightblue' : data[x + y * cols]["backgroundColor"] }
 	} 
 	
 }
@@ -50,7 +50,7 @@ export function main(coord, context, cursor, buffer) {
 	if (u.char === 0) { 
     if (coord.x == x && coord.y == y) { 
       return { 
-        char: drawChar, 
+        char: drawChar.char, 
         color: 'green', 
         backgroundColor: mode === "erase" ? 'yellow' : 'lightgreen'
       }
@@ -61,8 +61,9 @@ export function main(coord, context, cursor, buffer) {
     }
 	}
 	if (coord.x == x && coord.y == y) { 
+    if (drawChar.hide) return
     return { 
-      char: drawChar, 
+      char: drawChar.char, 
       color: 'green', 
       backgroundColor: mode === "erase" ? 'yellow' : 'lightgreen'
     }
