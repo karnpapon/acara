@@ -291,6 +291,8 @@ const _CSS4 = [..._CSS3,
 	{ int: 0x663399, name : 'rebeccapurple'}
 ]
 
+export const allColors = _CSS4;
+
 
 // Helper function
 function augment(pal) {

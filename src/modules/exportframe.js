@@ -35,6 +35,7 @@ export function exportFrame(context, filename, from=1, to=from) {
 	const base = m[1]
 	const ext = m[2]
 
+  
 	// Finally export the frame
 	const f = context.frame
 	if (f >= from && f <= to) {

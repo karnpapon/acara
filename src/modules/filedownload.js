@@ -2,11 +2,6 @@
 @module   filedownload.js
 @desc     Exports a file via Blob
 @category internal
-
-Downloads a Blob as file and this “hack”:
-creates an anchor with a “download” attribute
-and then emits a click event.
-See: https://github.com/eligrey/FileSaver.js
 */
 
 const mimeTypes = {
@@ -24,7 +19,6 @@ export function saveSourceAsFile(src, filename) {
 	saveBlobAsFile(blob, filename)
 }
 
-// Gets extension of a filename
 function getFileExt(filename) {
 	return filename.split('.').pop()
 }

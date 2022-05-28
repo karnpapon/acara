@@ -2,9 +2,10 @@ import textRenderer from './core/textrenderer.js'
 import canvasRenderer from './core/canvasrenderer.js'
 import FPS from './core/fps.js'
 import storage from './core/storage.js'
-import RUNNER_VERSION from './core/version.js'
-
-export { RUNNER_VERSION }
+import { clamp } from './modules/num.js';
+import { borderStyles } from './modules/drawbox.js';
+import { allColors } from './modules/color.js';
+import { saveBlobAsFile } from './modules/filedownload.js'
 
 const renderers = {
 	'canvas' : canvasRenderer,
@@ -23,6 +24,15 @@ const defaultSettings = {
   cursorChar      : '*',
   drawChar        : '#',
   mode            : 'draw',
+  generateData    : { },
+  generateBox  : { 
+    pos: { x: 0, y: 0 }, 
+    style: { 
+      borderStyle: 'single', 
+      color: 'black', 
+      backgroundColor: 'white' 
+    }
+  }
 }
 
 const CSSStyles = [
@@ -37,12 +47,17 @@ const CSSStyles = [
 ]
 
 
+function pickKey(obj){
+  var keys = Object.keys(obj);
+  return keys[ keys.length * Math.random() << 0];
+}
+
 // The program object should export at least a main(), pre() or post() function.
 export function run(program, runSettings, userData = {}) {
 
 	return new Promise(function(resolve) {
     
-		const settings = {...defaultSettings, ...runSettings, ...program.settings}
+		const settings = {...JSON.parse(JSON.stringify(defaultSettings)), ...runSettings, ...program.settings}
 
 		// for localStorage if settings.restoreState == true.
 		const state = {
@@ -118,6 +133,32 @@ export function run(program, runSettings, userData = {}) {
 
     window.addEventListener('selectchar', e => {
       settings.drawChar = e.detail
+    })
+
+    window.addEventListener('generate', e => {
+      let metrics = calcMetrics(settings.element)
+      settings.generateData = e.detail
+      const rect = settings.element.getBoundingClientRect()
+      const cols = settings.cols || Math.floor(rect.width / metrics.cellWidth)
+      const rows = settings.rows || Math.floor(rect.height / metrics.lineHeight)
+      const x = Math.floor((Math.random() * cols)); 
+      const y = Math.floor((Math.random() * rows));
+      const pos =  { x: clamp(x, 0, 22) , y: clamp(y, 0, 48) }
+      settings.generateBox.pos = pos
+      settings.generateBox.style = {
+        borderStyle: pickKey(borderStyles),
+        color: allColors[Math.random() * allColors.length << 0].name, 
+        backgroundColor: allColors[Math.random() * allColors.length << 0].name
+      }
+    })
+
+    window.addEventListener('reset', e => {
+      settings.generateBox = JSON.parse(JSON.stringify(defaultSettings)).generateBox
+    })
+
+    window.addEventListener('download', e => {
+      const canvas = settings.element
+      canvas.toBlob( blob => saveBlobAsFile(blob, 'export.png'))
     })
 
     document.addEventListener('keydown', e => {
@@ -265,7 +306,6 @@ export function run(program, runSettings, userData = {}) {
 			// Snapshot of context data
 			const context = getContext(state, settings, metrics, fps)
 
-			// FPS update
 			fps.update(t)
 
 			// Timing update

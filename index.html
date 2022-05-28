@@ -5,12 +5,14 @@
   <meta charset="utf-8">
   <title>ascii poster generator</title>
   <link rel="stylesheet" type="text/css" href="/css/main.css">
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/fetch/1.0.0/fetch.min.js"></script>
+  <script type="text/javascript" src="/src/lib/figlet.js"></script>
   <style type="text/css" media="screen">
 
     /* Reset */
 
     * { margin:0;padding:0;border:0;outline:0;text-decoration:none;font-weight:inherit;font-style:inherit;color:inherit;font-size:100%;font-family:inherit;vertical-align:baseline;list-style:none;border-collapse:collapse;border-spacing:0; -webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale; }
-    strong { font-weight: bolder; text-decoration: underline;}
+    strong { font-weight: bolder;}
     body {
       background-color: rgb(250, 250, 250);
       margin: 0;
@@ -20,7 +22,7 @@
     canvas,
     pre {
       font-family: 'JetBrainsMono Nerd Font Mono';
-      line-height: 1.125;
+      line-height: 1;
       position: absolute;
       left: 0;
       top: 0;
@@ -29,8 +31,16 @@
       width: 100%;
       height: 100%;
       cursor: none;
+      margin-top: 20px;
+      font-size: 12px;
       /* background-color: red; */
     }
+
+    button {
+      cursor: pointer;
+    }
+
+    button:hover { opacity: 0.5;}
 
     /* -- main grid layout ---------------------------------------------- */
 
@@ -84,7 +94,7 @@
 
     .menu {
       font-weight: 100;
-      background-color: rgb(255, 255, 255);
+      background-color: rgba(255, 255, 255, 0);
       color: black;
       opacity: 0;
       transition: 400ms;
@@ -97,7 +107,8 @@
 
     .menu-flex-overflow-wrapper {
       height: calc(100vh - 40px);
-      width: calc(100% + 35px);
+      width: 100%;
+      /* width: calc(100% + 35px); */
       overflow: hidden;
       background-color: beige;
     }
@@ -145,8 +156,8 @@
       cursor: pointer;
     }
 
-    .action-button:hover:before {
-      content: ">";
+    .action-button:hover {
+      text-decoration: underline;
     }
 
     .row-wrap {
@@ -257,10 +268,9 @@
       cursor: pointer;
     }
 
-    #charlist-title:hover {
-      text-decoration: none;
-    }
-
+    #generate { background-color: #00cc55;}
+    #reset { background-color: #ff8b50;}
+    #download { background-color: white;}
   </style>
 </head>
 
@@ -278,50 +288,52 @@
           <div class="ruler"></div> 
   
           <div>
-           <strong id="charlist-title">Character set</strong> 
-           <div id="chars" class="char-table"></div>
+           <strong id="charlist-title" class=" action-button">Character set</strong> 
+           <div id="chars" class="char-table collapse"></div>
           </div>
           
           <div class="ruler"></div> <!-- --------------------------- -->
           <div> 
             <strong>Poster Generator</strong>
-            <form class="generator-form" action="/action_page.php">
+            <form id="generator-form" class="generator-form">
               <label for="title">title</label><br>
               <input type="text" id="title" name="title" value="Sonic Thread III"><br>
               <label for="artists">Artists</label><br>
               <input type="text" id="artists" name="artists" value="CRSCRSCRS, Alex McLean, Kindohm"><br>
               <label for="location">Location</label><br>
-              <input type="text" id="artists" name="artists" value="Tentacles Workshop"><br>
+              <input type="text" id="location" name="location" value="Tentacles Workshop"><br>
               <label for="dates">Dates</label><br>
-              <input type="text" id="artists" name="artists" value="Sept 9 – Oct 30, 2021"><br>
+              <input type="text" id="dates" name="dates" value="Sept 9 – Oct 30, 2021"><br>
               <label for="times">Times</label><br>
-              <input type="text" id="artists" name="artists" value="17.00 ~ 19.00"><br>
+              <input type="text" id="times" name="times" value="17.00 ~ 19.00"><br>
               <label for="notes">Notes</label><br>
-              <input type="text" id="artists" name="artists" value="Free Entry"><br>
+              <input type="text" id="notes" name="notes" value="Free Entry"><br>
   
               <div class="input-size">
                 <div>
                   <label for="width">Width</label><br>
-                  <input type="text" id="artists" name="artists" value="900"><br>
+                  <input type="text" id="width" name="width" value="500"><br>
                 </div>
   
                 <div>
                   <label for="height">Height</label><br>
-                  <input type="text" id="artists" name="artists" value="1200"><br>
+                  <input type="text" id="height" name="height" value="700"><br>
                 </div>
               </div>
   
-              <button type="submit">generate</button>
-              <button type="download">download</button>
+              <button id="generate" type="submit">generate</button>
+              <button id="reset">reset</button>
+              <button id="download" type="download">download</button>
             </form>
-  
+            
           </div>
-  
+          
         </nav>
       </div>
       
     </div>
-    <pre id="output" class="cell2 output"></pre>
+    <!-- <pre id="output" class="cell2 output"></pre> -->
+    <canvas id="output" class="cell2 output"></canvas>
   </div>
 
   </div>
@@ -330,15 +342,55 @@
     import * as prog0 from '/src/programs/draw.js'
     import Char, { charsList } from '/src/modules/chars.js'
 
+    if (window.location.protocol === 'file:') {
+      alert('fetch APi does not support file: protocol.');
+    }
+    
+    figlet.defaults({
+        fontPath: '/fonts'
+    });
+
+    figlet.preloadFonts(["Standard", "Ghost"], function() {
+        console.log('prefetching done (only did it for 2 fonts)!');
+    });
+
     const character = new Char();
 
-    const pre = document.querySelector('pre')
+    const pre = document.getElementById('output')
     const chartable = document.getElementById("chars")
     const charListTitle = document.getElementById("charlist-title")
     const menu = document.getElementById("menu")
     const drawBtn = document.getElementById("draw")
+    const downloadBtn = document.getElementById("download")
+    const resetBtn = document.getElementById("reset")
+    const form = document.getElementById("generator-form")
 
     charListTitle.onclick = () => { chartable.classList.toggle("collapse") }
+    resetBtn.onclick = (e) => { 
+      window.dispatchEvent(new Event('reset'))
+      e.preventDefault()
+    }
+    downloadBtn.onclick = (e) => { 
+      window.dispatchEvent(new Event('download'))
+      e.preventDefault()
+    }
+
+    form.onsubmit = (e) => { 
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const data = {
+        title: formData.get("title"),
+        artists: formData.get("artists"),
+        location: formData.get("location"),
+        dates: formData.get("dates"),
+        times: formData.get("times"),
+        notes: formData.get("notes"),
+        width: formData.get("width"),
+        height: formData.get("height"),
+      }
+
+      window.dispatchEvent(new CustomEvent('generate', { detail: data }));
+    }
 
     run(prog0, { element: pre })
       .catch(errorHandler)
@@ -360,6 +412,16 @@
       console.warn(e.message)
       console.log(e.error)
     }
+
+    window.figlet("Sonic Thread", 'Standard', function(err, text) {
+      if (err) {
+        console.log('something went wrong...');
+        console.dir(err);
+        return;
+      }
+      console.log(text);
+    });
+
   </script>
 </body>
 
