@@ -788,20 +788,21 @@ var figlet = figlet || (function() {
     */
     var generateText = function(fontName, options, txt) {
         txt = txt.replace(/\r\n/g,"\n").replace(/\r/g,"\n");
-        var lines = txt.split("\n");
+        var lines = txt.split(" ");
         var figLines = [];
         var ii, len, output;
         len = lines.length;
         for (ii = 0; ii < len; ii++) {
-            figLines = figLines.concat( generateFigTextLines(lines[ii], figFonts[fontName], options) );
+          figLines = figLines.concat( generateFigTextLines(lines[ii], figFonts[fontName], options) );
         }
         len = figLines.length;
         output = figLines[0];
         for (ii = 1; ii < len; ii++) {
-            output = smushVerticalFigLines(output, figLines[ii], options);
+          output = smushVerticalFigLines(output, figLines[ii], options);
         }
 
-        return output ? output.join("\n") : '';
+        return output ? output : '';
+        // return output ? output.join("x\n") : '';
     };
 
     // -------------------------------------------------------------------------

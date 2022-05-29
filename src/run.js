@@ -23,11 +23,21 @@ const defaultSettings = {
 	restoreState    : false,   // will store the "state" object in local storage
   drawChar        : { char: '#', hide: false }, // hide cursor when downloading.
   mode            : 'draw',
+  figlet          : [""],      // ascii alphabets. 
   generateData    : { },
   generateBox  : { 
-    pos: { x: 0, y: 0 }, 
+    pos: { x: 12, y: 42 }, 
     style: { 
       borderStyle: 'single', 
+      color: 'black', 
+      backgroundColor: 'white' 
+    }
+  },
+  generateTextTitle  : { 
+    pos: { x: 0, y: 0 }, 
+    fontname: "Standard",
+    style: { 
+      borderStyle: 'none', 
       color: 'black', 
       backgroundColor: 'white' 
     }
@@ -45,13 +55,16 @@ const CSSStyles = [
 	'textAlign',
 ]
 
-
 function pickKey(obj){
   var keys = Object.keys(obj);
   return keys[ keys.length * Math.random() << 0];
 }
 
-// The program object should export at least a main(), pre() or post() function.
+// life-cycle. 
+// boot()  
+// pre()  
+// main() *this function is required* 
+// post()
 export function run(program, runSettings, userData = {}) {
 
 	return new Promise(function(resolve) {
@@ -98,11 +111,6 @@ export function run(program, runSettings, userData = {}) {
 			if (settings[s]) settings.element.style[s] = settings[s]
 		}
 
-		// Eventqueue
-		// Stores events and pops them at the end of the renderloop
-		// TODO: needed?
-		// const eventQueue = []
-
 		// Input pointer updated by DOM events
 		const pointer = {
 			x        : 0,
@@ -140,6 +148,7 @@ export function run(program, runSettings, userData = {}) {
       const rect = settings.element.getBoundingClientRect()
       const cols = settings.cols || Math.floor(rect.width / metrics.cellWidth)
       const rows = settings.rows || Math.floor(rect.height / metrics.lineHeight)
+
       const x = Math.floor((Math.random() * cols)); 
       const y = Math.floor((Math.random() * rows));
       const pos =  { x: clamp(x, 0, 22) , y: clamp(y, 0, 48) }
@@ -149,15 +158,39 @@ export function run(program, runSettings, userData = {}) {
         color: allColors[Math.random() * allColors.length << 0].name, 
         backgroundColor: allColors[Math.random() * allColors.length << 0].name
       }
+
+      figlet(e.detail.title, settings.generateTextTitle.fontname, function(err, text) {
+        if (err) {
+          console.log('something went wrong...');
+          console.dir(err);
+          return;
+        }
+        settings.figlet = text
+      });
+
+      const x2 = Math.floor((Math.random() * cols)); 
+      const y2 = Math.floor((Math.random() * rows));
+      const pos2 =  { x: clamp(x2, 0, 2) , y: clamp(y2, 0, 48) }
+      settings.generateTextTitle.pos = pos2
+      settings.generateTextTitle.style = {
+        borderStyle: "none",
+        color: "black", 
+        backgroundColor: "white"
+      }
     })
 
     window.addEventListener('reset', e => {
       settings.generateBox = JSON.parse(JSON.stringify(defaultSettings)).generateBox
+      settings.generateTextTitle = JSON.parse(JSON.stringify(defaultSettings)).generateTextTitle
     })
 
     window.addEventListener('download', e => {
       const canvas = settings.element
       canvas.toBlob( blob => saveBlobAsFile(blob, 'export.png'))
+    })
+
+    window.addEventListener('fontselect', e => {
+      settings.generateTextTitle.fontname = e.detail
     })
 
     document.addEventListener('keydown', e => {
@@ -216,49 +249,20 @@ export function run(program, runSettings, userData = {}) {
 		// Text selection may be annoing in case of interactive programs
 		if (!settings.allowSelect) disableSelect(settings.element)
 
-		// Method to load a font via the FontFace object.
-		// The load promise works 100% of the times.
-		// But a definition of the font via CSS is preferable and more flexible.
-		/*
-		const CSSInfo = getCSSInfo(settings.element)
-		var font = new FontFace('Simple Console', 'url(/css/fonts/simple/SimpleConsole-Light.woff)', { style: 'normal', weight: 400 })
-		font.load().then(function(f) {
-			...
-		})
-		*/
-
-		// Metrics needs to be calculated before boot
-		// Even with the "fonts.ready" the font may STILL not be loaded yet
-		// on Safari 13.x and also 14.0.
-		// A (shitty) workaround is to wait 3! rAF.
-		// Submitted: https://bugs.webkit.org/show_bug.cgi?id=217047
+    // kick in loop
 		document.fonts.ready.then((e) => {
-			// Run this three times...
 			let count = 3
-			;(function __run_thrice__() {
+			;(function __waitForFullyLoaded__() {
 				if (--count > 0) {
-					requestAnimationFrame(__run_thrice__)
+					requestAnimationFrame(__waitForFullyLoaded__)
 				} else {
-					// settings.element.style.lineHeight = Math.ceil(metrics.lineHeightf) + 'px'
-					// console.log(`Using font faimily: ${ci.fontFamily} @ ${ci.fontSize}/${ci.lineHeight}`)
-					// console.log(`Metrics: cellWidth: ${metrics.cellWidth}, lineHeightf: ${metrics.lineHeightf}`)
-					// Finally Boot!
 					boot()
 				}
 			})()
-			// Ideal mode:
-			// metrics = calcMetrics(settings.element)
-			// etc.
-			// requestAnimationFrame(loop)
 		})
 
-		// FPS object (keeps some state for precise FPS measure)
 		const fps = new FPS()
-
-		// A cell with no value at all is just a space
 		const EMPTY_CELL = ' '
-
-		// Default cell style inserted in case of undefined / null
 		const DEFAULT_CELL_STYLE = Object.freeze({
 			color           : settings.color,
 			backgroundColor : settings.backgroundColor,
@@ -269,9 +273,22 @@ export function run(program, runSettings, userData = {}) {
 		// each array entry represents a cell.
 		const buffer = []
 
-		// Metrics object, calc once (below)
+		// calc once
 		let metrics
+    
+    // let columns = 69 // TODO: no hardcode
+    // buffer.length = (columns * 58) // = 4002
 
+    // for (let i=0; i<buffer.length; i++) {
+    //   buffer[i] = {...DEFAULT_CELL_STYLE, char : EMPTY_CELL}
+    // }
+
+    // for (let x=0; x<settings.figlet.length; x++) {
+    //   for (let y=0; y<settings.figlet[x].length; y++){
+    //     buffer[y + x * columns].char = settings.figlet[x].charAt(y)
+    //   }
+    // }
+    
 		function boot() {
 			metrics = calcMetrics(settings.element)
 			const context = getContext(state, settings, metrics, fps)
@@ -283,21 +300,16 @@ export function run(program, runSettings, userData = {}) {
 
 		// Time sample to calculate precise offset
 		let timeSample = 0
-		// Previous time step to increment state.time (with state.time initial offset)
-		let ptime = 0
+    let ptime = 0
 		const interval = 1000 / settings.fps
 		const timeOffset = state.time
 
 		// Used to track window resize
 		let cols, rows
 
-		// Main program loop
 		function loop(t) {
-
-			// Timing
 			const delta = t - timeSample
 			if (delta < interval) {
-				// Skip the frame
 				if (!settings.once) requestAnimationFrame(loop)
 				return
 			}
@@ -337,10 +349,10 @@ export function run(program, runSettings, userData = {}) {
 			if (cols != context.cols || rows != context.rows) {
 				cols = context.cols
 				rows = context.rows
-				buffer.length = context.cols * context.rows
-				for (let i=0; i<buffer.length; i++) {
-					buffer[i] = {...DEFAULT_CELL_STYLE, char : EMPTY_CELL}
-				}
+				// buffer.length = context.cols * context.rows
+				// for (let i=0; i<buffer.length; i++) {
+				// 	buffer[i] = {...DEFAULT_CELL_STYLE, char : EMPTY_CELL}
+				// }
 			}
 
 			// 2. --------------------------------------------------------------
@@ -356,15 +368,13 @@ export function run(program, runSettings, userData = {}) {
 					const offs = j * context.cols
 					for (let i=0; i<context.cols; i++) {
 						const idx = i + offs
-						// Override content:
-						// buffer[idx] = program.main({x:i, y:j, index:idx}, context, cursor, buffer, userData)
 						const out = program.main({x:i, y:j, index:idx}, context, cursor, buffer, userData)
 						if (typeof out == 'object' && out !== null) {
 							buffer[idx] = {...buffer[idx], ...out}
 						} else {
 							buffer[idx] = {...buffer[idx], char : out}
 						}
-						// Fix undefined / null / etc.
+						// handle undefined / null / etc.
 						if (!Boolean(buffer[idx].char) && buffer[idx].char !== 0) {
 							buffer[idx].char = EMPTY_CELL
 						}
@@ -378,21 +388,8 @@ export function run(program, runSettings, userData = {}) {
 				program.post(context, cursor, buffer, userData)
 			}
 
-			// 5. --------------------------------------------------------------
 			renderer.render(context, buffer, settings)
-
-			// 6. --------------------------------------------------------------
-			// Queued events
-			// while (eventQueue.length > 0) {
-			// 	const type = eventQueue.shift()
-			// 	if (type && typeof program[type] == 'function') {
-			// 		program[type](context, cursor, buffer)
-			// 	}
-			// }
-
-			// 7. --------------------------------------------------------------
 			if (!settings.once) requestAnimationFrame(loop)
-
 			resolve(context)
 		}
 	})
@@ -431,32 +428,15 @@ function disableSelect(el) {
 	el.dataset.selectionEnabled = 'false'
 }
 
-// Enables selection for an HTML element
-// function enableSelect(el) {
-// 	el.style.userSelect = 'auto'
-// 	el.style.webkitUserSelect = 'auto'
-// 	el.style.mozUserSelect = 'auto'
-// 	el.dataset.selectionEnabled = 'true'
-// }
-
-// Calcs width (fract), height, aspect of a monospaced char
-// assuming that the CSS font-family is a monospaced font.
-// Returns a mutable object.
 export function calcMetrics(el) {
 
 	const style = getComputedStyle(el)
-
-	// Extract info from the style: in case of a canvas element
-	// the style and font family should be set anyways.
 	const fontFamily = style.getPropertyValue('font-family')
 	const fontSize   = parseFloat(style.getPropertyValue('font-size'))
-	// Can’t rely on computed lineHeight since Safari 14.1
-	// See:  https://bugs.webkit.org/show_bug.cgi?id=225695
+	// https://bugs.webkit.org/show_bug.cgi?id=225695
 	const lineHeight = parseFloat(style.getPropertyValue('line-height'))
 	let cellWidth
 
-	// If the output element is a canvas 'measureText()' is used
-	// else cellWidth is computed 'by hand' (should be the same, in any case)
 	if (el.nodeName == 'CANVAS') {
 		const ctx = el.getContext('2d')
 		ctx.font = fontSize + 'px ' + fontFamily
@@ -475,14 +455,10 @@ export function calcMetrics(el) {
 		lineHeight,
 		fontFamily,
 		fontSize,
-		// Semi-hackish way to allow an update of the metrics object.
-		// This may be useful in some situations, for example
-		// responsive layouts with baseline or font change.
-		// NOTE: It’s not an immutable object anymore
+		// allow an update of the metrics object.
 		_update : function() {
 			const tmp = calcMetrics(el)
 			for(var k in tmp) {
-				// NOTE: Object.assign won’t work
 				if (typeof tmp[k] == 'number' || typeof tmp[k] == 'string') {
 					m[k] = tmp[k]
 				}
@@ -492,5 +468,3 @@ export function calcMetrics(el) {
 
 	return metrics
 }
-
-

@@ -43,14 +43,10 @@ function render(context, buffer) {
 	const fg = settings && settings.color ? settings.color : 'black'
 	const fontWeight = settings && settings.fontWeight ? settings.color : '400'
 
-	// Set the backgroundColor of the box-element
-	// canvas.style.backgroundColor = settings.backgroundColor || 'white'
-
 	// Transparent canvas backround for the remaining size
 	// (fractions of cellWidth and lineHeight).
 	// Only the 'rendered' area has a solid color.
 	const ctx = canvas.getContext('2d')
-	//ctx.clearRect(0, 0, canvas.width, canvas.height)
 	ctx.fillStyle = bg
 	ctx.fillRect(0, 0, canvas.width, canvas.height)
 

@@ -8,11 +8,31 @@
   <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/fetch/1.0.0/fetch.min.js"></script>
   <script type="text/javascript" src="/src/lib/figlet.js"></script>
   <style type="text/css" media="screen">
-
     /* Reset */
 
-    * { margin:0;padding:0;border:0;outline:0;text-decoration:none;font-weight:inherit;font-style:inherit;color:inherit;font-size:100%;font-family:inherit;vertical-align:baseline;list-style:none;border-collapse:collapse;border-spacing:0; -webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale; }
-    strong { font-weight: bolder;}
+    * {
+      margin: 0;
+      padding: 0;
+      border: 0;
+      outline: 0;
+      text-decoration: none;
+      font-weight: inherit;
+      font-style: inherit;
+      color: inherit;
+      font-size: 100%;
+      font-family: inherit;
+      vertical-align: baseline;
+      list-style: none;
+      border-collapse: collapse;
+      border-spacing: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    strong {
+      font-weight: bolder;
+    }
+
     body {
       background-color: rgb(250, 250, 250);
       margin: 0;
@@ -40,7 +60,9 @@
       cursor: pointer;
     }
 
-    button:hover { opacity: 0.5;}
+    button:hover {
+      opacity: 0.5;
+    }
 
     /* -- main grid layout ---------------------------------------------- */
 
@@ -244,22 +266,22 @@
       background-color: rgba(103, 103, 103, 0.5);
     }
 
-    .usage strong[data-usage="draw"]  {
+    .usage strong[data-usage="draw"] {
       background-color: #aaff66;
       color: #00cc55;
     }
 
-    .usage strong[data-usage="erase"]  {
+    .usage strong[data-usage="erase"] {
       background-color: #eeee77;
       color: #00cc55;
     }
 
-    .usage strong[data-usage="drawBg"]  {
+    .usage strong[data-usage="drawBg"] {
       background-color: #b0b0b0;
       color: #696969;
     }
 
-    .usage strong[data-usage="drawTextColor"]  {
+    .usage strong[data-usage="drawTextColor"] {
       background-color: #344ffa;
       color: #e2e2e2;
     }
@@ -268,9 +290,25 @@
       cursor: pointer;
     }
 
-    #generate { background-color: #00cc55;}
-    #reset { background-color: #ff8b50;}
-    #download { background-color: white;}
+    #generate {
+      background-color: #00cc55;
+    }
+
+    #reset {
+      background-color: #ff8b50;
+    }
+
+    #download {
+      background-color: white;
+    }
+
+    #fontname { 
+      width: 70%;
+      padding: 4px;
+      margin-bottom: 1rem;
+    }
+
+    .fontname { margin-top: 0.25rem;}
   </style>
 </head>
 
@@ -285,15 +323,15 @@
             <div><strong id="drawBg">b</strong><span>drawBg</span></div>
             <div><strong id="erase">e</strong><span>erase</span></div>
           </div>
-          <div class="ruler"></div> 
-  
+          <div class="ruler"></div>
+
           <div>
-           <strong id="charlist-title" class=" action-button">Character set</strong> 
-           <div id="chars" class="char-table collapse"></div>
+            <strong id="charlist-title" class=" action-button">Character set</strong>
+            <div id="chars" class="char-table collapse"></div>
           </div>
-          
+
           <div class="ruler"></div> <!-- --------------------------- -->
-          <div> 
+          <div>
             <strong>Poster Generator</strong>
             <form id="generator-form" class="generator-form">
               <label for="title">title</label><br>
@@ -308,29 +346,35 @@
               <input type="text" id="times" name="times" value="17.00 ~ 19.00"><br>
               <label for="notes">Notes</label><br>
               <input type="text" id="notes" name="notes" value="Free Entry"><br>
-  
+
               <div class="input-size">
                 <div>
                   <label for="width">Width</label><br>
                   <input type="text" id="width" name="width" value="500"><br>
                 </div>
-  
+
                 <div>
                   <label for="height">Height</label><br>
                   <input type="text" id="height" name="height" value="700"><br>
                 </div>
               </div>
-  
+
+              <div class="fontname">
+                <div>fontname</div>
+                <select name="fontname" id="fontname"></select>
+              </div>
+
               <button id="generate" type="submit">generate</button>
               <button id="reset">reset</button>
               <button id="download" type="download">download</button>
             </form>
-            
+
+
           </div>
-          
+
         </nav>
       </div>
-      
+
     </div>
     <!-- <pre id="output" class="cell2 output"></pre> -->
     <canvas id="output" class="cell2 output"></canvas>
@@ -342,85 +386,94 @@
     import * as prog0 from '/src/programs/draw.js'
     import Char, { charsList } from '/src/modules/chars.js'
 
-    if (window.location.protocol === 'file:') {
-      alert('fetch APi does not support file: protocol.');
-    }
-    
-    figlet.defaults({
-        fontPath: '/fonts'
+    const fontSelector = document.getElementById('fontname')
+
+    let fontname;
+    let httpRequest = new XMLHttpRequest(); 
+    httpRequest.open("GET", "fontlists.json", true);
+    httpRequest.send();
+    httpRequest.addEventListener("readystatechange", function() {
+        if (this.readyState === this.DONE) {
+          fontname = JSON.parse(this.response);
+          for(let i=0; i<fontname.data.length;i++){
+            const opt = document.createElement("option")
+            opt.value = fontname.data[i]
+            opt.label = fontname.data[i]
+            if(fontname.data[i] === "Standard") { opt.selected = true }
+            fontSelector.appendChild(opt)
+          }
+        }
     });
 
-    figlet.preloadFonts(["Standard", "Ghost"], function() {
-        console.log('prefetching done (only did it for 2 fonts)!');
-    });
-
-    const character = new Char();
-
-    const pre = document.getElementById('output')
-    const chartable = document.getElementById("chars")
-    const charListTitle = document.getElementById("charlist-title")
-    const menu = document.getElementById("menu")
-    const drawBtn = document.getElementById("draw")
-    const downloadBtn = document.getElementById("download")
-    const resetBtn = document.getElementById("reset")
-    const form = document.getElementById("generator-form")
-
-    charListTitle.onclick = () => { chartable.classList.toggle("collapse") }
-    resetBtn.onclick = (e) => { 
-      window.dispatchEvent(new Event('reset'))
-      e.preventDefault()
-    }
-    downloadBtn.onclick = (e) => { 
-      window.dispatchEvent(new Event('download'))
+    fontSelector.onchange = (e) => {
+      window.dispatchEvent(new CustomEvent('fontselect', { detail: e.target.value}))
       e.preventDefault()
     }
 
-    form.onsubmit = (e) => { 
-      e.preventDefault();
-      const formData = new FormData(e.target);
-      const data = {
-        title: formData.get("title"),
-        artists: formData.get("artists"),
-        location: formData.get("location"),
-        dates: formData.get("dates"),
-        times: formData.get("times"),
-        notes: formData.get("notes"),
-        width: formData.get("width"),
-        height: formData.get("height"),
+    figlet.defaults({ fontPath: '/fonts' });
+    figlet.preloadFonts(["Standard", "Ghost"], () => {
+      console.log("loaded FIGlet.js")
+
+      const character = new Char();
+
+      const output = document.getElementById('output')
+      const chartable = document.getElementById("chars")
+      const charListTitle = document.getElementById("charlist-title")
+      const menu = document.getElementById("menu")
+      const drawBtn = document.getElementById("draw")
+      const downloadBtn = document.getElementById("download")
+      const resetBtn = document.getElementById("reset")
+      const form = document.getElementById("generator-form")
+
+      charListTitle.onclick = () => { chartable.classList.toggle("collapse") }
+      resetBtn.onclick = (e) => {
+        window.dispatchEvent(new Event('reset'))
+        e.preventDefault()
+      }
+      downloadBtn.onclick = (e) => {
+        window.dispatchEvent(new Event('download'))
+        e.preventDefault()
       }
 
-      window.dispatchEvent(new CustomEvent('generate', { detail: data }));
-    }
+      form.onsubmit = (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const data = {
+          title: formData.get("title"),
+          artists: formData.get("artists"),
+          location: formData.get("location"),
+          dates: formData.get("dates"),
+          times: formData.get("times"),
+          notes: formData.get("notes"),
+          width: formData.get("width"),
+          height: formData.get("height"),
+        }
 
-    run(prog0, { element: pre })
-      .catch(errorHandler)
-      .then((res) => {
-        menu.className = "menu ready"
-        charsList.map(char => {
-        let c = document.createElement("p")
-        c.innerText = char
-        c.addEventListener("click", () => {
-          character.selectChar(char)
+        window.dispatchEvent(new CustomEvent('generate', { detail: data }));
+      }
+
+      run(prog0, { element: output })
+        .catch(errorHandler)
+        .then((res) => {
+          menu.className = "menu ready"
+          charsList.map(char => {
+            let c = document.createElement("p")
+            c.innerText = char
+            c.addEventListener("click", () => {
+              character.selectChar(char)
+            })
+            chartable.appendChild(c)
+          })
+
+          drawBtn.setAttribute("data-usage", "draw")
         })
-        chartable.appendChild(c)
-      })
 
-      drawBtn.setAttribute("data-usage", "draw")
-    })
-
-    function errorHandler(e) {
-      console.warn(e.message)
-      console.log(e.error)
-    }
-
-    window.figlet("Sonic Thread", 'Standard', function(err, text) {
-      if (err) {
-        console.log('something went wrong...');
-        console.dir(err);
-        return;
+      function errorHandler(e) {
+        console.warn(e.message)
+        console.log(e.error)
       }
-      console.log(text);
     });
+
 
   </script>
 </body>

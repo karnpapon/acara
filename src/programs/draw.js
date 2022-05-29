@@ -1,4 +1,5 @@
 import { drawBox, drawInfo } from '/src/modules/drawbox.js'
+import { drawTextBox } from '/src/modules/drawtext.js'
 
 export const settings = { 
   fps : 30, 	
@@ -13,8 +14,8 @@ export const settings = {
   },
   // cols : 64,
   // rows : 22,
-  // backgroundColor : 'lightgray',
-  color : 'blue'
+  backgroundColor : 'white',
+  color : 'black'
 }
 
 const data = []
@@ -30,12 +31,16 @@ export function pre(context, cursor, buffer) {
 	if (cols != context.cols || rows != context.rows) {
 		cols = context.cols
 		rows = context.rows
-		data.length = cols * rows
-		data.fill({ char: 0, color: 'black', backgroundColor: 'white'})
+		// data.length = cols * rows
+    data.push(...buffer)
+		// data.fill({ char: '', color: 'black', backgroundColor: 'white'})
 	}
-
+  
 	if (cursor.pressed) {
-		data[x + y * cols] = mode === "erase" ? {char: 0, color: 'black', backgroundColor: 'white'} : { char: drawChar.char, color: mode === 'drawTextColor' ?  'red' : data[x + y * cols]["color"], backgroundColor: mode === 'drawBg' ? 'lightblue' : data[x + y * cols]["backgroundColor"] }
+    if(data[x + y * cols]) {
+      const newChar = mode === "erase" ? {char: '', color: 'black', backgroundColor: 'white'} : { char: drawChar.char, color: mode === 'drawTextColor' ?  'red' : data[x + y * cols]["color"], backgroundColor: mode === 'drawBg' ? 'lightblue' : data[x + y * cols]["backgroundColor"] }
+      data[x + y * cols] = newChar      
+    }
 	} 
 	
 }
@@ -45,37 +50,40 @@ export function main(coord, context, cursor, buffer) {
 	const x = Math.floor(cursor.x) 
 	const y = Math.floor(cursor.y) 
 	
-	const u = data[coord.index]
-
-	if (u.char === 0) { 
+  if(data[coord.index]) {
+    const u = data[coord.index]
+  
+    // determine rendering empty cells (and when cursor is hovering these).
+    if (u.char === '') { 
+      if (coord.x == x && coord.y == y) { 
+        return { 
+          char: drawChar.char, 
+          color: 'black', 
+          backgroundColor: 'white', 
+        }
+      }
+      return { 
+        char: '', 
+        backgroundColor: 'white'
+      }
+    }
+  
+    // when cursor is hovering non-empty cell ( clearly see cursor position eg. colored cell)
     if (coord.x == x && coord.y == y) { 
       return { 
         char: drawChar.char, 
         color: 'black', 
         backgroundColor: 'white', 
-        // color: 'green', 
-        // backgroundColor: mode === "erase" ? 'yellow' : 'lightgreen'
       }
     }
-    return { 
-      char: '', 
-      backgroundColor: 'white'
-    }
-	}
-	if (coord.x == x && coord.y == y) { 
-    return { 
-      char: drawChar.char, 
-      color: 'black', 
-      backgroundColor: 'white', 
-      // color: 'green', 
-      // backgroundColor: mode === "erase" ? 'yellow' : 'lightgreen'
+    // no-hovered non-empty cell rendering.
+    return {
+      char : u.char,
+      color: u.color,
+      backgroundColor: u.backgroundColor
     }
   }
-	return {
-		char : u.char,
-    color: u.color,
-		backgroundColor: u.backgroundColor
-	}
+
 }
 
 export const boxStyle = {
@@ -89,12 +97,24 @@ export const boxStyle = {
 	borderStyle     : 'round',
 }
 
+const textStyle = {
+  x               : 0,
+  y               : 2,
+	backgroundColor : 'white',
+	color           : 'black',
+	fontWeight      : 'normal',
+	shadowStyle     : 'none',
+	borderStyle     : 'round', 
+}
+
 
 export function post(context, cursor, buffer) {
 
-  const { rows, cols, settings: { generateData, generateBox } } =  context
+  const { rows, cols, settings: { generateData, generateBox, generateTextTitle, figlet } } =  context
   const textBoxStyle = {...boxStyle, ...generateBox.pos, ...generateBox.style}
+  const titleBoxStyle = {...textStyle, ...generateTextTitle.pos, ...generateTextTitle.style}
 
+  // console.log("figlet", figlet)
   // drawInfo(context, cursor, buffer, {
 	// 	color : 'white', 
   //   backgroundColor : 'royalblue',
@@ -109,7 +129,7 @@ export function post(context, cursor, buffer) {
     return acc
   } , "")
 
-  drawBox(txt, textBoxStyle, buffer, cols, rows)
+  drawTextBox(figlet, titleBoxStyle, buffer, cols, rows)
 
-  
+  drawBox(txt, textBoxStyle, buffer, cols, rows)
 }
