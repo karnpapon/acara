@@ -6,6 +6,7 @@ import { clamp } from './modules/num.js';
 import { borderStyles } from './modules/drawbox.js';
 import { allColors } from './modules/color.js';
 import { saveBlobAsFile } from './modules/filedownload.js'
+import { clear } from './programs/draw.js';
 
 const renderers = {
 	'canvas' : canvasRenderer,
@@ -19,7 +20,7 @@ const defaultSettings = {
 	once            : false,   // if set to true the renderer will run only once
 	fps             : 30,      // fps capping
 	renderer        : 'text',  // can be 'canvas', anything else falls back to 'text'
-	allowSelect     : false,   // allows selection of the rendered element
+	// allowSelect     : false,   // allows selection of the rendered element
 	restoreState    : false,   // will store the "state" object in local storage
   drawChar        : { char: '#', hide: false }, // hide cursor when downloading.
   mode            : 'draw',
@@ -60,7 +61,7 @@ function pickKey(obj){
   return keys[ keys.length * Math.random() << 0];
 }
 
-// life-cycle. 
+// lifecycle. 
 // boot()  
 // pre()  
 // main() *this function is required* 
@@ -125,21 +126,32 @@ export function run(program, runSettings, userData = {}) {
 			const rect = settings.element.getBoundingClientRect()
 			pointer.x = e.clientX - rect.left
 			pointer.y = e.clientY - rect.top
-			// eventQueue.push('pointerMove')
 		})
 
 		settings.element.addEventListener('pointerdown', e => {
 			pointer.pressed = true
-			// eventQueue.push('pointerDown')
 		})
 
 		settings.element.addEventListener('pointerup', e => {
 			pointer.pressed = false
-			// eventQueue.push('pointerUp')
 		})
 
     window.addEventListener('selectchar', e => {
       settings.drawChar.char = e.detail
+    })
+
+    window.addEventListener('resize-canvas', e => {
+      const { w, h, fsize } = e.detail
+      settings.element.style.fontSize = fsize
+      settings.canvasSize = { width : w, height: h }
+      let m = calcMetrics(settings.element)
+      m._update(metrics)
+    })
+
+    window.addEventListener('clear-canvas', e => {
+      clear()
+      clearBuffer()
+      settings.generateData = []
     })
 
     window.addEventListener('generate', e => {
@@ -247,7 +259,7 @@ export function run(program, runSettings, userData = {}) {
 		settings.element.style.fontStrech = 'normal'
 
 		// Text selection may be annoing in case of interactive programs
-		if (!settings.allowSelect) disableSelect(settings.element)
+		// if (!settings.allowSelect) disableSelect(settings.element)
 
     // kick in loop
 		document.fonts.ready.then((e) => {
@@ -269,25 +281,14 @@ export function run(program, runSettings, userData = {}) {
 			fontWeight      : settings.fontWeight
 		})
 
-		// Buffer needed for the final DOM rendering,
-		// each array entry represents a cell.
 		const buffer = []
-
-		// calc once
 		let metrics
-    
-    // let columns = 69 // TODO: no hardcode
-    // buffer.length = (columns * 58) // = 4002
 
-    // for (let i=0; i<buffer.length; i++) {
-    //   buffer[i] = {...DEFAULT_CELL_STYLE, char : EMPTY_CELL}
-    // }
-
-    // for (let x=0; x<settings.figlet.length; x++) {
-    //   for (let y=0; y<settings.figlet[x].length; y++){
-    //     buffer[y + x * columns].char = settings.figlet[x].charAt(y)
-    //   }
-    // }
+    function clearBuffer(){
+      for (let i=0; i<buffer.length; i++) {
+        buffer[i] = {...DEFAULT_CELL_STYLE, char : EMPTY_CELL}
+      }
+    }
     
 		function boot() {
 			metrics = calcMetrics(settings.element)
@@ -300,7 +301,6 @@ export function run(program, runSettings, userData = {}) {
 
 		// Time sample to calculate precise offset
 		let timeSample = 0
-    let ptime = 0
 		const interval = 1000 / settings.fps
 		const timeOffset = state.time
 
@@ -349,10 +349,10 @@ export function run(program, runSettings, userData = {}) {
 			if (cols != context.cols || rows != context.rows) {
 				cols = context.cols
 				rows = context.rows
-				// buffer.length = context.cols * context.rows
-				// for (let i=0; i<buffer.length; i++) {
-				// 	buffer[i] = {...DEFAULT_CELL_STYLE, char : EMPTY_CELL}
-				// }
+				buffer.length = context.cols * context.rows
+				for (let i=0; i<buffer.length; i++) {
+					buffer[i] = {...DEFAULT_CELL_STYLE, char : EMPTY_CELL}
+				}
 			}
 
 			// 2. --------------------------------------------------------------
@@ -415,18 +415,17 @@ function getContext(state, settings, metrics, fps) {
 		runtime : Object.freeze({
 			cycle : state.cycle,
 			fps : fps.fps
-			// updatedRowNum
 		})
 	})
 }
 
 // Disables selection for an HTML element
-function disableSelect(el) {
-	el.style.userSelect = 'none'
-	el.style.webkitUserSelect = 'none' // for Safari on mac and iOS
-	el.style.mozUserSelect = 'none'    // for mobile FF
-	el.dataset.selectionEnabled = 'false'
-}
+// function disableSelect(el) {
+// 	el.style.userSelect = 'none'
+// 	el.style.webkitUserSelect = 'none' // for Safari on mac and iOS
+// 	el.style.mozUserSelect = 'none'    // for mobile FF
+// 	el.dataset.selectionEnabled = 'false'
+// }
 
 export function calcMetrics(el) {
 
@@ -455,8 +454,8 @@ export function calcMetrics(el) {
 		lineHeight,
 		fontFamily,
 		fontSize,
-		// allow an update of the metrics object.
-		_update : function() {
+		// // allow an update of the metrics object.
+		_update : function(m) {
 			const tmp = calcMetrics(el)
 			for(var k in tmp) {
 				if (typeof tmp[k] == 'number' || typeof tmp[k] == 'string') {
@@ -465,6 +464,5 @@ export function calcMetrics(el) {
 			}
 		}
 	}
-
 	return metrics
 }

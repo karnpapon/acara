@@ -135,20 +135,22 @@
       background-color: beige;
     }
 
+    .menu-overflow-scroll-wrapper {
+      width: calc(100% + 15px);
+      overflow-y: scroll;
+      height: 100%;
+    }
+
     .menu-flex {
       display: flex;
       flex-direction: column;
-      /* grid-template-columns: 1fr auto; */
-      /* grid-template-rows: auto; */
       font-weight: initial;
       font-family: 'JetBrainsMono Nerd Font Mono';
       font-size: 0.8rem;
       line-height: 1.5rem;
       padding: 2rem;
-      overflow-y: scroll;
       height: 100%;
       padding-bottom: 1rem;
-      /*max-width: 31ch;*/
     }
 
     .menu-flex:last-child {
@@ -222,7 +224,7 @@
 
     .generator-form input {
       color: black;
-      width: 70%;
+      width: 100%;
       padding: 4px;
     }
 
@@ -235,6 +237,40 @@
     .generator-form .input-size {
       width: 50%;
       display: flex;
+    }
+
+    /* ---------- setting------- */
+    .setting {
+      width: 100%;
+      padding-bottom: 12rem;
+      height: 0;
+      display: flex;
+      flex-wrap: wrap;
+      overflow: hidden;
+      transition: 400ms;
+    }
+
+    .input-size input {
+      padding: 8px;
+      width:  80%;
+    }
+
+    .setting-btn > button {
+      padding: 8px;
+      margin-right: 8px;
+    }
+    
+    .setting-btn {
+      display: flex;
+    }
+
+    .setting-size-input{
+      margin-bottom: 8px;
+      display: flex;
+    }
+
+    .setting-size-input > div {
+      margin-right: 4px;
     }
 
     /* ----------char table---------- */
@@ -288,9 +324,10 @@
 
     #charlist-title {
       cursor: pointer;
+      user-select: none;
     }
 
-    #generate {
+    #generate, #resize-canvas {
       background-color: #00cc55;
     }
 
@@ -303,12 +340,12 @@
     }
 
     #fontname { 
-      width: 70%;
+      width: 100%;
       padding: 4px;
       margin-bottom: 1rem;
     }
 
-    .fontname { margin-top: 0.25rem;}
+    .fontname { margin-top: 0.25rem; width: 100%;}
   </style>
 </head>
 
@@ -316,63 +353,81 @@
   <div class="grid three">
     <div id="menu" class="cell1 menu">
       <div class="menu-flex-overflow-wrapper">
-        <nav class="menu-flex">
-          <div class="usage">
-            <div><strong id="draw">d</strong><span>draw</span></div>
-            <div><strong id="drawTextColor">t</strong><span>drawTextColor</span></div>
-            <div><strong id="drawBg">b</strong><span>drawBg</span></div>
-            <div><strong id="erase">e</strong><span>erase</span></div>
-          </div>
-          <div class="ruler"></div>
-
-          <div>
-            <strong id="charlist-title" class=" action-button">Character set</strong>
-            <div id="chars" class="char-table collapse"></div>
-          </div>
-
-          <div class="ruler"></div> <!-- --------------------------- -->
-          <div>
-            <strong>Poster Generator</strong>
-            <form id="generator-form" class="generator-form">
-              <label for="title">title</label><br>
-              <input type="text" id="title" name="title" value="Sonic Thread III"><br>
-              <label for="artists">Artists</label><br>
-              <input type="text" id="artists" name="artists" value="CRSCRSCRS, Alex McLean, Kindohm"><br>
-              <label for="location">Location</label><br>
-              <input type="text" id="location" name="location" value="Tentacles Workshop"><br>
-              <label for="dates">Dates</label><br>
-              <input type="text" id="dates" name="dates" value="Sept 9 – Oct 30, 2021"><br>
-              <label for="times">Times</label><br>
-              <input type="text" id="times" name="times" value="17.00 ~ 19.00"><br>
-              <label for="notes">Notes</label><br>
-              <input type="text" id="notes" name="notes" value="Free Entry"><br>
-
-              <div class="input-size">
-                <div>
-                  <label for="width">Width</label><br>
-                  <input type="text" id="width" name="width" value="500"><br>
+        <div class="menu-overflow-scroll-wrapper">
+          <nav class="menu-flex">
+            <div class="usage">
+              <div><strong id="draw">d</strong><span>draw</span></div>
+              <div><strong id="drawTextColor">t</strong><span>drawTextColor</span></div>
+              <div><strong id="drawBg">b</strong><span>drawBg</span></div>
+              <div><strong id="erase">e</strong><span>erase</span></div>
+            </div>
+            <div class="ruler"></div>
+  
+            <div>
+              <strong id="charlist-title" class=" action-button">character set</strong>
+              <div id="chars" class="char-table collapse"></div>
+            </div>
+  
+            <div class="ruler"></div> <!-- --------------------------- -->
+            <div>
+              <strong>poster Generator</strong>
+              <form id="generator-form" class="generator-form">
+                <label for="title">title</label><br>
+                <input type="text" id="title" name="title" value="Sonic Thread III"><br>
+                <label for="artists">Artists</label><br>
+                <input type="text" id="artists" name="artists" value="CRSCRSCRS, Alex McLean, Kindohm"><br>
+                <label for="location">Location</label><br>
+                <input type="text" id="location" name="location" value="Tentacles Workshop"><br>
+                <label for="dates">Dates</label><br>
+                <input type="text" id="dates" name="dates" value="Sept 9 – Oct 30, 2021"><br>
+                <label for="times">Times</label><br>
+                <input type="text" id="times" name="times" value="17.00 ~ 19.00"><br>
+                <label for="notes">Notes</label><br>
+                <input type="text" id="notes" name="notes" value="Free Entry"><br>
+                <div class="fontname">
+                  <div>fontname</div>
+                  <select name="fontname" id="fontname"></select>
                 </div>
-
-                <div>
-                  <label for="height">Height</label><br>
-                  <input type="text" id="height" name="height" value="700"><br>
+  
+                <button id="generate" type="submit">generate</button>
+                <button id="reset">reset</button>
+                <button id="download" type="download">download</button>
+              </form>
+  
+              <div class="ruler"></div> <!-- --------------------------- -->
+              <div>
+                <strong id="setting" class="action-button">setting</strong>
+                <div id="setting-section" class="setting">
+                  
+                  <div class="input-size">
+                    <div class="setting-size-input">
+                      <div>
+                        <label for="width">Width</label>
+                        <input type="text" id="width" name="width" value="500"><br>
+                      </div>
+                      <div>
+                        <label for="height">Height</label>
+                        <input type="text" id="height" name="height" value="700"><br>
+                      </div>
+                      <div>
+                        <label for="font-size">font-size</label>
+                        <input type="text" id="font-size" name="font-size" value="12px"><br>
+                      </div>
+                    </div>
+                    <div class="setting-btn">
+                      <button id="resize-canvas">resize</button>
+                      <button id="clear-canvas">clear</button>
+                    </div>
+                  </div>
+  
                 </div>
               </div>
-
-              <div class="fontname">
-                <div>fontname</div>
-                <select name="fontname" id="fontname"></select>
-              </div>
-
-              <button id="generate" type="submit">generate</button>
-              <button id="reset">reset</button>
-              <button id="download" type="download">download</button>
-            </form>
-
-
-          </div>
-
-        </nav>
+  
+  
+            </div>
+  
+          </nav>
+        </div>
       </div>
 
     </div>
@@ -412,13 +467,17 @@
 
     figlet.defaults({ fontPath: '/fonts' });
     figlet.preloadFonts(["Standard", "Ghost"], () => {
-      console.log("loaded FIGlet.js")
+      console.log("FIGlet loaded!")
 
       const character = new Char();
 
       const output = document.getElementById('output')
       const chartable = document.getElementById("chars")
+      const resizeBtn = document.getElementById("resize-canvas")
+      const clearBtn = document.getElementById("clear-canvas")
       const charListTitle = document.getElementById("charlist-title")
+      const settingBtn = document.getElementById("setting")
+      const settingSection = document.getElementById("setting-section")
       const menu = document.getElementById("menu")
       const drawBtn = document.getElementById("draw")
       const downloadBtn = document.getElementById("download")
@@ -426,12 +485,25 @@
       const form = document.getElementById("generator-form")
 
       charListTitle.onclick = () => { chartable.classList.toggle("collapse") }
+      settingBtn.onclick = () => { settingSection.classList.toggle("collapse") }
+
       resetBtn.onclick = (e) => {
         window.dispatchEvent(new Event('reset'))
         e.preventDefault()
       }
       downloadBtn.onclick = (e) => {
         window.dispatchEvent(new Event('download'))
+        e.preventDefault()
+      }
+      resizeBtn.onclick = (e) => {
+        const w = document.getElementById("width").value
+        const h = document.getElementById("height").value
+        const fsize = document.getElementById("font-size").value
+        window.dispatchEvent(new CustomEvent('resize-canvas', { detail: { w,h,fsize }}))
+        e.preventDefault()
+      }
+      clearBtn.onclick = (e) => {
+        window.dispatchEvent(new CustomEvent('clear-canvas'))
         e.preventDefault()
       }
 

@@ -51,7 +51,6 @@ export function drawTextBox(text, style, target, targetCols, targetRows) {
 		backgroundColor : s.backgroundColor
 	}, x1, y1, w, h, target, targetCols, targetRows)
 
-	// Txt
 	mergeText({
 		text: text.join('\n'),
 		color : style.color,
