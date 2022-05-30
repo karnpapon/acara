@@ -253,6 +253,20 @@ export function run(program, runSettings, userData = {}) {
         el3.removeAttribute("data-usage")
         el.setAttribute("data-usage", "drawTextColor")
       } 
+
+      if (e.key === 'c') { 
+        settings.mode = 'cursorMode'
+        const el = document.getElementById("cursorMode")
+        const el4 = document.getElementById("drawTextColor")
+        const el1 = document.getElementById("drawBg")
+        const el2 = document.getElementById("erase")
+        const el3 = document.getElementById("draw")
+        el1.removeAttribute("data-usage")
+        el2.removeAttribute("data-usage")
+        el3.removeAttribute("data-usage")
+        el4.removeAttribute("data-usage")
+        el.setAttribute("data-usage", "drawTextColor")
+      } 
     })
 
 		// CSS fix

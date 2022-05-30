@@ -78,6 +78,7 @@
 
     .icon-title-wrapper {
       display: flex;
+      align-items: center;
       width: 100%;
     }
 
@@ -140,7 +141,7 @@
       background-color: rgba(255, 255, 255, 0);
       color: black;
       opacity: 0;
-      transition: 400ms;
+      transition: 200ms;
       padding: 20px;
       height: calc(100vh - 40px);
       /* padding: 0 1ch 0  1ch; */
@@ -236,14 +237,16 @@
       text-decoration: none;
     }
 
-    .menu-flex a:hover:before {
-      content: ">";
-    }
-
-
     /* -------------- form ---------- */
     .generator-form {
-      /* color: black; */
+      margin-top: 1rem;
+      width: 100%;
+      padding-bottom: 25rem;
+      height: 0;
+      display: flex;
+      flex-wrap: wrap;
+      overflow: hidden;
+      transition: 200ms;
     }
 
     .generator-form input {
@@ -266,12 +269,13 @@
     /* ---------- setting------- */
     .setting {
       width: 100%;
-      padding-bottom: 12rem;
+      padding-bottom: 7rem;
       height: 0;
       display: flex;
       flex-wrap: wrap;
       overflow: hidden;
-      transition: 400ms;
+      transition: 200ms;
+      margin-top: 0.5rem;
     }
 
     .input-size input {
@@ -306,11 +310,8 @@
       display: flex;
       flex-wrap: wrap;
       overflow: hidden;
-      transition: 400ms;
-    }
-
-    .collapse {
-      padding-bottom: 0;
+      transition: 200ms;
+      margin-top: 0.5rem;
     }
 
     .ready {
@@ -347,6 +348,35 @@
       color: #e2e2e2;
     }
 
+    .usage strong[data-usage="cursorMode"] {
+      background-color: #34e6fa;
+      color: #000000;
+    }
+
+    /* ---------- about ----------- */
+
+    .about {
+      width: 100%;
+      padding-bottom: 20rem;
+      height: 0;
+      display: flex;
+      flex-wrap: wrap;
+      overflow: hidden;
+      transition: 200ms;
+      margin-top: 0.5rem;
+    }
+
+    .about > div > a { 
+      text-decoration: underline;
+      width: fit-content;
+      font-weight: bolder;
+    }
+    .about > div > a:hover { 
+      text-decoration: none;
+    }
+
+    /* ------id------------------- */
+
     #charlist-title {
       cursor: pointer;
       user-select: none;
@@ -373,7 +403,21 @@
       margin-bottom: 1rem;
     }
 
+    #generator-title, #setting, #about-section {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    #generator-title:hover{
+      text-decoration: underline;
+    }
+
     .fontname { margin-top: 0.25rem; width: 100%;}
+
+    .collapse {
+      padding-bottom: 0;
+      margin: 0;
+    }
   </style>
 </head>
 
@@ -387,6 +431,7 @@
               <div><strong id="draw">d</strong><span>draw</span></div>
               <div><strong id="drawTextColor">t</strong><span>drawTextColor</span></div>
               <div><strong id="drawBg">b</strong><span>drawBg</span></div>
+              <div><strong id="cursorMode">c</strong><span>cursor</span></div>
               <div><strong id="erase">e</strong><span>erase</span></div>
             </div>
             <hr>
@@ -397,13 +442,25 @@
                 <rect width="7" height="7" x="3" y="3"/> <rect width="7" height="7" x="14" y="3"/>
                 <rect width="7" height="7" x="3" y="14"/> <rect width="7" height="7" x="14" y="14"/> 
               </svg>
-              <strong id="charlist-title" class=" action-button">character set</strong>
+              <strong id="charlist-title" class=" action-button">characters</strong>
             </div>
             <div id="chars" class="char-table collapse"></div>
   
             <hr>
             <div>
-              <strong>poster Generator</strong>
+              <div class="icon-title-wrapper">
+                <svg class="icon" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+                  width="35px" height="35px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
+                  <path d="M78,36H38c-1.1,0-2-0.9-2-2v-4c0-1.1,0.9-2,2-2H78c1.1,0,2,0.9,2,2v4C80,35.1,79.1,36,78,36z"/>
+                  <path d="M78,54H38c-1.1,0-2-0.9-2-2v-4c0-1.1,0.9-2,2-2H78c1.1,0,2,0.9,2,2v4C80,53.1,79.1,54,78,54z"/>
+                  <path d="M26,54h-4c-1.1,0-2-0.9-2-2v-4c0-1.1,0.9-2,2-2h4c1.1,0,2,0.9,2,2v4C28,53.1,27.1,54,26,54z"/>
+                  <path d="M26,36h-4c-1.1,0-2-0.9-2-2v-4c0-1.1,0.9-2,2-2h4c1.1,0,2,0.9,2,2v4C28,35.1,27.1,36,26,36z"/>
+                  <path d="M26,72h-4c-1.1,0-2-0.9-2-2v-4c0-1.1,0.9-2,2-2h4c1.1,0,2,0.9,2,2v4C28,71.1,27.1,72,26,72z"/>
+                  <path d="M78,72H38c-1.1,0-2-0.9-2-2v-4c0-1.1,0.9-2,2-2H78c1.1,0,2,0.9,2,2v4C80,71.1,79.1,72,78,72z"/>
+                </svg>
+                <strong id="generator-title">generator</strong>
+              </div>
+
               <form id="generator-form" class="generator-form">
                 <label for="title">title</label><br>
                 <input type="text" id="title" name="title" value="Sonic Thread III"><br>
@@ -429,10 +486,9 @@
                 </div>
               </form>
   
-              <!-- <div class="ruler"></div> -->
               <hr>
               <div>
-                <div class="icon-title-wrapper mb-4">
+                <div class="icon-title-wrapper">
                   <svg class="icon" width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M18.48 18.5368H21M4.68 12L3 12.044M4.68 12C4.68 13.3255 5.75451 14.4 7.08 14.4C8.40548 14.4 9.48 13.3255 9.48 12C9.48 10.6745 8.40548 9.6 7.08 9.6C5.75451 9.6 4.68 10.6745 4.68 12ZM10.169 12.0441H21M12.801 5.55124L3 5.55124M21 5.55124H18.48M3 18.5368H12.801M17.88 18.6C17.88 19.9255 16.8055 21 15.48 21C14.1545 21 13.08 19.9255 13.08 18.6C13.08 17.2745 14.1545 16.2 15.48 16.2C16.8055 16.2 17.88 17.2745 17.88 18.6ZM17.88 5.4C17.88 6.72548 16.8055 7.8 15.48 7.8C14.1545 7.8 13.08 6.72548 13.08 5.4C13.08 4.07452 14.1545 3 15.48 3C16.8055 3 17.88 4.07452 17.88 5.4Z" stroke="#363853" stroke-width="1.5" stroke-linecap="round"/>
                   </svg>
@@ -459,6 +515,26 @@
                       <button id="resize-canvas">resize</button>
                       <button id="clear-canvas">clear</button>
                     </div>
+                  </div>
+  
+                </div>
+              </div>
+
+              <hr>
+              <div>
+                <div class="icon-title-wrapper mb-4">
+                  <svg class="icon" width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18.48 18.5368H21M4.68 12L3 12.044M4.68 12C4.68 13.3255 5.75451 14.4 7.08 14.4C8.40548 14.4 9.48 13.3255 9.48 12C9.48 10.6745 8.40548 9.6 7.08 9.6C5.75451 9.6 4.68 10.6745 4.68 12ZM10.169 12.0441H21M12.801 5.55124L3 5.55124M21 5.55124H18.48M3 18.5368H12.801M17.88 18.6C17.88 19.9255 16.8055 21 15.48 21C14.1545 21 13.08 19.9255 13.08 18.6C13.08 17.2745 14.1545 16.2 15.48 16.2C16.8055 16.2 17.88 17.2745 17.88 18.6ZM17.88 5.4C17.88 6.72548 16.8055 7.8 15.48 7.8C14.1545 7.8 13.08 6.72548 13.08 5.4C13.08 4.07452 14.1545 3 15.48 3C16.8055 3 17.88 4.07452 17.88 5.4Z" stroke="#363853" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                  <strong id="about-section" class="action-button">about</strong>
+                </div>
+                <div id="about" class="about collapse">
+                  <div>
+                    <p>ASCII (American Standard Code for Information Interchange) is the most common character encoding format for text data in computers and on the internet. In standard ASCII-encoded data, there are unique values for 128 alphabetic, numeric or special additional characters and control codes.</p>
+                    <br>
+                    <a href="https://github.com/karnpapon">
+                      <p>GitHub</p>
+                    </a>
                   </div>
   
                 </div>
@@ -507,7 +583,7 @@
     }
 
     figlet.defaults({ fontPath: '/fonts' });
-    figlet.preloadFonts(["Standard", "Ghost"], () => {
+    figlet.preloadFonts(["Standard"], () => {
       console.log("FIGlet loaded!")
 
       const character = new Char();
@@ -518,15 +594,20 @@
       const clearBtn = document.getElementById("clear-canvas")
       const charListTitle = document.getElementById("charlist-title")
       const settingBtn = document.getElementById("setting")
+      const generatorSectionTitle = document.getElementById("generator-title")
       const settingSection = document.getElementById("setting-section")
+      const aboutSectionTitle = document.getElementById("about-section")
       const menu = document.getElementById("menu")
       const drawBtn = document.getElementById("draw")
       const downloadBtn = document.getElementById("download")
       const resetBtn = document.getElementById("reset")
       const form = document.getElementById("generator-form")
+      const about = document.getElementById("about")
 
       charListTitle.onclick = () => { chartable.classList.toggle("collapse") }
       settingBtn.onclick = () => { settingSection.classList.toggle("collapse") }
+      generatorSectionTitle.onclick = () => { form.classList.toggle("collapse") }
+      aboutSectionTitle.onclick = () => { about.classList.toggle("collapse") }
 
       resetBtn.onclick = (e) => {
         window.dispatchEvent(new Event('reset'))

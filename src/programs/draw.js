@@ -78,6 +78,14 @@ export function main(coord, context, cursor, buffer) {
   const { settings: { drawChar, mode }} = context
 	const x = Math.floor(cursor.x) 
 	const y = Math.floor(cursor.y) 
+
+  if (coord.x  == x && coord.y == y - 1 ) return ''
+  if (coord.x  == x && coord.y == y + 1 ) return ''
+  if (coord.y  == y && coord.x == x + 1 ) return ''
+  if (coord.y  == y && coord.x == x - 1 ) return ''
+  if (coord.x == x && coord.y == y) return drawChar.char
+	if (coord.x == x) return ':'
+	if (coord.y == y) return '·'
 	
   if(data[coord.index]) {
     const u = data[coord.index]
