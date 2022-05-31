@@ -34,9 +34,6 @@ let prevPos = []
 let cols, rows
 let fig = []
 
-
-// width = context.metrics.cellWidth * context.rows
-
 const textStyle = {
   x               : 0,
   y               : 2,
