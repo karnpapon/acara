@@ -1,6 +1,6 @@
-# `ascii-poster-generator`
+# `acara`
 
-an ascii poster generator / small sketch tool. easy to create custom, web-based design tools that export design assets right in your browser. written in plain javascript. heavily inspired by [mechanic.js](https://mechanic.design/#), [play.core](https://github.com/ertdfgcvb/play.core) and [noodle](https://github.com/hundredrabbits/Noodle) 
+acara (อักขระ (àk-kà-rà), means 'charactor' or 'letter' in Thai), an (a)scii (ca)nvas gene(ra)tor and small sketch tool. easy to create custom, web-based design tools that export design assets right in your browser. written in plain javascript. heavily inspired by [mechanic.js](https://mechanic.design/#), [play.core](https://github.com/ertdfgcvb/play.core) and [noodle](https://github.com/hundredrabbits/Noodle) 
 
 
 # features
