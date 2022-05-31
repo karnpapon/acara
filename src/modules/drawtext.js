@@ -7,19 +7,19 @@ A style object can be passed to override the default style:
 */
 
 const defaultTextBoxStyle = {
-	x               : 2,
+	x               : 1,
 	y               : 1,
-	width           : 0, // auto width
-	height          : 0, // auto height
-	paddingX        : 0, // text offset from the left border
-	paddingY        : 0, // text offset from the top border
+	width           : 0, 
+	height          : 0, 
+	paddingX        : 0, 
+	paddingY        : 0, 
 	backgroundColor : 'white',
 	color           : 'black',
 	fontWeight      : 'normal',
 	shadowStyle     : 'none',
 	borderStyle     : 'round',
-	shadowX         : 2, // horizontal shadow offset
-	shadowY         : 1, // vertical shadow offset
+	shadowX         : 1, 
+	shadowY         : 1, 
 }
 
 import { measure } from './string.js'

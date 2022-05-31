@@ -180,18 +180,34 @@
       box-sizing: border-box;
     }
 
-    .usage div {
+    .usage > div {
       margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+    }
+
+    .usage > div > span {
+      margin-right: 8px;
+    }
+
+    .usage > div > p {
+      background-color: gainsboro;
+      border-radius: 16px;
+      padding: 3px 15px;
+      margin-left: auto;
     }
 
     .usage strong {
       font-weight: bolder;
       background-color: white;
       padding: 4px;
+      padding-left: 10px;
+      padding-right: 10px;
       color: black;
       border-radius: 4px;
       margin-right: 0.5rem;
       text-decoration: none;
+      line-height: 20px;
     }
 
     .level2,
@@ -431,7 +447,10 @@
               <div><strong id="draw">d</strong><span>draw</span></div>
               <div><strong id="drawTextColor">t</strong><span>drawTextColor</span></div>
               <div><strong id="drawBg">b</strong><span>drawBg</span></div>
-              <div><strong id="cursorMode">c</strong><span>cursor</span></div>
+              <div>
+                <strong id="cursorMode">c</strong><span>cursor</span>
+                <p id="cursor-type">normal</p>
+              </div>
               <div><strong id="erase">e</strong><span>erase</span></div>
             </div>
             <hr>
@@ -461,7 +480,7 @@
                 <strong id="generator-title">generator</strong>
               </div>
 
-              <form id="generator-form" class="generator-form">
+              <form id="generator-form" class="generator-form collapse">
                 <label for="title">title</label><br>
                 <input type="text" id="title" name="title" value="Sonic Thread III"><br>
                 <label for="artists">Artists</label><br>
@@ -528,7 +547,7 @@
                   </svg>
                   <strong id="about-section" class="action-button">about</strong>
                 </div>
-                <div id="about" class="about collapse">
+                <div id="about" class="about">
                   <div>
                     <p>ASCII (American Standard Code for Information Interchange) is the most common character encoding format for text data in computers and on the internet. In standard ASCII-encoded data, there are unique values for 128 alphabetic, numeric or special additional characters and control codes.</p>
                     <br>

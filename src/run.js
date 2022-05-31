@@ -1,76 +1,28 @@
-import textRenderer from './core/textrenderer.js'
-import canvasRenderer from './core/canvasrenderer.js'
+// import textRenderer from './core/textrenderer.js'
+// import canvasRenderer from './core/canvasrenderer.js'
 import FPS from './core/fps.js'
 import storage from './core/storage.js'
-import { clamp } from './modules/num.js';
-import { borderStyles } from './modules/drawbox.js';
-import { allColors } from './modules/color.js';
-import { saveBlobAsFile } from './modules/filedownload.js'
-import { clear } from './programs/draw.js';
+import { listen } from './modules/events.js'
+import { getContext, calcMetrics } from "./modules/utils.js";
+import { renderers, defaultSettings, CSSStyles} from "./modules/setting.js";
 
-const renderers = {
-	'canvas' : canvasRenderer,
-	'text'   : textRenderer
-}
-
-const defaultSettings = {
-	element         : null,    // target element for output
-	cols            : 0,       // number of columns, 0 is equivalent to 'auto'
-	rows            : 0,       // number of columns, 0 is equivalent to 'auto'
-	once            : false,   // if set to true the renderer will run only once
-	fps             : 30,      // fps capping
-	renderer        : 'text',  // can be 'canvas', anything else falls back to 'text'
-	// allowSelect     : false,   // allows selection of the rendered element
-	restoreState    : false,   // will store the "state" object in local storage
-  drawChar        : { char: '#', hide: false }, // hide cursor when downloading.
-  mode            : 'draw',
-  figlet          : [""],      // ascii alphabets. 
-  generateData    : { },
-  generateBox  : { 
-    pos: { x: 12, y: 42 }, 
-    style: { 
-      borderStyle: 'single', 
-      color: 'black', 
-      backgroundColor: 'white' 
-    }
-  },
-  generateTextTitle  : { 
-    pos: { x: 0, y: 0 }, 
-    fontname: "Standard",
-    style: { 
-      borderStyle: 'none', 
-      color: 'black', 
-      backgroundColor: 'white' 
-    }
-  }
-}
-
-const CSSStyles = [
-	'backgroundColor',
-	'color',
-	'fontFamily',
-	'fontSize',
-	'fontWeight',
-	'letterSpacing',
-	'lineHeight',
-	'textAlign',
-]
-
-function pickKey(obj){
-  var keys = Object.keys(obj);
-  return keys[ keys.length * Math.random() << 0];
-}
 
 // lifecycle. 
-// boot()  
-// pre()  
-// main() *this function is required* 
-// post()
+// boot()  --> pre()  --> main() *this function is required* -> post()
 export function run(program, runSettings, userData = {}) {
 
 	return new Promise(function(resolve) {
     
 		const settings = {...JSON.parse(JSON.stringify(defaultSettings)), ...runSettings, ...program.settings}
+
+		const pointer = {
+			x        : 0,
+			y        : 0,
+			pressed  : false,
+			px       : 0,
+			py       : 0,
+			ppressed : false,
+		}
 
 		// for localStorage if settings.restoreState == true.
 		const state = {
@@ -112,168 +64,13 @@ export function run(program, runSettings, userData = {}) {
 			if (settings[s]) settings.element.style[s] = settings[s]
 		}
 
-		// Input pointer updated by DOM events
-		const pointer = {
-			x        : 0,
-			y        : 0,
-			pressed  : false,
-			px       : 0,
-			py       : 0,
-			ppressed : false,
-		}
+    let metrics = calcMetrics(settings.element)
 
-		settings.element.addEventListener('pointermove', e => {
-			const rect = settings.element.getBoundingClientRect()
-			pointer.x = e.clientX - rect.left
-			pointer.y = e.clientY - rect.top
-		})
-
-		settings.element.addEventListener('pointerdown', e => {
-			pointer.pressed = true
-		})
-
-		settings.element.addEventListener('pointerup', e => {
-			pointer.pressed = false
-		})
-
-    window.addEventListener('selectchar', e => {
-      settings.drawChar.char = e.detail
-    })
-
-    window.addEventListener('resize-canvas', e => {
-      const { w, h, fsize } = e.detail
-      settings.element.style.fontSize = fsize
-      settings.canvasSize = { width : w, height: h }
-      let m = calcMetrics(settings.element)
-      m._update(metrics)
-    })
-
-    window.addEventListener('clear-canvas', e => {
-      clear()
-      clearBuffer()
-      settings.generateData = []
-    })
-
-    window.addEventListener('generate', e => {
-      let metrics = calcMetrics(settings.element)
-      settings.generateData = e.detail
-      const rect = settings.element.getBoundingClientRect()
-      const cols = settings.cols || Math.floor(rect.width / metrics.cellWidth)
-      const rows = settings.rows || Math.floor(rect.height / metrics.lineHeight)
-
-      const x = Math.floor((Math.random() * cols)); 
-      const y = Math.floor((Math.random() * rows));
-      const pos =  { x: clamp(x, 0, 22) , y: clamp(y, 0, 48) }
-      settings.generateBox.pos = pos
-      settings.generateBox.style = {
-        borderStyle: pickKey(borderStyles),
-        color: allColors[Math.random() * allColors.length << 0].name, 
-        backgroundColor: allColors[Math.random() * allColors.length << 0].name
-      }
-
-      figlet(e.detail.title, settings.generateTextTitle.fontname, function(err, text) {
-        if (err) {
-          console.log('something went wrong...');
-          console.dir(err);
-          return;
-        }
-        settings.figlet = text
-      });
-
-      const x2 = Math.floor((Math.random() * cols)); 
-      const y2 = Math.floor((Math.random() * rows));
-      const pos2 =  { x: clamp(x2, 0, 2) , y: clamp(y2, 0, 48) }
-      settings.generateTextTitle.pos = pos2
-      settings.generateTextTitle.style = {
-        borderStyle: "none",
-        color: "black", 
-        backgroundColor: "white"
-      }
-    })
-
-    window.addEventListener('reset', e => {
-      settings.generateBox = JSON.parse(JSON.stringify(defaultSettings)).generateBox
-      settings.generateTextTitle = JSON.parse(JSON.stringify(defaultSettings)).generateTextTitle
-    })
-
-    window.addEventListener('download', e => {
-      const canvas = settings.element
-      canvas.toBlob( blob => saveBlobAsFile(blob, 'export.png'))
-    })
-
-    window.addEventListener('fontselect', e => {
-      settings.generateTextTitle.fontname = e.detail
-    })
-
-    document.addEventListener('keydown', e => {
-      if (e.key === 'e') { 
-        settings.mode = 'erase'
-        const el = document.getElementById("erase")
-        const el1 = document.getElementById("drawTextColor")
-        const el2 = document.getElementById("draw")
-        const el3 = document.getElementById("drawBg")
-        el1.removeAttribute("data-usage")
-        el2.removeAttribute("data-usage")
-        el3.removeAttribute("data-usage")
-        el.setAttribute("data-usage", "erase")
-      }
-
-      if (e.key === 'd') { 
-        settings.mode = 'draw'
-        const el = document.getElementById("draw")
-        const el1 = document.getElementById("drawTextColor")
-        const el2 = document.getElementById("erase")
-        const el3 = document.getElementById("drawBg")
-        el1.removeAttribute("data-usage")
-        el2.removeAttribute("data-usage")
-        el3.removeAttribute("data-usage")
-        el.setAttribute("data-usage", "draw")
-      } 
-
-      if (e.key === 'b') { 
-        settings.mode = 'drawBg'
-        const el = document.getElementById("drawBg")
-        const el2 = document.getElementById("erase")
-        const el3 = document.getElementById("draw")
-        const el1 = document.getElementById("drawTextColor")
-        el1.removeAttribute("data-usage")
-        el2.removeAttribute("data-usage")
-        el3.removeAttribute("data-usage")
-        el.setAttribute("data-usage", "drawBg")
-      } 
-
-      if (e.key === 't') { 
-        settings.mode = 'drawTextColor'
-        const el = document.getElementById("drawTextColor")
-        const el1 = document.getElementById("drawBg")
-        const el2 = document.getElementById("erase")
-        const el3 = document.getElementById("draw")
-        el1.removeAttribute("data-usage")
-        el2.removeAttribute("data-usage")
-        el3.removeAttribute("data-usage")
-        el.setAttribute("data-usage", "drawTextColor")
-      } 
-
-      if (e.key === 'c') { 
-        settings.mode = 'cursorMode'
-        const el = document.getElementById("cursorMode")
-        const el4 = document.getElementById("drawTextColor")
-        const el1 = document.getElementById("drawBg")
-        const el2 = document.getElementById("erase")
-        const el3 = document.getElementById("draw")
-        el1.removeAttribute("data-usage")
-        el2.removeAttribute("data-usage")
-        el3.removeAttribute("data-usage")
-        el4.removeAttribute("data-usage")
-        el.setAttribute("data-usage", "drawTextColor")
-      } 
-    })
+    // event listening
+    listen(settings, pointer, metrics)
 
 		// CSS fix
 		settings.element.style.fontStrech = 'normal'
-
-		// Text selection may be annoing in case of interactive programs
-		// if (!settings.allowSelect) disableSelect(settings.element)
 
     // kick in loop
 		document.fonts.ready.then((e) => {
@@ -288,7 +85,7 @@ export function run(program, runSettings, userData = {}) {
 		})
 
 		const fps = new FPS()
-		const EMPTY_CELL = ' '
+		const EMPTY_CELL = ''
 		const DEFAULT_CELL_STYLE = Object.freeze({
 			color           : settings.color,
 			backgroundColor : settings.backgroundColor,
@@ -296,16 +93,8 @@ export function run(program, runSettings, userData = {}) {
 		})
 
 		const buffer = []
-		let metrics
-
-    function clearBuffer(){
-      for (let i=0; i<buffer.length; i++) {
-        buffer[i] = {...DEFAULT_CELL_STYLE, char : EMPTY_CELL}
-      }
-    }
-    
+		
 		function boot() {
-			metrics = calcMetrics(settings.element)
 			const context = getContext(state, settings, metrics, fps)
 			if (typeof program.boot == 'function') {
 				program.boot(context, buffer, userData)
@@ -407,76 +196,4 @@ export function run(program, runSettings, userData = {}) {
 			resolve(context)
 		}
 	})
-}
-
-// -- Helpers ------------------------------------------------------------------
-
-// Build / update the 'context' object (immutable)
-function getContext(state, settings, metrics, fps) {
-	const rect = settings.element.getBoundingClientRect()
-	const cols = settings.cols || Math.floor(rect.width / metrics.cellWidth)
-	const rows = settings.rows || Math.floor(rect.height / metrics.lineHeight)
-	return Object.freeze({
-		frame : state.frame,
-		time : state.time,
-		cols,
-		rows,
-		metrics,
-		width : rect.width,
-		height : rect.height,
-		settings,
-		// Runtime & debug data
-		runtime : Object.freeze({
-			cycle : state.cycle,
-			fps : fps.fps
-		})
-	})
-}
-
-// Disables selection for an HTML element
-// function disableSelect(el) {
-// 	el.style.userSelect = 'none'
-// 	el.style.webkitUserSelect = 'none' // for Safari on mac and iOS
-// 	el.style.mozUserSelect = 'none'    // for mobile FF
-// 	el.dataset.selectionEnabled = 'false'
-// }
-
-export function calcMetrics(el) {
-
-	const style = getComputedStyle(el)
-	const fontFamily = style.getPropertyValue('font-family')
-	const fontSize   = parseFloat(style.getPropertyValue('font-size'))
-	// https://bugs.webkit.org/show_bug.cgi?id=225695
-	const lineHeight = parseFloat(style.getPropertyValue('line-height'))
-	let cellWidth
-
-	if (el.nodeName == 'CANVAS') {
-		const ctx = el.getContext('2d')
-		ctx.font = fontSize + 'px ' + fontFamily
-		cellWidth = ctx.measureText(''.padEnd(50, '╳')).width / 50
-	} else {
-		const span = document.createElement('span')
-		el.appendChild(span)
-		span.innerHTML = ''.padEnd(50, '╳')
-		cellWidth = span.getBoundingClientRect().width / 50
-		el.removeChild(span)
-	}
-
-	const metrics = {
-		aspect : cellWidth / lineHeight,
-		cellWidth,
-		lineHeight,
-		fontFamily,
-		fontSize,
-		// // allow an update of the metrics object.
-		_update : function(m) {
-			const tmp = calcMetrics(el)
-			for(var k in tmp) {
-				if (typeof tmp[k] == 'number' || typeof tmp[k] == 'string') {
-					m[k] = tmp[k]
-				}
-			}
-		}
-	}
-	return metrics
 }

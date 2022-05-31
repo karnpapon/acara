@@ -18,6 +18,17 @@ export const settings = {
   color : 'black'
 }
 
+export const boxStyle = {
+  x               : 12,
+  y               : 2,
+	width           : 44,
+	backgroundColor : 'white',
+	color           : 'black',
+	fontWeight      : 'normal',
+	shadowStyle     : 'none',
+	borderStyle     : 'round',
+}
+
 const data = []
 let buff = []
 let prevPos = []
@@ -37,6 +48,26 @@ const textStyle = {
 	borderStyle     : 'round', 
 }
 
+function hasWhiteSpace(c) {
+  return c === ' '
+      || c === ''
+      || c === '\n'
+      || c === '\t'
+      || c === '\r'
+      || c === '\f'
+      || c === '\v'
+      || c === '\u00a0'
+      || c === '\u1680'
+      || c === '\u2000'
+      || c === '\u200a'
+      || c === '\u2028'
+      || c === '\u2029'
+      || c === '\u202f'
+      || c === '\u205f'
+      || c === '\u3000'
+      || c === '\ufeff'
+}
+
 export function clear(){
   data.fill({char: '', backgroundColor: "white", color: "black"})
 }
@@ -44,18 +75,37 @@ export function clear(){
 export function pre(context, cursor, buffer) {
   const { settings: { drawChar, mode, generateTextTitle, figlet } } =  context
   const titleBoxStyle = {...textStyle, ...generateTextTitle.pos, ...generateTextTitle.style}
-  // const { settings: { drawChar, mode  }} = context
 
   // draw FIGlet font first (so the cursor can be positioned above)
-  if (figlet != fig) {
-    fig = figlet
-    buff.length = (69 * figlet.length)
-    for (let i=0; i<buff.length; i++) { buff[i] = data[i] } // fill temp buff avoid undefined
+  if (cols && figlet != fig) {
+    buff.length = (cols * figlet.length)
+
+    for (let i=0; i<buff.length; i++) { 
+      buff[i] = { char: "", color: "black", backgroundColor: "white"} 
+    } // fill temp buff avoid undefined
+
     drawTextBox(figlet, { ...titleBoxStyle, x:0, y:0 }, buff, cols, rows)
-    for (let x=0; x<buff.length; x++) { data[x + (titleBoxStyle.x + titleBoxStyle.y * cols)] = buff[x] } // push new FIGlet font pos
-    for (let i=0;i<prevPos.length;i++){ data[prevPos[i]] = {char: '', color: "black", backgroundColor: "white"} } // clear old position: ;
-    prevPos = []
-    for (let x=0; x<buff.length; x++) { prevPos.push(x + (titleBoxStyle.x + titleBoxStyle.y * 69)) } // then push new positions to array
+
+    if(prevPos.length > 0){
+      for (let i=0;i<prevPos.length;i++){ 
+        if (buff[i] && !hasWhiteSpace(buff[i].char) ) {
+          data[prevPos[i]] = {char: "", color: "black", backgroundColor: "white"} 
+        }
+      } // clear old position;
+      prevPos = []
+    }
+
+    for (let x=0; x<buff.length; x++) { 
+      if (buff[x] && buff[x].char !== " " ) {
+        data[x + (titleBoxStyle.x + titleBoxStyle.y * cols)] = buff[x] 
+      }
+    } // push new FIGlet font pos
+
+    for (let x=0; x<buff.length; x++) { 
+      prevPos.push(x + (titleBoxStyle.x + titleBoxStyle.y * cols)) 
+    } // then push new positions to array
+   
+    fig = figlet
   }
 
 	if (cols != context.cols || rows != context.rows) {
@@ -68,7 +118,7 @@ export function pre(context, cursor, buffer) {
     const x = Math.floor(cursor.x) 
     const y = Math.floor(cursor.y)
     if(data[x + y * cols]) {
-      const newChar = mode === "erase" ? {char: '', color: 'black', backgroundColor: 'white'} : { char: drawChar.char, color: mode === 'drawTextColor' ?  'red' : data[x + y * cols]["color"], backgroundColor: mode === 'drawBg' ? 'lightblue' : data[x + y * cols]["backgroundColor"] }
+      const newChar = mode.main === "erase" ? {char: '', color: 'black', backgroundColor: 'white'} : { char: drawChar.char, color: mode.main === 'drawTextColor' ?  'red' : data[x + y * cols]["color"], backgroundColor: mode.main === 'drawBg' ? 'lightblue' : data[x + y * cols]["backgroundColor"] }
       data[x + y * cols] = newChar      
     }
 	} 
@@ -79,14 +129,18 @@ export function main(coord, context, cursor, buffer) {
 	const x = Math.floor(cursor.x) 
 	const y = Math.floor(cursor.y) 
 
-  if (coord.x  == x && coord.y == y - 1 ) return ''
-  if (coord.x  == x && coord.y == y + 1 ) return ''
-  if (coord.y  == y && coord.x == x + 1 ) return ''
-  if (coord.y  == y && coord.x == x - 1 ) return ''
+  // cursor mode
+  if (coord.x == x && coord.y == y && mode.subcmd === "none") return ''
   if (coord.x == x && coord.y == y) return drawChar.char
-	if (coord.x == x) return ':'
-	if (coord.y == y) return '·'
-	
+  if(mode.subcmd === "guide") {
+    if (coord.x  == x && coord.y == y - 1 ) return ''
+    if (coord.x  == x && coord.y == y + 1 ) return ''
+    if (coord.y  == y && coord.x == x + 1 ) return ''
+    if (coord.y  == y && coord.x == x - 1 ) return ''
+    if (coord.x == x) return ':'
+    if (coord.y == y) return '·'
+  }
+
   if(data[coord.index]) {
     const u = data[coord.index]
   
@@ -101,6 +155,7 @@ export function main(coord, context, cursor, buffer) {
       }
       return { 
         char: '', 
+        color: 'black', 
         backgroundColor: 'white'
       }
     }
@@ -123,24 +178,10 @@ export function main(coord, context, cursor, buffer) {
 
 }
 
-export const boxStyle = {
-  x               : 12,
-  y               : 2,
-	width           : 44,
-	backgroundColor : 'white',
-	color           : 'black',
-	fontWeight      : 'normal',
-	shadowStyle     : 'none',
-	borderStyle     : 'round',
-}
-
-
-
 export function post(context, cursor, buffer) {
 
-  const { rows, cols, settings: { generateData, generateBox, generateTextTitle, figlet } } =  context
+  const { rows, cols, settings: { generateData, generateBox } } =  context
   const textBoxStyle = {...boxStyle, ...generateBox.pos, ...generateBox.style}
-  // const titleBoxStyle = {...textStyle, ...generateTextTitle.pos, ...generateTextTitle.style}
 
   // console.log("figlet", figlet)
   // drawInfo(context, cursor, buffer, {
@@ -156,8 +197,6 @@ export function post(context, cursor, buffer) {
     acc += curr + ' : ' + generateData[curr] + "\n" 
     return acc
   } , "")
-
-  // drawTextBox(figlet, titleBoxStyle, buffer, cols, rows)
 
   drawBox(txt, textBoxStyle, buffer, cols, rows)
 }
