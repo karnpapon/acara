@@ -10,9 +10,7 @@ let subCmdIndex = 0
 
 const cmdlist = {
   d: { main: "draw", subcmd: undefined},
-  t: { main: "drawTextColor", subcmd: undefined},
-  b: { main: "drawBg", subcmd: undefined},
-  c: { main: "cursorMode", subcmd: undefined},
+  c: { main: "cursorMode", subcmd: "guide"},
   e: { main: "erase", subcmd: undefined}
 }
 
@@ -24,14 +22,15 @@ function pickKey(obj){
 function setSubCmd(c, settings){
   if(c["main"] !== "cursorMode") { 
     const cursorType = document.getElementById("cursor-type")
-    cursorType.innerText = "normal"
+    cursorType.innerText = "guide"
+    settings.mode.main = c["main"]
+    settings.mode.subcmd = "guide"
     subCmdIndex = 0
-    settings.mode.subcmd = undefined
     return 
   } 
 
   const cursorType = document.getElementById("cursor-type")
-  const _subcmd = ["normal", "guide", "none" ]
+  const _subcmd = ["guide", "normal", "none" ]
   cursorType.innerText = _subcmd[subCmdIndex]
   settings.mode.subcmd = _subcmd[subCmdIndex]
   subCmdIndex = (subCmdIndex += 1) % _subcmd.length
@@ -44,7 +43,7 @@ function command(e, settings) {
 
   setSubCmd(c, settings)
 
-  settings.mode = c 
+  // settings.mode = c 
   const el = document.getElementById(c["main"])
   const rest = document.querySelector("[data-usage]")
   rest.removeAttribute("data-usage")
@@ -69,6 +68,14 @@ export function listen(settings, pointer, metrics) {
 
   window.addEventListener('selectchar', e => {
     settings.drawChar.char = e.detail
+  })
+
+  window.addEventListener('select-text-color', e => {
+    settings.color = e.detail.color
+  })
+
+  window.addEventListener('select-bg-color', e => {
+    settings.backgroundColor = e.detail.color
   })
 
   window.addEventListener('resize-canvas', e => {

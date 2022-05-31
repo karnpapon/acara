@@ -1,5 +1,3 @@
-// import textRenderer from './core/textrenderer.js'
-// import canvasRenderer from './core/canvasrenderer.js'
 import FPS from './core/fps.js'
 import storage from './core/storage.js'
 import { listen } from './modules/events.js'

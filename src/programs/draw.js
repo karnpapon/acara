@@ -1,6 +1,5 @@
-import { drawBox, drawInfo } from '/src/modules/drawbox.js'
+import { drawBox } from '/src/modules/drawbox.js'
 import { drawTextBox } from '/src/modules/drawtext.js'
-import { clamp } from '/src/modules/num.js';
 
 export const settings = { 
   fps : 30, 	
@@ -73,7 +72,7 @@ export function clear(){
 }
 
 export function pre(context, cursor, buffer) {
-  const { settings: { drawChar, mode, generateTextTitle, figlet } } =  context
+  const { settings: { drawChar, mode, generateTextTitle, figlet, color, backgroundColor } } =  context
   const titleBoxStyle = {...textStyle, ...generateTextTitle.pos, ...generateTextTitle.style}
 
   // draw FIGlet font first (so the cursor can be positioned above)
@@ -118,7 +117,7 @@ export function pre(context, cursor, buffer) {
     const x = Math.floor(cursor.x) 
     const y = Math.floor(cursor.y)
     if(data[x + y * cols]) {
-      const newChar = mode.main === "erase" ? {char: '', color: 'black', backgroundColor: 'white'} : { char: drawChar.char, color: mode.main === 'drawTextColor' ?  'red' : data[x + y * cols]["color"], backgroundColor: mode.main === 'drawBg' ? 'lightblue' : data[x + y * cols]["backgroundColor"] }
+      const newChar = mode.main === "erase" ? {char: '', color: 'black', backgroundColor: 'white'} : { char: drawChar.char, color, backgroundColor }
       data[x + y * cols] = newChar      
     }
 	} 

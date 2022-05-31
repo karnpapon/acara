@@ -39,7 +39,7 @@ function render(context, buffer) {
 	}
 
 	const ff = ' ' + m.fontSize + 'px ' + m.fontFamily
-	const bg = settings && settings.backgroundColor ? settings.backgroundColor : 'white'
+	const bg = settings && 'white'
 	const fg = settings && settings.color ? settings.color : 'black'
 	const fontWeight = settings && settings.fontWeight ? settings.color : '400'
 
