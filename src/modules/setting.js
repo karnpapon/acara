@@ -18,7 +18,7 @@ export const defaultSettings = {
   mode            : { main: "normal", subcmd: "guide", index: 0},
   figlet          : [""],      // ascii alphabets. 
   generateData    : { },
-  theme           : "light",
+  theme           : "white",
   generateBox  : { 
     pos: { x: 12, y: 42 }, 
     style: { 
@@ -50,11 +50,11 @@ export const CSSStyles = [
 ]
 
 export const themeStyle = {
-  light: { 
+  white: { 
     color: "black", 
     backgroundColor: "white", 
   },
-  dark: {
+  black: {
     backgroundColor : "black",
     color : "white"
   }  

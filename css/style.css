@@ -83,8 +83,10 @@ button:hover {
 }
 
 .hide {
-  display: none;
+  display: none !important;
 }
+
+.h-0 { height: 0; }
 
 .canvas-container {
   position: relative;
@@ -339,6 +341,11 @@ button:hover {
   flex-wrap: wrap;
   overflow: hidden;
   transition: 200ms;
+  margin-bottom: 10px;
+}
+
+.char-table-wrapper {
+  margin-left: 2rem;
 }
 
 .ready {
@@ -447,6 +454,12 @@ button:hover {
 
 .bg-color {
   background-color: #fff;
+}
+
+.current-char {
+  justify-content: center;
+  align-items: center;
+  display: flex;
 }
 
 .hidden {

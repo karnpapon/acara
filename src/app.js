@@ -41,9 +41,10 @@ export function start(){
   
     const output = document.getElementById("output");
     const chartable = document.getElementById("chars");
+    const currentChar = document.getElementById("current-char");
+    const currentCharBg = document.getElementById("current-char-status");
     const resizeBtn = document.getElementById("resize-canvas");
     const clearBtn = document.getElementById("clear-canvas");
-    const charListTitle = document.getElementById("charlist-title");
     const settingBtn = document.getElementById("setting");
     const generatorSectionTitle = document.getElementById("generator-title");
     const settingSection = document.getElementById("setting-section");
@@ -59,7 +60,7 @@ export function start(){
     const selectTextColorBtn = document.getElementById("text-color");
     const selectBgColorBtn = document.getElementById("bg-color");
   
-    charListTitle.onclick = () => {
+    currentCharBg.onclick = () => {
       chartable.classList.toggle("collapse");
     };
     settingBtn.onclick = () => {
@@ -83,6 +84,7 @@ export function start(){
       window.dispatchEvent(
         new CustomEvent("select-text-color", { detail: { color } })
       );
+      currentChar.style.color = color 
     });
   
     AColorPicker.from(pickerBgColor).on("change", (picker, color) => {
@@ -90,6 +92,7 @@ export function start(){
       window.dispatchEvent(
         new CustomEvent("select-bg-color", { detail: { color } })
       );
+      currentCharBg.style.backgroundColor = color 
     });
   
     resetBtn.onclick = (e) => {
@@ -140,6 +143,7 @@ export function start(){
           c.innerText = char;
           c.addEventListener("click", () => {
             character.selectChar(char);
+            currentChar.innerText = char
           });
           chartable.appendChild(c);
         });

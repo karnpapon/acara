@@ -11,7 +11,7 @@ const cmdlist = {
   c: { main: "cursorMode", subcmd: "guide", index: 0},
   g: { main: "grid", subcmd: "show", index: 0},
   e: { main: "erase", subcmd: undefined, index: 0},
-  t: { main: "theme", subcmd: "light", index: 0}
+  k: { main: "theme", subcmd: "white", index: 0}
 }
 
 function pickKey(obj){
@@ -51,7 +51,7 @@ function setSubCmd(c, settings){
     settings.backgroundColor = themeStyle[settings.theme].color
 
     const themeStatus = document.getElementById("theme-status")
-    const _subcmd = ["light", "dark" ]
+    const _subcmd = ["white", "black" ]
     settings.mode.index = (settings.mode.index += 1) % _subcmd.length
     const mode = _subcmd[settings.mode.index]
     themeStatus.innerText = mode
