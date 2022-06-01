@@ -86,6 +86,10 @@ button:hover {
   display: none;
 }
 
+.canvas-container {
+  position: relative;
+}
+
 /* -- main grid layout ---------------------------------------------- */
 
 .grid {
@@ -310,6 +314,20 @@ button:hover {
 
 .setting-size-input>div {
   margin-right: 4px;
+}
+
+.grid-overlay {
+  width: 500px;
+  height: 700px;
+  margin-top: 20px;
+  position: absolute;
+  pointer-events: none;
+  opacity: 0.5;
+  top: 0;
+  background-image:
+      repeating-linear-gradient(rgb(224, 224, 224) 0 1px, transparent 1px 100%),
+      repeating-linear-gradient(90deg, rgb(224, 224, 224) 0 1px, transparent 1px 100%);
+  background-size: 7.22px 12px;
 }
 
 /* ----------char table---------- */

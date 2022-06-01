@@ -15,7 +15,7 @@ export const defaultSettings = {
 	renderer        : "text",  // can be 'canvas', anything else falls back to 'text'
 	restoreState    : false,   // will store the "state" object in local storage
   drawChar        : { char: '#', hide: false }, // hide cursor when downloading.
-  mode            : { main: "normal", subcmd: "guide"},
+  mode            : { main: "normal", subcmd: "guide", index: 0},
   figlet          : [""],      // ascii alphabets. 
   generateData    : { },
   generateBox  : { 

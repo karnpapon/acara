@@ -125,23 +125,26 @@ export function main(coord, context, cursor, buffer) {
 	const x = Math.floor(cursor.x) 
 	const y = Math.floor(cursor.y) 
 
-  // cursor mode
-  if (coord.x == x && coord.y == y && mode.subcmd === "none") return ''
-  if (coord.x == x && coord.y == y) return drawChar.char
-  if(mode.subcmd === "guide") {
-    if (coord.x  == x && coord.y == y - 1 ) return ''
-    if (coord.x  == x && coord.y == y + 1 ) return ''
-    if (coord.y  == y && coord.x == x + 1 ) return ''
-    if (coord.y  == y && coord.x == x - 1 ) return ''
-    if (coord.x == x) return ':'
-    if (coord.y == y) return '·'
-  }
+  
 
   if(data[coord.index]) {
     const u = data[coord.index]
   
     // determine rendering empty cells (and when cursor is hovering these).
     if (u.char === '') { 
+
+      // cursor mode
+  if (coord.x == x && coord.y == y && mode.subcmd === "none") return ''
+  if (coord.x == x && coord.y == y) return { char: drawChar.char, color: 'black' }
+  if(mode.subcmd === "guide") {
+    // if (coord.x  == x && coord.y == y - 1 ) return ''
+    // if (coord.x  == x && coord.y == y + 1 ) return ''
+    // if (coord.y  == y && coord.x == x + 1 ) return ''
+    // if (coord.y  == y && coord.x == x - 1 ) return ''
+    if (coord.x == x) return { char: '·', color: 'gray' }
+    if (coord.y == y) return { char: '·', color: 'gray' }
+  }
+
       if (coord.x == x && coord.y == y) { 
         return { 
           char: drawChar.char, 
@@ -164,6 +167,7 @@ export function main(coord, context, cursor, buffer) {
         backgroundColor: 'white', 
       }
     }
+    
     // no-hovered non-empty cell rendering.
     return {
       char : u.char,

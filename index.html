@@ -45,6 +45,10 @@
                 <strong id="cursorMode">c</strong><span>cursor</span>
                 <p id="cursor-type">guide</p>
               </div>
+              <div>
+                <strong id="grid">g</strong><span>grid</span>
+                <p id="grid-status">show</p>
+              </div>
               <div><strong id="erase">e</strong><span>erase</span></div>
             </div>
             <hr>
@@ -69,7 +73,7 @@
                 </div>
                 <div>
                   <label for="artists">artists</label><br>
-                  <input type="text" id="artists" name="artists" value="CRSCRSCRS, Alex McLean, Kindohm"><br>
+                  <input type="text" id="artists" name="artists" value="CRSCRSCRS, JAAG, 624175"><br>
                 </div>
                 <div>
                   <label for="location">location</label><br>
@@ -140,7 +144,7 @@
                 </div>
                 <div id="about" class="about">
                   <span>
-                    <p><strong>acara</strong>, (อักขระ (àk-kà-rà)), an (a)scii (ca)nvas gene(ra)tor and small sketch tool. easy to create custom, web-based design tools that export design assets right in your browser. written in plain javascript.  </p>
+                    <p><strong>acara</strong>, (อักขระ (àk-kà-rà)), an (a)scii (ca)nvas gene(ra)tor and small sketch tool. easy to create custom design assets right in your browser. written in plain javascript.  </p>
                     <br>
                     <a href="https://github.com/karnpapon/acara">
                       <p>GitHub</p>
@@ -159,7 +163,12 @@
 
     </div>
     <!-- <pre id="output" class="cell2 output"></pre> -->
-    <canvas id="output" class="cell2 output"></canvas>
+    <div class="canvas-container">
+      <canvas id="output" class="cell2 output"></canvas>
+      <div class="grid-overlay">
+    </div>
+      
+    </div>
   </div>
 
   </div>

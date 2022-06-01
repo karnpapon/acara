@@ -27,23 +27,26 @@ export function calcMetrics(el) {
 	const fontSize   = parseFloat(style.getPropertyValue('font-size'))
 	// https://bugs.webkit.org/show_bug.cgi?id=225695
 	const lineHeight = parseFloat(style.getPropertyValue('line-height'))
-	let cellWidth
+	let cellWidth, cellHeight
 
 	if (el.nodeName == 'CANVAS') {
 		const ctx = el.getContext('2d')
 		ctx.font = fontSize + 'px ' + fontFamily
-		cellWidth = ctx.measureText(''.padEnd(50, '╳')).width / 50
+    const textMetric = ctx.measureText(''.padEnd(69, 'X')) //TODO: calc from settings.cols
+		cellWidth = textMetric.width / 69
+		cellHeight = textMetric.fontBoundingBoxAscent + textMetric.fontBoundingBoxDescent / 69
 	} else {
 		const span = document.createElement('span')
 		el.appendChild(span)
 		span.innerHTML = ''.padEnd(50, '╳')
-		cellWidth = span.getBoundingClientRect().width / 50
+		cellWidth = span.getBoundingClientRect().width / 69
 		el.removeChild(span)
 	}
 
 	const metrics = {
 		aspect : cellWidth / lineHeight,
 		cellWidth,
+		cellHeight,
 		lineHeight,
 		fontFamily,
 		fontSize,

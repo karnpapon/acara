@@ -6,12 +6,11 @@ import { clear } from "../programs/draw.js";
 import { defaultSettings } from "./setting.js";
 import { calcMetrics } from "./utils.js";
 
-let subCmdIndex = 0
-
 const cmdlist = {
-  d: { main: "draw", subcmd: undefined},
-  c: { main: "cursorMode", subcmd: "guide"},
-  e: { main: "erase", subcmd: undefined}
+  d: { main: "draw", subcmd: undefined, index: 0},
+  c: { main: "cursorMode", subcmd: "guide", index: 0},
+  g: { main: "grid", subcmd: "show", index: 0},
+  e: { main: "erase", subcmd: undefined, index: 0}
 }
 
 function pickKey(obj){
@@ -20,20 +19,27 @@ function pickKey(obj){
 }
 
 function setSubCmd(c, settings){
-  if(c["main"] !== "cursorMode") { 
+  if(c["main"] === "cursorMode") { 
     const cursorType = document.getElementById("cursor-type")
-    cursorType.innerText = "guide"
-    settings.mode.main = c["main"]
-    settings.mode.subcmd = "guide"
-    subCmdIndex = 0
+    const _subcmd = ["guide", "normal", "none" ]
+    settings.mode.index = (settings.mode.index += 1) % _subcmd.length
+    cursorType.innerText = _subcmd[settings.mode.index]
+    settings.mode.subcmd = _subcmd[settings.mode.index]
     return 
   } 
 
-  const cursorType = document.getElementById("cursor-type")
-  const _subcmd = ["guide", "normal", "none" ]
-  cursorType.innerText = _subcmd[subCmdIndex]
-  settings.mode.subcmd = _subcmd[subCmdIndex]
-  subCmdIndex = (subCmdIndex += 1) % _subcmd.length
+  if(c["main"] === "grid") { 
+    const gridStatus = document.getElementById("grid-status")
+    const gridElem = document.getElementsByClassName("grid-overlay")[0]
+    gridElem.classList.toggle("hide")
+    const _subcmd = ["show", "hide" ]
+    settings.mode.index = (settings.mode.index += 1) % _subcmd.length
+    gridStatus.innerText = _subcmd[settings.mode.index]
+    settings.mode.subcmd = _subcmd[settings.mode.index]
+    return 
+  } 
+
+  settings.mode.main = c["main"]
 }
 
 function command(e, settings) {
@@ -81,7 +87,11 @@ export function listen(settings, pointer, metrics) {
     settings.element.style.fontSize = fsize
     settings.canvasSize = { width : w, height: h }
     let m = calcMetrics(settings.element)
+    const gridEle = document.getElementsByClassName("grid-overlay")[0]
     m._update(metrics)
+    gridEle.style.width =`${w}px`
+    gridEle.style.height = `${h}px`
+    gridEle.style.backgroundSize = `${m.cellWidth}px ${m.cellHeight}px`
   })
 
   window.addEventListener('clear-canvas', e => {
