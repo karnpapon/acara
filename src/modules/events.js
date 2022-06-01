@@ -3,14 +3,15 @@ import { borderStyles } from "./drawbox.js";
 import { allColors } from "./color.js";
 import { saveBlobAsFile } from "./filedownload.js"
 import { clear } from "../programs/draw.js";
-import { defaultSettings } from "./setting.js";
+import { defaultSettings, themeStyle } from "./setting.js";
 import { calcMetrics } from "./utils.js";
 
 const cmdlist = {
   d: { main: "draw", subcmd: undefined, index: 0},
   c: { main: "cursorMode", subcmd: "guide", index: 0},
   g: { main: "grid", subcmd: "show", index: 0},
-  e: { main: "erase", subcmd: undefined, index: 0}
+  e: { main: "erase", subcmd: undefined, index: 0},
+  t: { main: "theme", subcmd: "light", index: 0}
 }
 
 function pickKey(obj){
@@ -34,8 +35,30 @@ function setSubCmd(c, settings){
     gridElem.classList.toggle("hide")
     const _subcmd = ["show", "hide" ]
     settings.mode.index = (settings.mode.index += 1) % _subcmd.length
-    gridStatus.innerText = _subcmd[settings.mode.index]
-    settings.mode.subcmd = _subcmd[settings.mode.index]
+    const mode = _subcmd[settings.mode.index]
+    gridStatus.innerText = mode
+    settings.mode.subcmd = mode
+    return 
+  } 
+
+  if(c["main"] === "theme") { 
+    const textColor = document.getElementById("text-color");
+    const bgColor = document.getElementById("bg-color");
+    textColor.style.backgroundColor = themeStyle[settings.theme].backgroundColor
+    bgColor.style.backgroundColor = themeStyle[settings.theme].color
+
+    settings.color = themeStyle[settings.theme].backgroundColor
+    settings.backgroundColor = themeStyle[settings.theme].color
+
+    const themeStatus = document.getElementById("theme-status")
+    const _subcmd = ["light", "dark" ]
+    settings.mode.index = (settings.mode.index += 1) % _subcmd.length
+    const mode = _subcmd[settings.mode.index]
+    themeStatus.innerText = mode
+    settings.mode.subcmd = mode
+    settings.theme = mode
+
+    
     return 
   } 
 

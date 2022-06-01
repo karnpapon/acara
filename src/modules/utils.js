@@ -38,7 +38,7 @@ export function calcMetrics(el) {
 	} else {
 		const span = document.createElement('span')
 		el.appendChild(span)
-		span.innerHTML = ''.padEnd(50, '╳')
+		span.innerHTML = ''.padEnd(69, '╳')
 		cellWidth = span.getBoundingClientRect().width / 69
 		el.removeChild(span)
 	}

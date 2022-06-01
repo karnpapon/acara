@@ -18,6 +18,7 @@ export const defaultSettings = {
   mode            : { main: "normal", subcmd: "guide", index: 0},
   figlet          : [""],      // ascii alphabets. 
   generateData    : { },
+  theme           : "light",
   generateBox  : { 
     pos: { x: 12, y: 42 }, 
     style: { 
@@ -47,3 +48,14 @@ export const CSSStyles = [
 	'lineHeight',
 	'textAlign',
 ]
+
+export const themeStyle = {
+  light: { 
+    color: "black", 
+    backgroundColor: "white", 
+  },
+  dark: {
+    backgroundColor : "black",
+    color : "white"
+  }  
+}

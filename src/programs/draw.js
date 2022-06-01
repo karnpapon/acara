@@ -1,5 +1,6 @@
 import { drawBox } from '/src/modules/drawbox.js'
 import { drawTextBox } from '/src/modules/drawtext.js'
+import { themeStyle } from "/src/modules/setting.js"
 
 export const settings = { 
   fps : 30, 	
@@ -121,41 +122,41 @@ export function pre(context, cursor, buffer) {
 }
 
 export function main(coord, context, cursor, buffer) {
-  const { settings: { drawChar, mode }} = context
+  const { settings: { drawChar, mode, theme }} = context
 	const x = Math.floor(cursor.x) 
 	const y = Math.floor(cursor.y) 
-
-  
 
   if(data[coord.index]) {
     const u = data[coord.index]
   
     // determine rendering empty cells (and when cursor is hovering these).
     if (u.char === '') { 
-
       // cursor mode
-  if (coord.x == x && coord.y == y && mode.subcmd === "none") return ''
-  if (coord.x == x && coord.y == y) return { char: drawChar.char, color: 'black' }
-  if(mode.subcmd === "guide") {
-    // if (coord.x  == x && coord.y == y - 1 ) return ''
-    // if (coord.x  == x && coord.y == y + 1 ) return ''
-    // if (coord.y  == y && coord.x == x + 1 ) return ''
-    // if (coord.y  == y && coord.x == x - 1 ) return ''
-    if (coord.x == x) return { char: '·', color: 'gray' }
-    if (coord.y == y) return { char: '·', color: 'gray' }
-  }
+      if (coord.x == x && coord.y == y && mode.subcmd === "none") return ''
+      if (coord.x == x && coord.y == y) return { 
+        char: drawChar.char, 
+        color: themeStyle[theme].color
+      }
+      if(mode.subcmd === "guide") {
+        if (coord.x  == x && coord.y == y - 1 ) return ''
+        if (coord.x  == x && coord.y == y + 1 ) return ''
+        if (coord.y  == y && coord.x == x + 1 ) return ''
+        if (coord.y  == y && coord.x == x - 1 ) return ''
+        if (coord.x == x) return { char: '·', color: 'gray' }
+        if (coord.y == y) return { char: '·', color: 'gray' }
+      }
 
       if (coord.x == x && coord.y == y) { 
         return { 
           char: drawChar.char, 
-          color: 'black', 
-          backgroundColor: 'white', 
+          color: themeStyle[theme].color,
+          backgroundColor: themeStyle[theme].backgroundColor,
         }
       }
       return { 
         char: '', 
-        color: 'black', 
-        backgroundColor: 'white'
+        color: themeStyle[theme].color,
+        backgroundColor: themeStyle[theme].backgroundColor,
       }
     }
   
@@ -163,8 +164,8 @@ export function main(coord, context, cursor, buffer) {
     if (coord.x == x && coord.y == y) { 
       return { 
         char: drawChar.char, 
-        color: 'black', 
-        backgroundColor: 'white', 
+        color: themeStyle[theme].color,
+        backgroundColor: themeStyle[theme].backgroundColor,
       }
     }
     
