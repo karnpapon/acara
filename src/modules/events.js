@@ -155,6 +155,7 @@ export function listen(settings, pointer, metrics) {
   })
 
   document.addEventListener('keydown', e => {
+    if (document.activeElement.tagName === "INPUT") return
     command(e, settings)
   })
 }
