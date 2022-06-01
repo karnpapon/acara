@@ -57,7 +57,6 @@ function setSubCmd(c, settings){
     themeStatus.innerText = mode
     settings.mode.subcmd = mode
     settings.theme = mode
-
     
     return 
   } 

@@ -135,15 +135,24 @@ export function main(coord, context, cursor, buffer) {
       if (coord.x == x && coord.y == y && mode.subcmd === "none") return ''
       if (coord.x == x && coord.y == y) return { 
         char: drawChar.char, 
-        color: themeStyle[theme].color
+        color: themeStyle[theme].color,
+        backgroundColor: themeStyle[theme].backgroundColor
       }
+
       if(mode.subcmd === "guide") {
-        if (coord.x  == x && coord.y == y - 1 ) return ''
-        if (coord.x  == x && coord.y == y + 1 ) return ''
-        if (coord.y  == y && coord.x == x + 1 ) return ''
-        if (coord.y  == y && coord.x == x - 1 ) return ''
-        if (coord.x == x) return { char: '·', color: 'gray' }
-        if (coord.y == y) return { char: '·', color: 'gray' }
+        if ( coord.x  == x && coord.y == y - 1 ||
+            coord.x  == x && coord.y == y + 1 ||
+            coord.y  == y && coord.x == x + 1 ||
+            coord.y  == y && coord.x == x - 1 
+          ) 
+          return { 
+            char: '', 
+            color: 'gray', 
+            backgroundColor: themeStyle[theme].backgroundColor 
+          }
+
+        if (coord.x == x) return { char: '·', color: 'gray', backgroundColor: themeStyle[theme].backgroundColor }
+        if (coord.y == y) return { char: '·', color: 'gray', backgroundColor: themeStyle[theme].backgroundColor }
       }
 
       if (coord.x == x && coord.y == y) { 
