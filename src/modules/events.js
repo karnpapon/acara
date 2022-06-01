@@ -11,7 +11,8 @@ const cmdlist = {
   c: { main: "cursorMode", subcmd: "guide", index: 0},
   g: { main: "grid", subcmd: "show", index: 0},
   e: { main: "erase", subcmd: undefined, index: 0},
-  k: { main: "theme", subcmd: "white", index: 0}
+  k: { main: "theme", subcmd: "white", index: 0},
+  j: { main: "generator", subcmd: undefined, index: 0}
 }
 
 function pickKey(obj){
@@ -61,10 +62,17 @@ function setSubCmd(c, settings){
     return 
   } 
 
+  if(c["main"] === "generator") { 
+    const form = document.getElementById("generator-form");
+    form.classList.toggle("collapse"); 
+    // return
+  }
+
   settings.mode.main = c["main"]
 }
 
 function command(e, settings) {
+
   const c = cmdlist[e.key]
 
   if(!c) return
