@@ -36,7 +36,7 @@ hr {
 
 canvas#output,
 pre#output {
-  font-family: 'JetBrainsMono Nerd Font Mono';
+  font-family: 'JetBrainsMono Nerd Font Mono', 'Noto Sans Thai';
   line-height: 1;
   position: absolute;
   left: 0;
@@ -173,7 +173,7 @@ button:hover {
   display: flex;
   flex-direction: column;
   font-weight: initial;
-  font-family: 'JetBrainsMono Nerd Font Mono';
+  font-family: 'JetBrainsMono Nerd Font Mono', 'Noto Sans Thai';
   font-size: 0.8rem;
   line-height: 1.5rem;
   padding: 2rem;
@@ -419,16 +419,15 @@ button:hover {
   margin-bottom: 1rem;
 }
 
-#generator-title,
 #setting,
 #about-section {
   cursor: pointer;
   user-select: none;
 }
 
-#generator-title:hover {
+/* #generator-title:hover {
   text-decoration: underline;
-}
+} */
 
 .fontname {
   margin-top: 0.25rem;

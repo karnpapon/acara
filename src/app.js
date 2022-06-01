@@ -46,7 +46,7 @@ export function start(){
     const resizeBtn = document.getElementById("resize-canvas");
     const clearBtn = document.getElementById("clear-canvas");
     const settingBtn = document.getElementById("setting");
-    const generatorSectionTitle = document.getElementById("generator-title");
+    // const generatorSectionTitle = document.getElementById("generator-title");
     const settingSection = document.getElementById("setting-section");
     const aboutSectionTitle = document.getElementById("about-section");
     const menu = document.getElementById("menu");
@@ -66,9 +66,9 @@ export function start(){
     settingBtn.onclick = () => {
       settingSection.classList.toggle("collapse");
     };
-    generatorSectionTitle.onclick = () => {
-      form.classList.toggle("collapse");
-    };
+    // generatorSectionTitle.onclick = () => {
+    //   form.classList.toggle("collapse");
+    // };
     aboutSectionTitle.onclick = () => {
       about.classList.toggle("collapse");
     };
