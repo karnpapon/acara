@@ -31,7 +31,7 @@
               </div>
               <div>
                 <strong class="hidden">x</strong>
-                <span>drawBg</span>
+                <span>bg-color</span>
                 <span id="bg-color" class="selected-color bg-color">
                   <span id="text-color" class="selected-color text-color">
                     <div id="picker-bg" class="picker hide" 
@@ -50,11 +50,7 @@
             <hr>
   
             <div class="icon-title-wrapper">
-              <svg class="icon" width="24px" height="24px" viewBox="0 0 24 24" role="img" xmlns="http://www.w3.org/2000/svg" aria-labelledby="gridLargeIconTitle" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" color="#000000"> 
-                <title id="gridLargeIconTitle">Large Grid</title> 
-                <rect width="7" height="7" x="3" y="3"/> <rect width="7" height="7" x="14" y="3"/>
-                <rect width="7" height="7" x="3" y="14"/> <rect width="7" height="7" x="14" y="14"/> 
-              </svg>
+              <svg class="icon" fill="#000000" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 16 16" width="16px" height="16px"><path d="M 7.5 1 C 3.917969 1 1 3.917969 1 7.5 C 1 11.082031 3.917969 14 7.5 14 C 11.082031 14 14 11.082031 14 7.5 C 14 3.917969 11.082031 1 7.5 1 Z M 7.5 2 C 10.542969 2 13 4.457031 13 7.5 C 13 10.542969 10.542969 13 7.5 13 C 4.457031 13 2 10.542969 2 7.5 C 2 4.457031 4.457031 2 7.5 2 Z"/></svg>
               <strong id="charlist-title" class=" action-button">characters</strong>
             </div>
             <div id="chars" class="char-table collapse"></div>
@@ -62,23 +58,36 @@
             <hr>
             <div>
               <div class="icon-title-wrapper">
-                <svg class="icon" width="24px" height="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M0 4.75C0 3.784.784 3 1.75 3h20.5c.966 0 1.75.784 1.75 1.75v14.5A1.75 1.75 0 0122.25 21H1.75A1.75 1.75 0 010 19.25V4.75zm1.75-.25a.25.25 0 00-.25.25v14.5c0 .138.112.25.25.25h20.5a.25.25 0 00.25-.25V4.75a.25.25 0 00-.25-.25H1.75z"/><path fill-rule="evenodd" d="M5 8.75A.75.75 0 015.75 8h11.5a.75.75 0 010 1.5H5.75A.75.75 0 015 8.75zm0 4a.75.75 0 01.75-.75h5.5a.75.75 0 010 1.5h-5.5a.75.75 0 01-.75-.75z"/></svg>
+                <svg class="icon" fill="#000000" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 16 16" width="16px" height="16px"><path d="M 1 2 L 1 3 L 14 3 L 14 2 Z M 1 7 L 1 8 L 14 8 L 14 7 Z M 1 12 L 1 13 L 14 13 L 14 12 Z"/></svg>
                 <strong id="generator-title">generator</strong>
               </div>
 
               <form id="generator-form" class="generator-form collapse">
-                <label for="title">title</label><br>
-                <input type="text" id="title" name="title" value="Sonic Thread III"><br>
-                <label for="artists">Artists</label><br>
-                <input type="text" id="artists" name="artists" value="CRSCRSCRS, Alex McLean, Kindohm"><br>
-                <label for="location">Location</label><br>
-                <input type="text" id="location" name="location" value="Tentacles Workshop"><br>
-                <label for="dates">Dates</label><br>
-                <input type="text" id="dates" name="dates" value="Sept 9 – Oct 30, 2021"><br>
-                <label for="times">Times</label><br>
-                <input type="text" id="times" name="times" value="17.00 ~ 19.00"><br>
-                <label for="notes">Notes</label><br>
-                <input type="text" id="notes" name="notes" value="Free Entry"><br>
+                <div>
+                  <label for="title">title</label><br>
+                  <input type="text" id="title" name="title" value="Sonic Thread III"><br>
+                </div>
+                <div>
+                  <label for="artists">artists</label><br>
+                  <input type="text" id="artists" name="artists" value="CRSCRSCRS, Alex McLean, Kindohm"><br>
+                </div>
+                <div>
+                  <label for="location">location</label><br>
+                  <input type="text" id="location" name="location" value="Tentacles Workshop"><br>
+                </div>
+                <div>
+                  <label for="dates">dates</label><br>
+                  <input type="text" id="dates" name="dates" value="Sept 9 – Oct 30, 2021"><br>
+                </div>
+                <div>
+                  <label for="times">times</label><br>
+                  <input type="text" id="times" name="times" value="17.00 ~ 19.00"><br>
+                </div>
+                <div>
+                  <label for="notes">notes</label><br>
+                  <input type="text" id="notes" name="notes" value="Free Entry"><br>
+                </div>
+               
                 <div class="fontname">
                   <div>fontname</div>
                   <select name="fontname" id="fontname"></select>
@@ -94,9 +103,7 @@
               <hr>
               <div>
                 <div class="icon-title-wrapper">
-                  <svg class="icon" width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M18.48 18.5368H21M4.68 12L3 12.044M4.68 12C4.68 13.3255 5.75451 14.4 7.08 14.4C8.40548 14.4 9.48 13.3255 9.48 12C9.48 10.6745 8.40548 9.6 7.08 9.6C5.75451 9.6 4.68 10.6745 4.68 12ZM10.169 12.0441H21M12.801 5.55124L3 5.55124M21 5.55124H18.48M3 18.5368H12.801M17.88 18.6C17.88 19.9255 16.8055 21 15.48 21C14.1545 21 13.08 19.9255 13.08 18.6C13.08 17.2745 14.1545 16.2 15.48 16.2C16.8055 16.2 17.88 17.2745 17.88 18.6ZM17.88 5.4C17.88 6.72548 16.8055 7.8 15.48 7.8C14.1545 7.8 13.08 6.72548 13.08 5.4C13.08 4.07452 14.1545 3 15.48 3C16.8055 3 17.88 4.07452 17.88 5.4Z" stroke="#363853" stroke-width="1.5" stroke-linecap="round"/>
-                  </svg>
+                  <svg class="icon" fill="#000000" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 16 16" width="16px" height="16px"><path d="M 6.5820312 1 L 6.3554688 2.25 C 5.417821 2.5577802 4.577385 3.0647074 3.90625 3.734375 L 2.6699219 3.2851562 L 1.2675781 5.8066406 L 2.2675781 6.6953125 C 2.1311901 7.0982196 2 7.5035144 2 8 C 2 8.5408639 2.089583 8.9738156 2.171875 9.4003906 L 1.1679688 10.292969 L 2.5800781 12.833984 L 3.921875 12.275391 C 4.5834176 12.930273 5.4158397 13.413911 6.3535156 13.658203 L 6.5761719 15 L 9.4179688 15 L 9.6425781 13.761719 C 10.587143 13.516483 11.425697 13.026459 12.089844 12.365234 L 13.330078 12.816406 L 14.732422 10.292969 L 13.734375 9.4082031 C 13.873117 8.9619087 14 8.5171703 14 8 C 14 7.4591361 13.910417 7.0261844 13.828125 6.5996094 L 14.832031 5.7070312 L 13.419922 3.1660156 L 12.078125 3.7246094 C 11.416582 3.0697267 10.58416 2.5860889 9.6464844 2.3417969 L 9.4238281 1 L 6.5820312 1 z M 7.4179688 2 L 8.5761719 2 L 8.7636719 3.1289062 L 9.1113281 3.1914062 C 10.09064 3.369463 10.996862 3.913266 11.623047 4.6289062 L 11.861328 4.9003906 L 12.980469 4.4335938 L 13.568359 5.4921875 L 12.753906 6.2167969 L 12.810547 6.4980469 C 12.910548 6.9980469 13 7.4555556 13 8 C 13 8.5444444 12.91498 8.9674232 12.736328 9.4140625 L 12.605469 9.7402344 L 13.46875 10.507812 L 12.869141 11.583984 L 11.849609 11.212891 L 11.623047 11.470703 C 10.996862 12.186343 10.09064 12.730146 9.1113281 12.908203 L 8.7695312 12.970703 L 8.5820312 14 L 7.4238281 14 L 7.2363281 12.871094 L 6.8886719 12.808594 C 5.9093599 12.630537 5.0031384 12.086734 4.3769531 11.371094 L 4.1386719 11.099609 L 3.0195312 11.566406 L 2.4316406 10.507812 L 3.2460938 9.7832031 L 3.1894531 9.5019531 C 3.0894531 9.0019531 3 8.5444444 3 8 C 3 7.4555556 3.0927682 7.0332135 3.2480469 6.7226562 L 3.4179688 6.3808594 L 2.53125 5.5917969 L 3.1308594 4.515625 L 4.1503906 4.8867188 L 4.3769531 4.6289062 C 5.0031384 3.9132659 5.9206957 3.3577436 6.9316406 3.0820312 L 7.2363281 3 L 7.4179688 2 z M 8 5 C 6.3380952 5 5 6.3380952 5 8 C 5 9.6619048 6.3380952 11 8 11 C 9.6619048 11 11 9.6619048 11 8 C 11 6.3380952 9.6619048 5 8 5 z M 8 6 C 9.1380952 6 10 6.8619048 10 8 C 10 9.1380952 9.1380952 10 8 10 C 6.8619048 10 6 9.1380952 6 8 C 6 6.8619048 6.8619048 6 8 6 z"/></svg>
                   <strong id="setting" class="action-button">setting</strong>
                 </div>
                 <div id="setting-section" class="setting collapse">
@@ -128,42 +135,12 @@
               <hr>
               <div>
                 <div class="icon-title-wrapper mb-4">
-                  <svg
-                    class="icon"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M6 6C6 5.44772 6.44772 5 7 5H17C17.5523 5 18 5.44772 18 6C18 6.55228 17.5523 7 17 7H7C6.44771 7 6 6.55228 6 6Z"
-                      fill="currentColor"
-                    />
-                    <path
-                      d="M6 10C6 9.44771 6.44772 9 7 9H17C17.5523 9 18 9.44771 18 10C18 10.5523 17.5523 11 17 11H7C6.44771 11 6 10.5523 6 10Z"
-                      fill="currentColor"
-                    />
-                    <path
-                      d="M7 13C6.44772 13 6 13.4477 6 14C6 14.5523 6.44771 15 7 15H17C17.5523 15 18 14.5523 18 14C18 13.4477 17.5523 13 17 13H7Z"
-                      fill="currentColor"
-                    />
-                    <path
-                      d="M6 18C6 17.4477 6.44772 17 7 17H11C11.5523 17 12 17.4477 12 18C12 18.5523 11.5523 19 11 19H7C6.44772 19 6 18.5523 6 18Z"
-                      fill="currentColor"
-                    />
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M2 4C2 2.34315 3.34315 1 5 1H19C20.6569 1 22 2.34315 22 4V20C22 21.6569 20.6569 23 19 23H5C3.34315 23 2 21.6569 2 20V4ZM5 3H19C19.5523 3 20 3.44771 20 4V20C20 20.5523 19.5523 21 19 21H5C4.44772 21 4 20.5523 4 20V4C4 3.44772 4.44771 3 5 3Z"
-                      fill="currentColor"
-                    />
-                  </svg>
+                  <svg class="icon" fill="#000000" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 16 16" width="16px" height="16px"><path d="M 2.5 2 C 1.675781 2 1 2.675781 1 3.5 L 1 11.5 C 1 12.324219 1.675781 13 2.5 13 L 4 13 L 4 15.433594 L 7.652344 13 L 12.5 13 C 13.324219 13 14 12.324219 14 11.5 L 14 3.5 C 14 2.675781 13.324219 2 12.5 2 Z M 2.5 3 L 12.5 3 C 12.78125 3 13 3.21875 13 3.5 L 13 11.5 C 13 11.78125 12.78125 12 12.5 12 L 7.347656 12 L 5 13.566406 L 5 12 L 2.5 12 C 2.21875 12 2 11.78125 2 11.5 L 2 3.5 C 2 3.21875 2.21875 3 2.5 3 Z M 7 4 L 7 5 L 8 5 L 8 4 Z M 7 6 L 7 11 L 8 11 L 8 6 Z"/></svg>
                   <strong id="about-section" class="action-button">about</strong>
                 </div>
                 <div id="about" class="about">
                   <span>
-                    <p><strong>acara</strong>, an (a)scii (ca)nvas gene(ra)tor and small sketch tool. easy to create custom, web-based design tools that export design assets right in your browser. written in plain javascript.  </p>
+                    <p><strong>acara</strong>, (อักขระ (àk-kà-rà)), an (a)scii (ca)nvas gene(ra)tor and small sketch tool. easy to create custom, web-based design tools that export design assets right in your browser. written in plain javascript.  </p>
                     <br>
                     <a href="https://github.com/karnpapon/acara">
                       <p>GitHub</p>

@@ -42,8 +42,6 @@ function command(e, settings) {
   if(!c) return
 
   setSubCmd(c, settings)
-
-  // settings.mode = c 
   const el = document.getElementById(c["main"])
   const rest = document.querySelector("[data-usage]")
   rest.removeAttribute("data-usage")
@@ -135,6 +133,10 @@ export function listen(settings, pointer, metrics) {
 
   window.addEventListener('download', e => {
     const canvas = settings.element
+    // const w = (settings.canvasSize.width * 2).toString() + 'px';
+    // const h = (settings.canvasSize.height * 2).toString() + 'px';
+    // canvas.style.width = w
+    // canvas.style.height = h
     canvas.toBlob( blob => saveBlobAsFile(blob, 'export.png'))
   })
 
