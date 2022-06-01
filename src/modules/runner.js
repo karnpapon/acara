@@ -1,8 +1,8 @@
-import FPS from './core/fps.js'
-import storage from './core/storage.js'
-import { listen } from './modules/events.js'
-import { getContext, calcMetrics } from "./modules/utils.js";
-import { renderers, defaultSettings, CSSStyles} from "./modules/setting.js";
+import FPS from '../core/fps.js'
+import storage from '../core/storage.js'
+import { listen } from './events.js'
+import { getContext, calcMetrics } from "./utils.js";
+import { renderers, defaultSettings, CSSStyles} from "./setting.js";
 
 
 // lifecycle. 
