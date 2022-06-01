@@ -8,3 +8,5 @@
 - horizontal/vertical lock (for drawing straight line)
 - ruler mode
 - fill bg mode.
+
+- update current-char-badge when canvas-fill is changes.
