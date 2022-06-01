@@ -6,6 +6,12 @@ export const renderers = {
 	'text'   : textRenderer
 }
 
+const optionsDefault = {
+  cursorMode: { status: "guide", index: 0, target: "cursor-type"},
+  grid: { status: "show", index: 0, target: "grid-status"},
+  canvas: { status: "white", index: 0, target: "canvas-fill-status"},
+}
+
 export const defaultSettings = {
 	element         : null,    // target element for output
 	cols            : 0,       // number of columns, 0 is equivalent to 'auto'
@@ -15,10 +21,10 @@ export const defaultSettings = {
 	renderer        : "text",  // can be 'canvas', anything else falls back to 'text'
 	restoreState    : false,   // will store the "state" object in local storage
   drawChar        : { char: '#', hide: false }, // hide cursor when downloading.
-  mode            : { main: "normal", subcmd: "guide", index: 0},
+  mode            : { cmd: "normal", options: optionsDefault},
   figlet          : [""],      // ascii alphabets. 
   generateData    : { },
-  theme           : "white",
+  canvasFill      : "white",
   generateBox  : { 
     pos: { x: 12, y: 42 }, 
     style: { 
@@ -49,7 +55,7 @@ export const CSSStyles = [
 	'textAlign',
 ]
 
-export const themeStyle = {
+export const canvasFillStyle = {
   white: { 
     color: "black", 
     backgroundColor: "white", 

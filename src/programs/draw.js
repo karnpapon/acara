@@ -1,6 +1,6 @@
 import { drawBox } from '/src/modules/drawbox.js'
 import { drawTextBox } from '/src/modules/drawtext.js'
-import { themeStyle } from "/src/modules/setting.js"
+import { canvasFillStyle } from "/src/modules/setting.js"
 
 export const settings = { 
   fps : 30, 	
@@ -115,14 +115,14 @@ export function pre(context, cursor, buffer) {
     const x = Math.floor(cursor.x) 
     const y = Math.floor(cursor.y)
     if(data[x + y * cols]) {
-      const newChar = mode.main === "erase" ? {char: '', color: 'black', backgroundColor: 'white'} : { char: drawChar.char, color, backgroundColor }
+      const newChar = mode.cmd === "erase" ? {char: '', color: 'black', backgroundColor: 'white'} : { char: drawChar.char, color, backgroundColor }
       data[x + y * cols] = newChar      
     }
 	} 
 }
 
 export function main(coord, context, cursor, buffer) {
-  const { settings: { drawChar, mode, theme }} = context
+  const { settings: { drawChar, mode, canvasFill }} = context
 	const x = Math.floor(cursor.x) 
 	const y = Math.floor(cursor.y) 
 
@@ -132,14 +132,14 @@ export function main(coord, context, cursor, buffer) {
     // determine rendering empty cells (and when cursor is hovering these).
     if (u.char === '') { 
       // cursor mode
-      if (coord.x == x && coord.y == y && mode.subcmd === "none") return ''
+      if (coord.x == x && coord.y == y && mode.options.cursorMode.status === "none") return ''
       if (coord.x == x && coord.y == y) return { 
         char: drawChar.char, 
-        color: themeStyle[theme].color,
-        backgroundColor: themeStyle[theme].backgroundColor
+        color: canvasFillStyle[canvasFill].color,
+        backgroundColor: canvasFillStyle[canvasFill].backgroundColor
       }
 
-      if(mode.subcmd === "guide") {
+      if(mode.options.cursorMode.status === "guide") {
         if ( coord.x  == x && coord.y == y - 1 ||
             coord.x  == x && coord.y == y + 1 ||
             coord.y  == y && coord.x == x + 1 ||
@@ -148,24 +148,24 @@ export function main(coord, context, cursor, buffer) {
           return { 
             char: '', 
             color: 'gray', 
-            backgroundColor: themeStyle[theme].backgroundColor 
+            backgroundColor: canvasFillStyle[canvasFill].backgroundColor 
           }
 
-        if (coord.x == x) return { char: '·', color: 'gray', backgroundColor: themeStyle[theme].backgroundColor }
-        if (coord.y == y) return { char: '·', color: 'gray', backgroundColor: themeStyle[theme].backgroundColor }
+        if (coord.x == x) return { char: '·', color: 'gray', backgroundColor: canvasFillStyle[canvasFill].backgroundColor }
+        if (coord.y == y) return { char: '·', color: 'gray', backgroundColor: canvasFillStyle[canvasFill].backgroundColor }
       }
 
       if (coord.x == x && coord.y == y) { 
         return { 
           char: drawChar.char, 
-          color: themeStyle[theme].color,
-          backgroundColor: themeStyle[theme].backgroundColor,
+          color: canvasFillStyle[canvasFill].color,
+          backgroundColor: canvasFillStyle[canvasFill].backgroundColor,
         }
       }
       return { 
         char: '', 
-        color: themeStyle[theme].color,
-        backgroundColor: themeStyle[theme].backgroundColor,
+        color: canvasFillStyle[canvasFill].color,
+        backgroundColor: canvasFillStyle[canvasFill].backgroundColor,
       }
     }
   
@@ -173,8 +173,8 @@ export function main(coord, context, cursor, buffer) {
     if (coord.x == x && coord.y == y) { 
       return { 
         char: drawChar.char, 
-        color: themeStyle[theme].color,
-        backgroundColor: themeStyle[theme].backgroundColor,
+        color: canvasFillStyle[canvasFill].color,
+        backgroundColor: canvasFillStyle[canvasFill].backgroundColor,
       }
     }
     

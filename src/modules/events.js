@@ -3,16 +3,16 @@ import { borderStyles } from "./drawbox.js";
 import { allColors } from "./color.js";
 import { saveBlobAsFile } from "./filedownload.js"
 import { clear } from "../programs/draw.js";
-import { defaultSettings, themeStyle } from "./setting.js";
+import { defaultSettings, canvasFillStyle } from "./setting.js";
 import { calcMetrics } from "./utils.js";
 
 const cmdlist = {
-  d: { main: "draw", subcmd: undefined, index: 0},
-  c: { main: "cursorMode", subcmd: "guide", index: 0},
-  g: { main: "grid", subcmd: "show", index: 0},
-  e: { main: "erase", subcmd: undefined, index: 0},
-  k: { main: "theme", subcmd: "white", index: 0},
-  j: { main: "generator", subcmd: undefined, index: 0}
+  d: { cmd: "draw", options: undefined, index: 0, target: undefined},
+  c: { cmd: "cursorMode", options: ["guide", "normal", "none" ], index: 0, target: "cursor-type"},
+  g: { cmd: "grid", options: ["show", "hide" ], index: 0, target: "grid-status"},
+  e: { cmd: "erase", options: undefined, index: 0, target: undefined},
+  k: { cmd: "canvas", options: ["white", "black" ], index: 0, target: "canvas-fill-status"},
+  j: { cmd: "generator", options: undefined, index: 0, target: undefined}
 }
 
 function pickKey(obj){
@@ -20,68 +20,48 @@ function pickKey(obj){
   return keys[ keys.length * Math.random() << 0];
 }
 
-function setSubCmd(c, settings){
-  if(c["main"] === "cursorMode") { 
-    const cursorType = document.getElementById("cursor-type")
-    const _subcmd = ["guide", "normal", "none" ]
-    settings.mode.index = (settings.mode.index += 1) % _subcmd.length
-    cursorType.innerText = _subcmd[settings.mode.index]
-    settings.mode.subcmd = _subcmd[settings.mode.index]
-    return 
-  } 
+function setoptions(c, settings){
+  const option = c.options[settings.mode.options[c["cmd"]].index]
+  settings.mode.options[c["cmd"]].index = (settings.mode.options[c["cmd"]].index += 1) % c.options.length
+  settings.mode.options[c["cmd"]].status = option
 
-  if(c["main"] === "grid") { 
-    const gridStatus = document.getElementById("grid-status")
+  const optionBadge = document.getElementById(c.target)
+  optionBadge.innerText = option
+
+  if(c["cmd"] === "grid") { 
     const gridElem = document.getElementsByClassName("grid-overlay")[0]
     gridElem.classList.toggle("hide")
-    const _subcmd = ["show", "hide" ]
-    settings.mode.index = (settings.mode.index += 1) % _subcmd.length
-    const mode = _subcmd[settings.mode.index]
-    gridStatus.innerText = mode
-    settings.mode.subcmd = mode
-    return 
   } 
 
-  if(c["main"] === "theme") { 
+  if(c["cmd"] === "canvas") { 
     const textColor = document.getElementById("text-color");
     const bgColor = document.getElementById("bg-color");
-    textColor.style.backgroundColor = themeStyle[settings.theme].backgroundColor
-    bgColor.style.backgroundColor = themeStyle[settings.theme].color
-
-    settings.color = themeStyle[settings.theme].backgroundColor
-    settings.backgroundColor = themeStyle[settings.theme].color
-
-    const themeStatus = document.getElementById("theme-status")
-    const _subcmd = ["white", "black" ]
-    settings.mode.index = (settings.mode.index += 1) % _subcmd.length
-    const mode = _subcmd[settings.mode.index]
-    themeStatus.innerText = mode
-    settings.mode.subcmd = mode
-    settings.theme = mode
-    
-    return 
-  } 
-
-  if(c["main"] === "generator") { 
-    const form = document.getElementById("generator-form");
-    form.classList.toggle("collapse"); 
-    // return
-  }
-
-  settings.mode.main = c["main"]
+    textColor.style.backgroundColor = canvasFillStyle[settings.canvasFill].backgroundColor
+    bgColor.style.backgroundColor = canvasFillStyle[settings.canvasFill].color
+    settings.color = canvasFillStyle[settings.canvasFill].backgroundColor
+    settings.backgroundColor = canvasFillStyle[settings.canvasFill].color
+    settings.canvasFill = option
+  }  
 }
 
 function command(e, settings) {
-
   const c = cmdlist[e.key]
-
   if(!c) return
+  if(c.target) { 
+    setoptions(c, settings) 
+  } else {
+    settings.mode.cmd = c["cmd"]
 
-  setSubCmd(c, settings)
-  const el = document.getElementById(c["main"])
+    if(c["cmd"] === "generator") { 
+      const form = document.getElementById("generator-form");
+      form.classList.toggle("collapse"); 
+    }
+  }
+  
+  const el = document.getElementById(c["cmd"])
   const rest = document.querySelector("[data-usage]")
   rest.removeAttribute("data-usage")
-  el.setAttribute("data-usage", c["main"])
+  el.setAttribute("data-usage", c["cmd"])
 }
 
 export function listen(settings, pointer, metrics) {
