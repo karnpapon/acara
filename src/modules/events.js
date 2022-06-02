@@ -7,12 +7,12 @@ import { defaultSettings, canvasFillStyle } from "./setting.js";
 import { calcMetrics } from "./utils.js";
 
 const cmdlist = {
-  d: { cmd: "draw", options: undefined, index: 0, target: undefined},
-  c: { cmd: "cursorMode", options: ["guide", "normal", "none" ], index: 0, target: "cursor-type"},
-  g: { cmd: "grid", options: ["show", "hide" ], index: 0, target: "grid-status"},
-  e: { cmd: "erase", options: undefined, index: 0, target: undefined},
-  k: { cmd: "canvas", options: ["white", "black" ], index: 0, target: "canvas-fill-status"},
-  j: { cmd: "generator", options: undefined, index: 0, target: undefined}
+  d: { cmd: "draw", options: undefined, target: undefined},
+  c: { cmd: "cursorMode", options: ["guide", "normal", "none" ], target: "cursor-type"},
+  g: { cmd: "grid", options: ["show", "hide" ], target: "grid-status"},
+  e: { cmd: "erase", options: undefined, target: undefined},
+  k: { cmd: "canvas", options: ["white", "black" ], target: "canvas-fill-status"},
+  j: { cmd: "generator", options: undefined, target: undefined}
 }
 
 function pickKey(obj){
@@ -36,11 +36,19 @@ function setoptions(c, settings){
   if(c["cmd"] === "canvas") { 
     const textColor = document.getElementById("text-color");
     const bgColor = document.getElementById("bg-color");
+
+    const currentChar = document.getElementById("current-char");
+    const currentCharBg = document.getElementById("current-char-status");
+
     textColor.style.backgroundColor = canvasFillStyle[settings.canvasFill].backgroundColor
     bgColor.style.backgroundColor = canvasFillStyle[settings.canvasFill].color
+    
     settings.color = canvasFillStyle[settings.canvasFill].backgroundColor
     settings.backgroundColor = canvasFillStyle[settings.canvasFill].color
     settings.canvasFill = option
+
+    currentChar.style.color = canvasFillStyle[settings.canvasFill].color 
+    currentCharBg.style.backgroundColor = canvasFillStyle[settings.canvasFill].backgroundColor; 
   }  
 }
 
