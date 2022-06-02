@@ -35,6 +35,7 @@ hr {
 }
 
 canvas#output,
+canvas#pattern-canvas,
 pre#output {
   font-family: 'JetBrainsMono Nerd Font Mono', 'Noto Sans Thai';
   line-height: 1;
@@ -87,6 +88,7 @@ button:hover {
 }
 
 .h-0 { height: 0; }
+.flex-col { flex-direction: column;}
 
 .canvas-container {
   position: relative;
@@ -130,6 +132,7 @@ button:hover {
 
 .grid.two {
   grid-template-columns: 1fr 1fr;
+  grid-gap: 12px;
 }
 
 .grid.two .cell3 {
@@ -137,7 +140,40 @@ button:hover {
 }
 
 .grid.three {
-  grid-template-columns: 1fr 3fr auto;
+  grid-template-columns: 3fr 3fr 3fr;
+}
+
+.grid.layout {
+  grid-template-columns: 1fr 3fr auto; 
+}
+
+.w-1_2 > div > input {
+  width: 50%;
+}
+
+.pattern-option > select{
+  width: 100%;
+}
+
+.pattern-grid-wrapper { position: relative;}
+
+.grid-overlay {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0.5;
+  margin-top: 20px;
+  top: 0;
+  background-image:
+      repeating-linear-gradient(rgb(224, 224, 224) 0 1px, transparent 1px 100%),
+      repeating-linear-gradient(90deg, rgb(224, 224, 224) 0 1px, transparent 1px 100%);
+  background-size: 7.22px 12px;
+}
+
+.grid-pattern-width {
+  width: 200px;
+  height: 200px;
+  background-size: 19.42px 32px;
+  margin-left: 3px;
 }
 
 /* -- menu ---------------------------------------------------------- */
@@ -250,6 +286,20 @@ button:hover {
   text-decoration: underline;
 }
 
+/* --------------pattern---------- */
+
+.pattern-form {
+  width: 100%;
+  padding-bottom: 16rem;
+  height: 0;
+  display: flex;
+  flex-wrap: wrap;
+  overflow: hidden;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  transition: 200ms;
+}
+
 /* -------------- form ---------- */
 .generator-form {
   width: 100%;
@@ -318,18 +368,9 @@ button:hover {
   margin-right: 4px;
 }
 
-.grid-overlay {
+.grid-canvas-width {
   width: 500px;
   height: 700px;
-  margin-top: 20px;
-  position: absolute;
-  pointer-events: none;
-  opacity: 0.5;
-  top: 0;
-  background-image:
-      repeating-linear-gradient(rgb(224, 224, 224) 0 1px, transparent 1px 100%),
-      repeating-linear-gradient(90deg, rgb(224, 224, 224) 0 1px, transparent 1px 100%);
-  background-size: 7.22px 12px;
 }
 
 /* ----------char table---------- */

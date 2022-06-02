@@ -13,7 +13,7 @@
 </head>
 
 <body>
-  <div class="grid three">
+  <div class="grid layout">
     <div id="menu" class="cell1 menu">
       <div class="menu-flex-overflow-wrapper">
         <div class="menu-overflow-scroll-wrapper">
@@ -69,7 +69,47 @@
                 <p id="canvas-fill-status">white</p>
               </div>
               <div><strong id="erase">e</strong><span>erase</span></div>
+
+              <div class="flex-col">
+                <div class="icon-title-wrapper">
+                  <strong id="pattern" class="">p</strong>
+                  <span class="">pattern</span>
+                </div>
+  
+                <form id="pattern-form" class="pattern-form collapse">
+                  <!-- <div class="grid two">
+                    <div class="pattern-option">
+                      <div>col</div>
+                      <select name="col-num" id="col-num">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                      </select>
+                    </div>
+                    <div class="pattern-option">
+                      <div>row</div>
+                      <select name="col-num" id="col-num">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                      </select>
+                    </div>
+                  </div> -->
+
+                  <!-- <div class="pattern-grid-wrapper"> </div> -->
+                  <div class="canvas-container">
+                    <canvas id="pattern-canvas" class="pattern-grid"></canvas>
+                    <div class="grid-overlay grid-pattern-width"></div>
+                  </div>
+                </form>
+              </div>
+
             </div>
+
+
+
             <!-- <hr> -->
             <div>
               <div class="usage icon-title-wrapper">
@@ -176,7 +216,7 @@
     <!-- <pre id="output" class="cell2 output"></pre> -->
     <div class="canvas-container">
       <canvas id="output" class="cell2 output"></canvas>
-      <div class="grid-overlay">
+      <div class="grid-overlay grid-canvas-width">
     </div>
       
     </div>

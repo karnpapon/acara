@@ -5,6 +5,7 @@ import { canvasFillStyle } from "/src/modules/setting.js"
 export const settings = { 
   fps : 30, 	
   renderer : 'canvas',
+  listenKeyPress: true,
   canvasOffset : {
     x : 'auto',
     y : 'auto'
@@ -70,7 +71,7 @@ export function clear(){
 }
 
 export function pre(context, cursor, buffer) {
-  const { settings: { drawChar, mode, generateTextTitle, figlet, color, backgroundColor } } =  context
+  const { settings: { cursorBrush, mode, generateTextTitle, figlet, color, backgroundColor } } =  context
   const titleBoxStyle = {...textStyle, ...generateTextTitle.pos, ...generateTextTitle.style}
 
   // draw FIGlet font first (so the cursor can be positioned above)
@@ -115,16 +116,44 @@ export function pre(context, cursor, buffer) {
     const x = Math.floor(cursor.x) 
     const y = Math.floor(cursor.y)
     if(data[x + y * cols]) {
-      const newChar = mode.cmd === "erase" ? {char: '', color: 'black', backgroundColor: 'white'} : { char: drawChar.char, color, backgroundColor }
-      data[x + y * cols] = newChar      
+      if(mode.options.cursorMode.status === "pattern") {
+        let i=0;
+        for (let px=x; px<(x+10); px++) {
+          let j=0;
+          for (let py=y; py<(y+6); py++) {
+            data[px + py * cols] = window.acara.pattern[i+j*10] 
+            j++
+          }
+          i++
+        }
+
+      } else {
+        const newChar = mode.cmd === "erase" ? {char: '', color: 'black', backgroundColor: 'white'} : { char: cursorBrush.char, color, backgroundColor }
+        data[x + y * cols] = newChar      
+      } 
     }
 	} 
 }
 
 export function main(coord, context, cursor, buffer) {
-  const { settings: { drawChar, mode, canvasFill }} = context
+  const { settings: { cursorBrush, mode, canvasFill }} = context
 	const x = Math.floor(cursor.x) 
 	const y = Math.floor(cursor.y) 
+
+  if(mode.options.cursorMode.status === "pattern") {
+    for (let px=0; px<10; px++) {
+      for (let py=0; py<6; py++) {
+        if ( coord.x  == x + px && coord.y == y + py || 
+          coord.x  == x + px && coord.y == y + py) {
+          return {
+            char: window.acara.pattern[px+py*10].char, 
+            color: canvasFillStyle[canvasFill].color,
+            backgroundColor: canvasFillStyle[canvasFill].backgroundColor 
+          }
+        } 
+      }
+    }
+  }
 
   if(data[coord.index]) {
     const u = data[coord.index]
@@ -132,36 +161,33 @@ export function main(coord, context, cursor, buffer) {
     // determine rendering empty cells (and when cursor is hovering these).
     if (u.char === '') { 
       // cursor mode
-      if (coord.x == x && coord.y == y && mode.options.cursorMode.status === "none") return ''
-      if (coord.x == x && coord.y == y) return { 
-        char: drawChar.char, 
-        color: canvasFillStyle[canvasFill].color,
-        backgroundColor: canvasFillStyle[canvasFill].backgroundColor
+      if (mode.options.cursorMode.status === "none") return ''
+
+      // when cursor is hovering non-empty cell ( clearly see cursor position eg. colored cell)
+      if (coord.x == x && coord.y == y) {
+        return {
+          char: cursorBrush.char, 
+          color: canvasFillStyle[canvasFill].color,
+          backgroundColor: canvasFillStyle[canvasFill].backgroundColor
+        }
       }
 
       if(mode.options.cursorMode.status === "guide") {
         if ( coord.x  == x && coord.y == y - 1 ||
-            coord.x  == x && coord.y == y + 1 ||
-            coord.y  == y && coord.x == x + 1 ||
-            coord.y  == y && coord.x == x - 1 
-          ) 
+          coord.x  == x && coord.y == y + 1 ||
+          coord.y  == y && coord.x == x + 1 ||
+          coord.y  == y && coord.x == x - 1 ) {
           return { 
             char: '', 
             color: 'gray', 
             backgroundColor: canvasFillStyle[canvasFill].backgroundColor 
           }
+        } 
 
         if (coord.x == x) return { char: '·', color: 'gray', backgroundColor: canvasFillStyle[canvasFill].backgroundColor }
         if (coord.y == y) return { char: '·', color: 'gray', backgroundColor: canvasFillStyle[canvasFill].backgroundColor }
       }
 
-      if (coord.x == x && coord.y == y) { 
-        return { 
-          char: drawChar.char, 
-          color: canvasFillStyle[canvasFill].color,
-          backgroundColor: canvasFillStyle[canvasFill].backgroundColor,
-        }
-      }
       return { 
         char: '', 
         color: canvasFillStyle[canvasFill].color,
@@ -169,15 +195,6 @@ export function main(coord, context, cursor, buffer) {
       }
     }
   
-    // when cursor is hovering non-empty cell ( clearly see cursor position eg. colored cell)
-    if (coord.x == x && coord.y == y) { 
-      return { 
-        char: drawChar.char, 
-        color: canvasFillStyle[canvasFill].color,
-        backgroundColor: canvasFillStyle[canvasFill].backgroundColor,
-      }
-    }
-    
     // no-hovered non-empty cell rendering.
     return {
       char : u.char,

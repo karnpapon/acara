@@ -1,6 +1,12 @@
 import { run } from "/src/modules/runner.js";
 import * as prog0 from "/src/programs/draw.js";
+import * as prog1 from "/src/programs/pattern_canvas.js";
 import Char, { charsList } from "/src/modules/chars.js";
+
+// global state, shared btw run()
+window.acara = {
+  pattern: []
+}
 
 export function setup(){
   const fontSelector = document.getElementById("fontname");
@@ -34,12 +40,14 @@ export function setup(){
 }
 
 export function start(){
+
   figlet.preloadFonts(["Standard"], () => {
     console.log("FIGlet loaded!");
   
     const character = new Char();
   
     const output = document.getElementById("output");
+    const patternCanvas = document.getElementById("pattern-canvas");
     const chartable = document.getElementById("chars");
     const currentChar = document.getElementById("current-char");
     const currentCharBg = document.getElementById("current-char-status");
@@ -146,6 +154,10 @@ export function start(){
   
         drawBtn.setAttribute("data-usage", "draw");
       });
+
+    run(prog1, { element: patternCanvas })
+    .catch(errorHandler)
+    .then((res) => { });
   
     function errorHandler(e) {
       console.warn(e.message);

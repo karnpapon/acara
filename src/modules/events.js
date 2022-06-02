@@ -8,11 +8,12 @@ import { calcMetrics } from "./utils.js";
 
 const cmdlist = {
   d: { cmd: "draw", options: undefined, target: undefined},
-  c: { cmd: "cursorMode", options: ["guide", "normal", "none" ], target: "cursor-type"},
+  c: { cmd: "cursorMode", options: ["guide", "normal", "pattern", "none" ], target: "cursor-type"},
   g: { cmd: "grid", options: ["show", "hide" ], target: "grid-status"},
   e: { cmd: "erase", options: undefined, target: undefined},
   k: { cmd: "canvas", options: ["white", "black" ], target: "canvas-fill-status"},
-  j: { cmd: "generator", options: undefined, target: undefined}
+  j: { cmd: "generator", options: undefined, target: undefined},
+  p: { cmd: "pattern", options: undefined, target: undefined}
 }
 
 function pickKey(obj){
@@ -29,11 +30,14 @@ function setoptions(c, settings){
   optionBadge.innerText = option
 
   if(c["cmd"] === "grid") { 
-    const gridElem = document.getElementsByClassName("grid-overlay")[0]
-    gridElem.classList.toggle("hide")
+    const gridElem = document.getElementsByClassName("grid-overlay")
+    for(let i=0;i<gridElem.length;i++){
+      gridElem[i].classList.toggle("hide")
+    }
   } 
 
   if(c["cmd"] === "canvas") { 
+    console.log("grid grid")
     const textColor = document.getElementById("text-color");
     const bgColor = document.getElementById("bg-color");
 
@@ -64,6 +68,11 @@ function command(e, settings) {
       const form = document.getElementById("generator-form");
       form.classList.toggle("collapse"); 
     }
+
+    if(c["cmd"] === "pattern") { 
+      const form = document.getElementById("pattern-form");
+      form.classList.toggle("collapse"); 
+    }
   }
   
   const el = document.getElementById(c["cmd"])
@@ -89,7 +98,7 @@ export function listen(settings, pointer, metrics) {
   })
 
   window.addEventListener('selectchar', e => {
-    settings.drawChar.char = e.detail
+    settings.cursorBrush.char = e.detail
   })
 
   window.addEventListener('select-text-color', e => {
@@ -161,17 +170,15 @@ export function listen(settings, pointer, metrics) {
 
   window.addEventListener('download', e => {
     const canvas = settings.element
-    // const w = (settings.canvasSize.width * 2).toString() + 'px';
-    // const h = (settings.canvasSize.height * 2).toString() + 'px';
-    // canvas.style.width = w
-    // canvas.style.height = h
     canvas.toBlob( blob => saveBlobAsFile(blob, 'export.png'))
   })
 
   window.addEventListener('fontselect', e => {
     settings.generateTextTitle.fontname = e.detail
   })
+}
 
+export function listenKeyPress(settings){
   document.addEventListener('keydown', e => {
     if (document.activeElement.tagName === "INPUT") return
     command(e, settings)

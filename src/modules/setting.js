@@ -20,7 +20,7 @@ export const defaultSettings = {
 	fps             : 30,      // fps capping
 	renderer        : "text",  // can be 'canvas', anything else falls back to 'text'
 	restoreState    : false,   // will store the "state" object in local storage
-  drawChar        : { char: '#', hide: false }, // hide cursor when downloading.
+  cursorBrush     : { char: '#', pattern: [ ] },
   mode            : { cmd: "normal", options: optionsDefault},
   figlet          : [""],      // ascii alphabets. 
   generateData    : { },

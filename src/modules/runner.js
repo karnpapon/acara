@@ -1,13 +1,13 @@
 import FPS from '../core/fps.js'
 import storage from '../core/storage.js'
-import { listen } from './events.js'
+import { listen, listenKeyPress } from './events.js'
 import { getContext, calcMetrics } from "./utils.js";
 import { renderers, defaultSettings, CSSStyles} from "./setting.js";
 
 
 // lifecycle. 
 // boot()  --> pre()  --> main() *this function is required* -> post()
-export function run(program, runSettings, userData = {}) {
+export function run(program, runSettings) {
 
 	return new Promise(function(resolve) {
     
@@ -67,6 +67,12 @@ export function run(program, runSettings, userData = {}) {
     // event listening
     listen(settings, pointer, metrics)
 
+    // avoid other canvas (other than main("output") canvas) to listen keypress 
+    // (otherwise events will be re-trigger)
+    if(settings.listenKeyPress){
+      listenKeyPress(settings, pointer, metrics)
+    }
+
 		// CSS fix
 		settings.element.style.fontStrech = 'normal'
 
@@ -95,7 +101,7 @@ export function run(program, runSettings, userData = {}) {
 		function boot() {
 			const context = getContext(state, settings, metrics, fps)
 			if (typeof program.boot == 'function') {
-				program.boot(context, buffer, userData)
+				program.boot(context, buffer)
 			}
 			requestAnimationFrame(loop)
 		}
@@ -159,7 +165,7 @@ export function run(program, runSettings, userData = {}) {
 			// 2. --------------------------------------------------------------
 			// Call pre(), if defined
 			if (typeof program.pre == 'function') {
-				program.pre(context, cursor, buffer, userData)
+				program.pre(context, cursor, buffer)
 			}
 
 			// 3. --------------------------------------------------------------
@@ -169,7 +175,7 @@ export function run(program, runSettings, userData = {}) {
 					const offs = j * context.cols
 					for (let i=0; i<context.cols; i++) {
 						const idx = i + offs
-						const out = program.main({x:i, y:j, index:idx}, context, cursor, buffer, userData)
+						const out = program.main({x:i, y:j, index:idx}, context, cursor, buffer)
 						if (typeof out == 'object' && out !== null) {
 							buffer[idx] = {...buffer[idx], ...out}
 						} else {
@@ -186,7 +192,7 @@ export function run(program, runSettings, userData = {}) {
 			// 4. --------------------------------------------------------------
 			// Call post(), if defined
 			if (typeof program.post == 'function') {
-				program.post(context, cursor, buffer, userData)
+				program.post(context, cursor, buffer)
 			}
 
 			renderer.render(context, buffer, settings)
