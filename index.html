@@ -75,31 +75,22 @@
                 </div>
   
                 <form id="pattern-form" class="pattern-form collapse">
-                  <!-- <div class="grid two">
+                  <div class="grid two">
                     <div class="pattern-option">
-                      <div>col</div>
-                      <select name="col-num" id="col-num">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                      </select>
+                      <div>col: </div>
+                      <input type="number" value="10" min="1" max="10">
                     </div>
                     <div class="pattern-option">
-                      <div>row</div>
-                      <select name="col-num" id="col-num">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                      </select>
+                      <div>row: </div>
+                      <input type="number" value="6" min="1" max="10">
                     </div>
-                  </div> -->
+                  </div>
 
-                  <!-- <div class="pattern-grid-wrapper"> </div> -->
                   <div class="canvas-container">
-                    <canvas id="pattern-canvas" class="pattern-grid"></canvas>
-                    <div class="grid-overlay grid-pattern-width"></div>
+                    <div class="pattern-canvas-cropped">
+                      <canvas id="pattern-canvas" class="pattern-grid"></canvas>
+                      <div class="grid-overlay grid-pattern-width"></div>
+                    </div>
                   </div>
                 </form>
               </div>

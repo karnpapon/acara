@@ -147,7 +147,7 @@ export function main(coord, context, cursor, buffer) {
           coord.x  == x + px && coord.y == y + py) {
           return {
             char: window.acara.pattern[px+py*10].char, 
-            color: canvasFillStyle[canvasFill].color, // TODO: ? should it be pattern's color
+            color: canvasFillStyle[canvasFill].color, 
             backgroundColor: canvasFillStyle[canvasFill].backgroundColor 
           }
         } 
@@ -209,13 +209,6 @@ export function post(context, cursor, buffer) {
 
   const { rows, cols, settings: { generateData, generateBox } } =  context
   const textBoxStyle = {...boxStyle, ...generateBox.pos, ...generateBox.style}
-
-  // console.log("figlet", figlet)
-  // drawInfo(context, cursor, buffer, {
-	// 	color : 'white', 
-  //   backgroundColor : 'royalblue',
-  //   x: 40,
-	// })
 
   if (Object.keys(generateData).length === 0) return 
 

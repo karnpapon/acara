@@ -151,9 +151,9 @@ button:hover {
   width: 50%;
 }
 
-.pattern-option > select{
-  width: 100%;
-}
+.pattern-option{ display: flex; }
+.pattern-option > div { margin-right: 4px;}
+.pattern-option > select{ width: 100%; }
 
 .pattern-grid-wrapper { position: relative;}
 
@@ -169,12 +169,26 @@ button:hover {
   background-size: 7.22px 12px;
 }
 
-.grid-pattern-width {
+.grid-pattern-width, .pattern-canvas-cropped {
   width: 200px;
   height: 200px;
-  background-size: 19.42px 32px;
-  margin-left: 3px;
+  background-size: 19.22px 32px;
 }
+
+.grid-pattern-width {
+  /* margin-left: 3px; */
+  margin-top: 0;
+}
+
+.pattern-canvas-cropped { 
+  overflow: hidden;
+  margin-top: 20px;
+  width: 192px;
+  height: 192px;
+  position: relative;
+}
+
+.pattern-canvas-cropped > canvas { transform: translateX(-3px); margin-top: 0 !important;}
 
 /* -- menu ---------------------------------------------------------- */
 

@@ -62,3 +62,8 @@ export function calcMetrics(el) {
 	}
 	return metrics
 }
+
+export function pickKey(obj){
+  var keys = Object.keys(obj);
+  return keys[ keys.length * Math.random() << 0];
+}

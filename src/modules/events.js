@@ -4,7 +4,7 @@ import { allColors } from "./color.js";
 import { saveBlobAsFile } from "./filedownload.js"
 import { clear } from "../programs/draw.js";
 import { defaultSettings, canvasFillStyle } from "./setting.js";
-import { calcMetrics } from "./utils.js";
+import { calcMetrics, pickKey } from "./utils.js";
 
 const cmdlist = {
   d: { cmd: "draw", options: undefined, target: undefined},
@@ -14,11 +14,6 @@ const cmdlist = {
   k: { cmd: "canvas", options: ["white", "black" ], target: "canvas-fill-status"},
   j: { cmd: "generator", options: undefined, target: undefined},
   p: { cmd: "pattern", options: undefined, target: undefined}
-}
-
-function pickKey(obj){
-  var keys = Object.keys(obj);
-  return keys[ keys.length * Math.random() << 0];
 }
 
 function setoptions(c, settings){
