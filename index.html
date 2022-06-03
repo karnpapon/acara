@@ -78,18 +78,19 @@
                   <div class="grid two">
                     <div class="pattern-option">
                       <div>col: </div>
-                      <input type="number" value="10" min="1" max="10">
+                      <input id="pattern-area-col" type="number" value="8" min="1" max="10">
                     </div>
                     <div class="pattern-option">
                       <div>row: </div>
-                      <input type="number" value="6" min="1" max="10">
+                      <input id="pattern-area-row" type="number" value="4" min="1" max="6">
                     </div>
                   </div>
 
                   <div class="canvas-container">
                     <div class="pattern-canvas-cropped">
                       <canvas id="pattern-canvas" class="pattern-grid"></canvas>
-                      <div class="grid-overlay grid-pattern-width"></div>
+                      <div id="pattern-canvas-overlay" class="grid-overlay grid-pattern-width"></div>
+                      <div id="pattern-canvas-overlay-area" class="grid-overlay available-area"></div>
                     </div>
                   </div>
                 </form>

@@ -118,9 +118,9 @@ export function pre(context, cursor, buffer) {
     if(data[x + y * cols]) {
       if(mode.options.cursorMode.status === "pattern") {
         let i=0;
-        for (let px=x; px<(x+10); px++) {
+        for (let px=x; px<(x+window.acara.patternSize.cols); px++) {
           let j=0;
-          for (let py=y; py<(y+6); py++) {
+          for (let py=y; py<(y+window.acara.patternSize.rows); py++) {
             data[px + py * cols] = window.acara.pattern[i+j*10] 
             j++
           }
@@ -141,8 +141,8 @@ export function main(coord, context, cursor, buffer) {
 	const y = Math.floor(cursor.y) 
 
   if(mode.options.cursorMode.status === "pattern") {
-    for (let px=0; px<10; px++) {
-      for (let py=0; py<6; py++) {
+    for (let px=0; px<window.acara.patternSize.cols; px++) {
+      for (let py=0; py<window.acara.patternSize.rows; py++) {
         if ( coord.x  == x + px && coord.y == y + py || 
           coord.x  == x + px && coord.y == y + py) {
           return {

@@ -5,7 +5,8 @@ import Char, { charsList } from "/src/modules/chars.js";
 
 // global state, shared btw run()
 window.acara = {
-  pattern: []
+  pattern: [],
+  patternSize: {cols: 8, rows: 4}
 }
 
 export function setup(){
@@ -66,6 +67,8 @@ export function start(){
     const pickerBgColor = document.getElementById("picker-bg");
     const selectTextColorBtn = document.getElementById("text-color");
     const selectBgColorBtn = document.getElementById("bg-color");
+    const patternAreaCol = document.getElementById("pattern-area-col");
+    const patternAreaRow = document.getElementById("pattern-area-row");
   
     currentCharBg.onclick = () => {
       chartable.classList.toggle("collapse");
@@ -81,6 +84,22 @@ export function start(){
     };
     selectBgColorBtn.onclick = () => {
       pickerBgColor.classList.toggle("hide");
+    };
+
+    patternAreaCol.onclick = (e) => {
+      const cols = 19.22 * e.target.value
+      const rows = 32 * patternAreaRow.value
+      const area = `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" preserveAspectRatio="none"><rect width="${cols}" height="${rows}" style="fill:rgb(0,0,0);" /></svg>') 0/100% 100%, linear-gradient(#fff,#fff);`
+      document.getElementById("pattern-canvas-overlay").setAttribute("style", `-webkit-mask: ${area}`)
+      window.acara.patternSize = {cols: parseInt(e.target.value), rows: parseInt(patternAreaRow.value)}
+    };
+
+    patternAreaRow.onclick = (e) => {
+      const cols = 19.22 * patternAreaCol.value
+      const rows = 32 * e.target.value
+      const area = `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" preserveAspectRatio="none"><rect width="${cols}" height="${rows}" style="fill:rgb(0,0,0);" /></svg>') 0/100% 100%, linear-gradient(#fff,#fff);`
+      document.getElementById("pattern-canvas-overlay").setAttribute("style", `-webkit-mask: ${area}`)
+      window.acara.patternSize = {cols: parseInt(patternAreaCol.value), rows: parseInt(e.target.value)}
     };
   
     AColorPicker.from(pickerTextColor).on("change", (picker, color) => {

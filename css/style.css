@@ -175,9 +175,28 @@ button:hover {
   background-size: 19.22px 32px;
 }
 
-.grid-pattern-width {
-  /* margin-left: 3px; */
+.available-area {
+  width: 200px;
+  height: 200px;
+  background-size: 19.22px 32px;
   margin-top: 0;
+}
+
+#pattern-canvas-overlay-area {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.grid-pattern-width {
+  margin-top: 0;
+  -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" preserveAspectRatio="none"><rect width="153.76" height="128" style="fill:rgb(0,0,0);" /></svg>') 0/100% 100%,
+    linear-gradient(#fff,#fff);
+  -webkit-mask-composite:destination-out;
+  mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" preserveAspectRatio="none"><rect width="153.76" height="128" style="fill:rgb(0,0,0);" /></svg>') 0/100% 100%,
+    linear-gradient(#fff,#fff);
+  mask-composite:exclude;  
+  background:rgb(0, 0, 0);
 }
 
 .pattern-canvas-cropped { 
@@ -186,6 +205,8 @@ button:hover {
   width: 192px;
   height: 192px;
   position: relative;
+  border: 5px solid white;
+  border-radius: 12px;
 }
 
 .pattern-canvas-cropped > canvas { transform: translateX(-3px); margin-top: 0 !important;}
