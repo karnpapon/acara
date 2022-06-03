@@ -1,6 +1,7 @@
 import { canvasFillStyle } from "/src/modules/setting.js"
 
 export const settings = { 
+  id : "pattern_canvas",
   fps : 30, 	
   renderer : 'canvas',
   canvasOffset : {
@@ -20,12 +21,6 @@ const pattern = ['|','-']
 const data = []
 let cols, rows
 
-// export function pipe(context, data){
-//   const { settings: { cursorBrush: { pattern } } } =  context
-//   pattern = data
-//   console.log("pattern", pattern)
-// }
-
 export function pre(context, cursor, buffer) {
   const { settings: { cursorBrush, mode, color, backgroundColor } } =  context
 
@@ -38,13 +33,12 @@ export function pre(context, cursor, buffer) {
         const c = (x + y) % 2
         data[x+y*cols] = {
           char : pattern[c][i % pattern[c].length],
-          color : 'black', 
-          backgroundColor: "white"
+          color, 
+          backgroundColor
         }
       }
     }
     window.acara.pattern = data
-    // console.log("data after", data)
 	}
   
 	if (cursor.pressed) {

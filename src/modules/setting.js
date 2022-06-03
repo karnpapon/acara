@@ -20,7 +20,7 @@ export const defaultSettings = {
 	fps             : 30,      // fps capping
 	renderer        : "text",  // can be 'canvas', anything else falls back to 'text'
 	restoreState    : false,   // will store the "state" object in local storage
-  cursorBrush     : { char: '#', pattern: [ ] },
+  cursorBrush     : { char: '#' },
   mode            : { cmd: "normal", options: optionsDefault},
   figlet          : [""],      // ascii alphabets. 
   generateData    : { },
@@ -61,7 +61,7 @@ export const canvasFillStyle = {
     backgroundColor: "white", 
   },
   black: {
+    color : "white",
     backgroundColor : "black",
-    color : "white"
   }  
 }

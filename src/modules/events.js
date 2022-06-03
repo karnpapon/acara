@@ -30,26 +30,33 @@ function setoptions(c, settings){
   optionBadge.innerText = option
 
   if(c["cmd"] === "grid") { 
-    const gridElem = document.getElementsByClassName("grid-overlay")
-    for(let i=0;i<gridElem.length;i++){
-      gridElem[i].classList.toggle("hide")
-    }
+    const drawCanvasElem = document.getElementsByClassName("grid-canvas-width")[0]
+    const patternCanvasElem = document.getElementsByClassName("grid-pattern-width")[0]
+    if(settings.id === "draw_canvas") { drawCanvasElem.classList.toggle("hide") }
+    if(settings.id === "pattern_canvas") { patternCanvasElem.classList.toggle("hide") }
   } 
 
   if(c["cmd"] === "canvas") { 
-    console.log("grid grid")
     const textColor = document.getElementById("text-color");
     const bgColor = document.getElementById("bg-color");
 
     const currentChar = document.getElementById("current-char");
     const currentCharBg = document.getElementById("current-char-status");
 
-    textColor.style.backgroundColor = canvasFillStyle[settings.canvasFill].backgroundColor
-    bgColor.style.backgroundColor = canvasFillStyle[settings.canvasFill].color
+    textColor.style.backgroundColor = canvasFillStyle[optionBadge.innerText].color
+    bgColor.style.backgroundColor = canvasFillStyle[optionBadge.innerText].backgroundColor
     
     settings.color = canvasFillStyle[settings.canvasFill].backgroundColor
     settings.backgroundColor = canvasFillStyle[settings.canvasFill].color
     settings.canvasFill = option
+
+    // repaint pattern-canvas
+    if(settings.id === "pattern_canvas") { 
+      window.acara.pattern.forEach(p => { 
+        p.color = canvasFillStyle[settings.canvasFill].color
+        p.backgroundColor = canvasFillStyle[settings.canvasFill].backgroundColor
+      })
+    }
 
     currentChar.style.color = canvasFillStyle[settings.canvasFill].color 
     currentCharBg.style.backgroundColor = canvasFillStyle[settings.canvasFill].backgroundColor; 
@@ -64,12 +71,12 @@ function command(e, settings) {
   } else {
     settings.mode.cmd = c["cmd"]
 
-    if(c["cmd"] === "generator") { 
+    if(c["cmd"] === "generator" && settings.id === "draw_canvas") { 
       const form = document.getElementById("generator-form");
       form.classList.toggle("collapse"); 
     }
 
-    if(c["cmd"] === "pattern") { 
+    if(c["cmd"] === "pattern" && settings.id === "pattern_canvas") { 
       const form = document.getElementById("pattern-form");
       form.classList.toggle("collapse"); 
     }
@@ -176,9 +183,7 @@ export function listen(settings, pointer, metrics) {
   window.addEventListener('fontselect', e => {
     settings.generateTextTitle.fontname = e.detail
   })
-}
 
-export function listenKeyPress(settings){
   document.addEventListener('keydown', e => {
     if (document.activeElement.tagName === "INPUT") return
     command(e, settings)

@@ -1,6 +1,6 @@
 import FPS from '../core/fps.js'
 import storage from '../core/storage.js'
-import { listen, listenKeyPress } from './events.js'
+import { listen } from './events.js'
 import { getContext, calcMetrics } from "./utils.js";
 import { renderers, defaultSettings, CSSStyles} from "./setting.js";
 
@@ -66,12 +66,6 @@ export function run(program, runSettings) {
 
     // event listening
     listen(settings, pointer, metrics)
-
-    // avoid other canvas (other than main("output") canvas) to listen keypress 
-    // (otherwise events will be re-trigger)
-    if(settings.listenKeyPress){
-      listenKeyPress(settings, pointer, metrics)
-    }
 
 		// CSS fix
 		settings.element.style.fontStrech = 'normal'

@@ -3,9 +3,9 @@ import { drawTextBox } from '/src/modules/drawtext.js'
 import { canvasFillStyle } from "/src/modules/setting.js"
 
 export const settings = { 
+  id : "draw_canvas",
   fps : 30, 	
   renderer : 'canvas',
-  listenKeyPress: true,
   canvasOffset : {
     x : 'auto',
     y : 'auto'
@@ -147,7 +147,7 @@ export function main(coord, context, cursor, buffer) {
           coord.x  == x + px && coord.y == y + py) {
           return {
             char: window.acara.pattern[px+py*10].char, 
-            color: canvasFillStyle[canvasFill].color,
+            color: canvasFillStyle[canvasFill].color, // TODO: ? should it be pattern's color
             backgroundColor: canvasFillStyle[canvasFill].backgroundColor 
           }
         } 
