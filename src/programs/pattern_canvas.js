@@ -42,6 +42,7 @@ export function pre(context, cursor, buffer) {
 	}
   
 	if (cursor.pressed) {
+    console.log("data pattern len", data.length)
     const x = Math.floor(cursor.x) 
     const y = Math.floor(cursor.y)
     if(data[x + y * cols]) {

@@ -192,8 +192,8 @@ export function listen(settings, pointer, metrics) {
       const rows = getRows()
       const txt = getData()
       let acc = "", ii = 0
-      for(let x=0; x<=cols; x++) {
-        for(let y=0;y<=rows; y++){
+      for(let x=0; x<cols; x++) {
+        for(let y=0;y<rows; y++){
           const curr = txt[ii].char
           if (ii % (cols) === 0) { acc += "\n" }
           if(hasWhiteSpace(curr) || curr === undefined) { 

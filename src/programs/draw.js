@@ -78,6 +78,13 @@ export function pre(context, cursor, buffer) {
   const { settings: { cursorBrush, mode, generateTextTitle, figlet, color, backgroundColor } } =  context
   const titleBoxStyle = {...textStyle, ...generateTextTitle.pos, ...generateTextTitle.style}
 
+  if (cols != context.cols || rows != context.rows) {
+		cols = context.cols
+		rows = context.rows
+		data.length = cols * rows 
+		data.fill({char: '', color: "black", backgroundColor: "white"})
+	}
+
   // draw FIGlet font first (so the cursor can be positioned above)
   if (cols && figlet != fig) {
     buff.length = (cols * figlet.length)
@@ -109,12 +116,6 @@ export function pre(context, cursor, buffer) {
    
     fig = figlet
   }
-
-	if (cols != context.cols || rows != context.rows) {
-		cols = context.cols
-		rows = context.rows
-    data.push(...buffer)
-	}
   
 	if (cursor.pressed) {
     const x = Math.floor(cursor.x) 
