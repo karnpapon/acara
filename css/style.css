@@ -214,6 +214,27 @@ button:hover {
 
 .download-group > select {  padding: 4px; width: 100%; }
 
+.flex { display: flex;}
+.flex-wrap { flex-wrap: wrap;}
+
+.char-table-wrapper { display: flex; flex-direction: column; align-items: initial !important;}
+
+.char-group-wrapper {     
+  background: white;
+  border-radius: 4px;
+  padding: 4px 10px;
+  margin-bottom: 1rem;
+}
+
+.char-group-wrapper > p { text-decoration: underline; cursor: pointer; user-select: none;}
+.char-group-wrapper > p:hover { text-decoration: none;}
+
+.chars-numerals { padding-bottom: 3rem;}
+.chars-letters { padding-bottom: 6rem;}
+.chars-lines { padding-bottom: 15rem;}
+.chars-blocks { padding-bottom: 5rem;}
+.chars-symbols { padding-bottom: 19rem;}
+
 /* -- menu ---------------------------------------------------------- */
 
 .menu {
@@ -414,7 +435,7 @@ button:hover {
 /* ----------char table---------- */
 .char-table {
   width: 100%;
-  padding-bottom: 46rem;
+  /* padding-bottom: 46rem; */
   height: 0;
   display: flex;
   flex-wrap: wrap;
@@ -425,6 +446,10 @@ button:hover {
 
 .char-table-wrapper {
   margin-left: 2rem;
+  height: fit-content;
+  overflow: hidden;
+  /* padding-bottom: 15rem; */
+  /* transition: 200ms; */
 }
 
 .ready {
@@ -542,3 +567,7 @@ button:hover {
 .hidden {
   visibility: hidden;
 }
+
+.collapse-h-full { height: 0;}
+
+#current-char { user-select: none;}

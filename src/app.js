@@ -55,6 +55,8 @@ export function start(){
     const chartable = document.getElementById("chars");
     const currentChar = document.getElementById("current-char");
     const currentCharBg = document.getElementById("current-char-status");
+    const charTableWrapper = document.getElementById("char-table-wrapper");
+    // const charGroupTypeBtn = document.getElementById("char-group-type");
     const resizeBtn = document.getElementById("resize-canvas");
     const clearBtn = document.getElementById("clear-canvas");
     const settingBtn = document.getElementById("setting");
@@ -74,7 +76,7 @@ export function start(){
     const patternAreaRow = document.getElementById("pattern-area-row");
   
     currentCharBg.onclick = () => {
-      chartable.classList.toggle("collapse");
+      charTableWrapper.classList.toggle("collapse-h-full");
     };
     settingBtn.onclick = () => {
       settingSection.classList.toggle("collapse");
@@ -165,14 +167,36 @@ export function start(){
       .catch(errorHandler)
       .then((res) => {
         menu.className = "menu ready";
-        charsList.map((char) => {
-          let c = document.createElement("p");
-          c.innerText = char;
-          c.addEventListener("click", () => {
-            character.selectChar(char);
-            currentChar.innerText = char
-          });
-          chartable.appendChild(c);
+        Object.keys(charsList).map((type) => {
+          console.log("typetype", type)
+          let groupTitle = document.createElement("div")
+          let p = document.createElement("p");
+          let charTable = document.createElement("div");
+          const charTableWrapper = document.getElementsByClassName("char-table-wrapper")[0]
+          groupTitle.classList.add("char-group-wrapper", "flex", "flex-col")
+          charTable.classList.add("char-table", "collapse", `chars-${type}`)
+          charTable.setAttribute("id", `chars-${type}`)
+          p.setAttribute("id", "char-group-type")
+          p.innerText = type;
+
+          p.onclick = () => {
+            charTable.classList.toggle("collapse");
+          };
+
+          charsList[type].map(char => {
+            let pp = document.createElement("p"); 
+            pp.addEventListener("click", () => {
+              character.selectChar(char);
+              currentChar.innerText = char
+            });
+            pp.innerText = char
+            charTable.appendChild(pp)
+          })
+
+          groupTitle.appendChild(p)
+          groupTitle.appendChild(charTable)
+          charTableWrapper.appendChild(groupTitle)
+          // chartable.appendChild(groupTitle);
         });
   
         drawBtn.setAttribute("data-usage", "draw");
