@@ -1,8 +1,8 @@
 import { clamp } from "./num.js";
 import { borderStyles } from "./drawbox.js";
 import { allColors } from "./color.js";
-import { saveBlobAsFile } from "./filedownload.js"
-import { clear } from "../programs/draw.js";
+import { saveBlobAsFile, saveSourceAsFile } from "./filedownload.js"
+import { clear, getData, getCols, getRows } from "../programs/draw.js";
 import { defaultSettings, canvasFillStyle } from "./setting.js";
 import { calcMetrics, pickKey } from "./utils.js";
 
@@ -24,7 +24,7 @@ function setoptions(c, settings){
   const optionBadge = document.getElementById(c.target)
   optionBadge.innerText = option
 
-  if(c["cmd"] === "grid") { 
+  if(c["cmd"] === "grid" && settings.id === "draw_canvas") { 
     const drawCanvasElem = document.getElementsByClassName("grid-canvas-width")[0]
     const patternCanvasElem = document.getElementsByClassName("grid-pattern-width")[0]
     if(settings.id === "draw_canvas") { drawCanvasElem.classList.toggle("hide") }
@@ -87,8 +87,19 @@ export function listen(settings, pointer, metrics) {
 
   settings.element.addEventListener('pointermove', e => {
     const rect = settings.element.getBoundingClientRect()
-    pointer.x = e.clientX - rect.left
-    pointer.y = e.clientY - rect.top
+    let _x = ( e.clientX  - rect.left )
+    let _y = ( e.clientY  - rect.top )
+
+    // if(settings.id === "draw_canvas" && settings.mode.options.cursorMode.status === "pattern") { 
+    //   let tempX = Math.floor((_x) / metrics.cellWidth) % 8
+    //   let tempY = Math.floor((_y) / metrics.lineHeight) % 4
+    //   if (tempX !== 0 || tempY !== 0) return
+    //   pointer.x = _x
+    //   pointer.y = _y
+    // } else {
+    pointer.x = _x
+    pointer.y = _y
+    // }
   })
 
   settings.element.addEventListener('pointerdown', e => {
@@ -171,8 +182,30 @@ export function listen(settings, pointer, metrics) {
   })
 
   window.addEventListener('download', e => {
-    const canvas = settings.element
-    canvas.toBlob( blob => saveBlobAsFile(blob, 'export.png'))
+    if(settings.id === "pattern_canvas") return 
+    const filetype = document.getElementById("download-filetype").value
+    if(filetype === "img") {
+      const canvas = settings.element
+      canvas.toBlob( blob => saveBlobAsFile(blob, 'export.png'))
+    } else if(filetype === "txt") {
+      const cols = getCols()
+      const rows = getRows()
+      const txt = getData()
+      let acc = "", ii = 0
+      for(let x=0; x<=cols; x++) {
+        for(let y=0;y<=rows; y++){
+          const curr = txt[ii].char
+          if (ii % (cols) === 0) { acc += "\n" }
+          if(hasWhiteSpace(curr) || curr === undefined) { 
+            acc +=  " " 
+          } else { 
+            acc += curr 
+          }
+          ii++
+        }
+      }
+      saveSourceAsFile(acc, 'export.txt')
+    }
   })
 
   window.addEventListener('fontselect', e => {
@@ -183,4 +216,23 @@ export function listen(settings, pointer, metrics) {
     if (document.activeElement.tagName === "INPUT") return
     command(e, settings)
   })
+}
+
+function hasWhiteSpace(c) {
+  return c === ' '
+      || c === ''
+      || c === '\t'
+      || c === '\r'
+      || c === '\f'
+      || c === '\v'
+      || c === '\u00a0'
+      || c === '\u1680'
+      || c === '\u2000'
+      || c === '\u200a'
+      || c === '\u2028'
+      || c === '\u2029'
+      || c === '\u202f'
+      || c === '\u205f'
+      || c === '\u3000'
+      || c === '\ufeff'
 }

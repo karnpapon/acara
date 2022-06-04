@@ -66,6 +66,10 @@ function hasWhiteSpace(c) {
       || c === '\ufeff'
 }
 
+export function getData(){ return data } 
+export function getCols(){ return cols}
+export function getRows(){ return rows}
+
 export function clear(){
   data.fill({char: '', backgroundColor: "white", color: "black"})
 }

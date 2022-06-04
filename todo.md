@@ -9,3 +9,4 @@
 - ruler mode
 - fill bg mode.
 - drag mode.
+- undo (cmd+z)

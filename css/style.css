@@ -211,6 +211,9 @@ button:hover {
 
 .pattern-canvas-cropped > canvas { transform: translateX(-3px); margin-top: 0 !important;}
 
+
+.download-group > select {  padding: 4px; width: 100%; }
+
 /* -- menu ---------------------------------------------------------- */
 
 .menu {
@@ -338,7 +341,7 @@ button:hover {
 /* -------------- form ---------- */
 .generator-form {
   width: 100%;
-  padding-bottom: 34rem;
+  padding-bottom: 36rem;
   height: 0;
   display: flex;
   flex-wrap: wrap;
@@ -492,7 +495,6 @@ button:hover {
 #fontname {
   width: 100%;
   padding: 4px;
-  margin-bottom: 1rem;
 }
 
 #setting,

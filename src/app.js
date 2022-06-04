@@ -48,6 +48,9 @@ export function start(){
     const character = new Char();
   
     const output = document.getElementById("output");
+    // const canv = new fabric.Canvas('output');
+    // canv.add(output);
+
     const patternCanvas = document.getElementById("pattern-canvas");
     const chartable = document.getElementById("chars");
     const currentChar = document.getElementById("current-char");
@@ -157,6 +160,7 @@ export function start(){
       window.dispatchEvent(new CustomEvent("generate", { detail: data }));
     };
   
+    // drawing canvas
     run(prog0, { element: output })
       .catch(errorHandler)
       .then((res) => {
@@ -174,6 +178,7 @@ export function start(){
         drawBtn.setAttribute("data-usage", "draw");
       });
 
+    // pattern brush canvas
     run(prog1, { element: patternCanvas })
     .catch(errorHandler)
     .then((res) => { });
