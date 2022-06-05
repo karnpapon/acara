@@ -1,25 +1,3 @@
-/**
-@module   drawbox.js
-@desc     Draw text boxes with optional custom styles
-@category public
-
-A style object can be passed to override the default style:
-
-const style = {
-	x               : 3,
-	y               : 2,
-	width           : 0,
-	height          : 0,
-	backgroundColor : 'white',
-	color           : 'black',
-	fontWeight      : 'normal',
-	shadowStyle     : 'none',
-	borderStyle     : 'round'
-	paddingX        : 2,
-	paddingY        : 1,
-}
-*/
-
 export const borderStyles = {
 	double : {
 		topleft     : '╔',

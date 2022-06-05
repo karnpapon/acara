@@ -1,9 +1,3 @@
-/**
-@module   num.js
-@desc     Some GLSL functions ported to JS
-@category public
-*/
-
 export default {
 	map,
 	fract,

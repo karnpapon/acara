@@ -3,6 +3,7 @@ import { canvasFillStyle } from "/src/modules/setting.js"
 export const settings = { 
   id : "pattern_canvas",
   fps : 30, 	
+  once: false,
   renderer : 'canvas',
   canvasOffset : {
     x : 'auto',
@@ -42,7 +43,6 @@ export function pre(context, cursor, buffer) {
 	}
   
 	if (cursor.pressed) {
-    console.log("data pattern len", data.length)
     const x = Math.floor(cursor.x) 
     const y = Math.floor(cursor.y)
     if(data[x + y * cols]) {

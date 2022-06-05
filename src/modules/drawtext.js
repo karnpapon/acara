@@ -1,11 +1,3 @@
-/**
-@module   drawtext.js
-@desc     Draw text (FIGlet)
-@category public
-
-A style object can be passed to override the default style:
-*/
-
 const defaultTextBoxStyle = {
 	x               : 1,
 	y               : 1,

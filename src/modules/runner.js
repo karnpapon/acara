@@ -11,7 +11,7 @@ export function run(program, runSettings) {
 
 	return new Promise(function(resolve) {
     
-		const settings = {...JSON.parse(JSON.stringify(defaultSettings)), ...runSettings, ...program.settings}
+		const settings = {...JSON.parse(JSON.stringify(defaultSettings)), ...runSettings, ...program.settings}    
 
 		const pointer = {
 			x        : 0,
@@ -118,7 +118,7 @@ export function run(program, runSettings) {
 
 			// Snapshot of context data
 			const context = getContext(state, settings, metrics, fps)
-
+      
 			fps.update(t)
 
 			// Timing update
@@ -145,8 +145,6 @@ export function run(program, runSettings) {
 			pointer.px = pointer.x
 			pointer.py = pointer.y
 			pointer.ppressed = pointer.pressed
-
-      // console.log("cursor", cursor)
 
 			// 1. --------------------------------------------------------------
 			// In case of resize / init normalize the buffer

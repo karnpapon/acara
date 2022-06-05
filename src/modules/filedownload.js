@@ -1,9 +1,3 @@
-/**
-@module   filedownload.js
-@desc     Exports a file via Blob
-@category internal
-*/
-
 const mimeTypes = {
 	'js'  : 'text/javascript',
 	'txt' : 'text/plain',
