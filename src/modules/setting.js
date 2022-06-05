@@ -10,6 +10,7 @@ const optionsDefault = {
   cursorMode: { status: "guide", index: 0, target: "cursor-type"},
   grid: { status: "show", index: 0, target: "grid-status"},
   canvas: { status: "white", index: 0, target: "canvas-fill-status"},
+  control: { status: "mouse", index: 0, target: "control-status"},
 }
 
 export const defaultSettings = {

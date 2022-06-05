@@ -168,7 +168,6 @@ export function start(){
       .then((res) => {
         menu.className = "menu ready";
         Object.keys(charsList).map((type) => {
-          console.log("typetype", type)
           let groupTitle = document.createElement("div")
           let p = document.createElement("p");
           let charTable = document.createElement("div");
@@ -196,7 +195,6 @@ export function start(){
           groupTitle.appendChild(p)
           groupTitle.appendChild(charTable)
           charTableWrapper.appendChild(groupTitle)
-          // chartable.appendChild(groupTitle);
         });
   
         drawBtn.setAttribute("data-usage", "draw");

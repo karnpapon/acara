@@ -12,6 +12,7 @@ const cmdlist = {
   g: { cmd: "grid", options: ["show", "hide" ], target: "grid-status"},
   e: { cmd: "erase", options: undefined, target: undefined},
   k: { cmd: "canvas", options: ["white", "black" ], target: "canvas-fill-status"},
+  n: { cmd: "control", options: ["mouse", "keyboard"], target: "control-status"},
   j: { cmd: "generator", options: undefined, target: undefined},
   p: { cmd: "pattern", options: undefined, target: undefined}
 }
@@ -24,6 +25,15 @@ function setoptions(c, settings){
   const optionBadge = document.getElementById(c.target)
   optionBadge.innerText = option
 
+  if(option === "keyboard" && settings.id === "draw_canvas") { 
+    const controlDetailBox = document.getElementById("control-detail-box");
+    controlDetailBox.classList.remove("collapse")
+  } else if (option === "mouse") {
+    const controlDetailBox = document.getElementById("control-detail-box");
+    controlDetailBox.classList.add("collapse")
+  }
+
+  // affect only draw_canvas
   if(c["cmd"] === "grid" && settings.id === "draw_canvas") { 
     const drawCanvasElem = document.getElementsByClassName("grid-canvas-width")[0]
     const patternCanvasElem = document.getElementsByClassName("grid-pattern-width")[0]
@@ -31,6 +41,7 @@ function setoptions(c, settings){
     if(settings.id === "pattern_canvas") { patternCanvasElem.classList.toggle("hide") }
   } 
 
+  // affect draw_canvas & pattern_canvas
   if(c["cmd"] === "canvas") { 
     const textColor = document.getElementById("text-color");
     const bgColor = document.getElementById("bg-color");
@@ -58,7 +69,7 @@ function setoptions(c, settings){
   }  
 }
 
-function command(e, settings) {
+function setcommand(e, settings, pointer) {
   const c = cmdlist[e.key]
   if(!c) return
   if(c.target) { 
@@ -75,6 +86,10 @@ function command(e, settings) {
       const form = document.getElementById("pattern-form");
       form.classList.toggle("collapse"); 
     }
+
+    if(c["cmd"] === "draw" && settings.mode.options.control.status === "keyboard" && settings.id === "draw_canvas") {
+      pointer.pressed = true
+    }
   }
   
   const el = document.getElementById(c["cmd"])
@@ -86,20 +101,12 @@ function command(e, settings) {
 export function listen(settings, pointer, metrics) {
 
   settings.element.addEventListener('pointermove', e => {
+    if(settings.id === "draw_canvas" && settings.mode.options.control.status === "keyboard") return
     const rect = settings.element.getBoundingClientRect()
     let _x = ( e.clientX  - rect.left )
     let _y = ( e.clientY  - rect.top )
-
-    // if(settings.id === "draw_canvas" && settings.mode.options.cursorMode.status === "pattern") { 
-    //   let tempX = Math.floor((_x) / metrics.cellWidth) % 8
-    //   let tempY = Math.floor((_y) / metrics.lineHeight) % 4
-    //   if (tempX !== 0 || tempY !== 0) return
-    //   pointer.x = _x
-    //   pointer.y = _y
-    // } else {
     pointer.x = _x
     pointer.y = _y
-    // }
   })
 
   settings.element.addEventListener('pointerdown', e => {
@@ -214,8 +221,40 @@ export function listen(settings, pointer, metrics) {
 
   document.addEventListener('keydown', e => {
     if (document.activeElement.tagName === "INPUT") return
-    command(e, settings)
+    if (isArrowKey(e.code)) handleArrowKey(arrowKeyToDirection(e.code), settings, pointer, metrics)
+    setcommand(e, settings, pointer)
   })
+
+  document.addEventListener('keyup', e => {
+    if (document.activeElement.tagName === "INPUT") return
+    if(e.code === "KeyD"){ pointer.pressed = false }
+  })
+}
+
+
+// ---------- helpers -------
+
+function handleArrowKey(arrow, settings, pointer, metrics) {
+  if(settings.id === "pattern_canvas" || settings.mode.options.control.status === "mouse") return
+  const rect = settings.element.getBoundingClientRect()
+  if(arrow.axis === "x") pointer.x += metrics.cellWidth * arrow.dir
+  if(arrow.axis === "y") pointer.y += metrics.lineHeight * arrow.dir 
+}
+
+function arrowKeyToDirection(e){
+  let dir = 0, axis = "x"
+  if(e === "ArrowLeft") dir = -1
+  if(e === "ArrowRight") dir = 1
+  if(e === "ArrowUp") dir = -1, axis = "y"
+  if(e === "ArrowDown") dir = 1, axis = "y"
+  return {dir, axis}
+}
+
+function isArrowKey(c) {
+  return c === "ArrowLeft"
+      || c === "ArrowRight"
+      || c === "ArrowUp"
+      || c === "ArrowDown"
 }
 
 function hasWhiteSpace(c) {

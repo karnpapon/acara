@@ -130,10 +130,14 @@ button:hover {
   display: none;
 }
 
+.gap-4 { grid-gap: 4px;}
+.grid.two2 { grid-template-columns: 1fr 7fr;}
+
 .grid.two {
   grid-template-columns: 1fr 1fr;
   grid-gap: 12px;
 }
+
 
 .grid.two .cell3 {
   display: none;
@@ -230,10 +234,36 @@ button:hover {
 .char-group-wrapper > p:hover { text-decoration: none;}
 
 .chars-numerals { padding-bottom: 3rem;}
-.chars-letters { padding-bottom: 6rem;}
+.chars-letters { padding-bottom: 8rem;}
 .chars-lines { padding-bottom: 15rem;}
-.chars-blocks { padding-bottom: 5rem;}
-.chars-symbols { padding-bottom: 19rem;}
+.chars-blocks { padding-bottom: 6rem;}
+.chars-symbols { padding-bottom: 20rem;}
+
+.control-status { 
+  justify-content: center; 
+  display: flex; 
+  align-items: center;
+  background-color: gainsboro;
+  border-radius: 16px;
+  padding: 3px 15px;
+  margin-left: auto;
+}
+.control-status > svg { width: 10px; height: 10px; margin-left: 8px;}
+
+.control-detail-box {  
+  width: 100%;
+  padding-bottom: 8rem;
+  height: 0;
+  display: flex;
+  flex-wrap: wrap;
+  overflow: hidden;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  transition: 200ms;
+}
+
+.clickable { cursor: pointer;}
+.clickable:hover { background-color: rgb(255, 255, 255); }
 
 /* -- menu ---------------------------------------------------------- */
 
