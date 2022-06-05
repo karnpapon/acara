@@ -90,6 +90,11 @@ function setcommand(e, settings, pointer) {
     if(c["cmd"] === "draw" && settings.mode.options.control.status === "keyboard" && settings.id === "draw_canvas") {
       pointer.pressed = true
     }
+
+    if(c["cmd"] === "erase" && settings.mode.options.control.status === "keyboard" && settings.id === "draw_canvas") {
+      settings.mode.cmd = "erase"
+      pointer.pressed = true
+    }
   }
   
   const el = document.getElementById(c["cmd"])
