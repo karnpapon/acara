@@ -1,7 +1,3 @@
-/**
-Save and restore a JSON object to and from local storage.
-*/
-
 export default {
 	store : function(key, obj) {
 		try {

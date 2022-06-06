@@ -1,5 +1,4 @@
 import FPS from '../core/fps.js'
-import storage from '../core/storage.js'
 import { listen } from './events.js'
 import { getContext, calcMetrics } from "./utils.js";
 import { renderers, defaultSettings, CSSStyles} from "./setting.js";
@@ -20,21 +19,6 @@ export function run(program, runSettings) {
 			px       : 0,
 			py       : 0,
 			ppressed : false,
-		}
-
-		// for localStorage if settings.restoreState == true.
-		const state = {
-			time  : 0, // The time in ms
-			frame : 0, // The frame number (int)
-			cycle : 0  // An cycle count for debugging purposes
-		}
-
-		// Name of local storage key
-		const LOCAL_STORAGE_KEY_STATE = 'currentState'
-
-		if (settings.restoreState) {
-			storage.restore(LOCAL_STORAGE_KEY_STATE, state)
-			state.cycle++ // Keep track of the cycle count for debugging purposes
 		}
 
 		let renderer
@@ -93,7 +77,7 @@ export function run(program, runSettings) {
 		const buffer = []
 		
 		function boot() {
-			const context = getContext(state, settings, metrics, fps)
+			const context = getContext(settings, metrics, fps)
 			if (typeof program.boot == 'function') {
 				program.boot(context, buffer)
 			}
@@ -103,7 +87,6 @@ export function run(program, runSettings) {
 		// Time sample to calculate precise offset
 		let timeSample = 0
 		const interval = 1000 / settings.fps
-		const timeOffset = state.time
 
 		// Used to track window resize
 		let cols, rows
@@ -117,15 +100,12 @@ export function run(program, runSettings) {
 			}
 
 			// Snapshot of context data
-			const context = getContext(state, settings, metrics, fps)
+			const context = getContext(settings, metrics, fps)
       
 			fps.update(t)
 
 			// Timing update
 			timeSample = t - delta % interval // adjust timeSample
-			state.time = t + timeOffset       // increment time + initial offs
-			state.frame++                     // increment frame counter
-			storage.store(LOCAL_STORAGE_KEY_STATE, state) // store state
 
 			// Cursor update
 			const cursor = {

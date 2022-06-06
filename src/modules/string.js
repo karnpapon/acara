@@ -1,8 +1,4 @@
 /**
-@module   string.js
-@desc     String helpers
-@category internal
-
 Wraps a string to a specific width.
 Doesn’t break words and keeps trailing line breaks.
 Counts lines and maxWidth (can be greater than width).

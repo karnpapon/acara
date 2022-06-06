@@ -3,8 +3,17 @@ import { canvasFillStyle } from "/src/modules/setting.js"
 export const settings = { 
   id : "pattern_canvas",
   fps : 30, 	
-  once: false,
   renderer : 'canvas',
+  eventListener: { 
+    generator: false, 
+    pattern: true, 
+    draw: false, 
+    erase: false,
+    grid: false,
+    control: false,
+    canvas: true,
+    download: false,
+  },
   canvasOffset : {
     x : 'auto',
     y : 'auto'

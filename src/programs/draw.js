@@ -5,6 +5,16 @@ import { canvasFillStyle } from "/src/modules/setting.js"
 export const settings = { 
   id : "draw_canvas",
   fps : 30, 	
+  eventListener: { 
+    generator: true, 
+    pattern: false, 
+    draw: true, 
+    erase: true, 
+    grid: true,
+    control: true,
+    canvas: true,
+    download: true,
+  },
   renderer : 'canvas',
   canvasOffset : {
     x : 'auto',

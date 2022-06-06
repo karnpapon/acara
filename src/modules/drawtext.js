@@ -37,7 +37,7 @@ export function drawTextBox(text, style, target, targetCols, targetRows) {
 
 	// Background, overwrite the buffer
 	setRect({
-		char       : '/',
+		char       : '',
 		color      : s.color,
 		fontWeight     : s.fontWeight,
 		backgroundColor : s.backgroundColor

@@ -1,8 +1,4 @@
 /**
-@module   color.js
-@desc     Some common palettes and simple color helpers
-@category public
-
 Colors can be defined as:
 
 rgb : { r:255, g:0, b:0 }

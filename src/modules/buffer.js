@@ -1,8 +1,4 @@
 /**
-@module   buffer.js
-@desc     Safe buffer helpers, mostly for internal use
-@category internal
-
 Safe set() and get() functions, rect() and text() ‘drawing’ helpers.
 
 Buffers are 1D arrays for 2D data, a ‘width’ and a 'height' parameter

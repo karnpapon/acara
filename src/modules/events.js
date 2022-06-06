@@ -18,6 +18,7 @@ const cmdlist = {
 }
 
 function setoptions(c, settings){
+  const isEventAllowed = settings.eventListener[c["cmd"]]
   const option = c.options[settings.mode.options[c["cmd"]].index]
   settings.mode.options[c["cmd"]].index = (settings.mode.options[c["cmd"]].index += 1) % c.options.length
   settings.mode.options[c["cmd"]].status = option
@@ -25,81 +26,83 @@ function setoptions(c, settings){
   const optionBadge = document.getElementById(c.target)
   optionBadge.innerText = option
 
-  if(option === "keyboard" && settings.id === "draw_canvas") { 
-    const controlDetailBox = document.getElementById("control-detail-box");
-    controlDetailBox.classList.remove("collapse")
-  } else if (option === "mouse") {
-    const controlDetailBox = document.getElementById("control-detail-box");
-    controlDetailBox.classList.add("collapse")
-  }
-
-  // affect only draw_canvas
-  if(c["cmd"] === "grid" && settings.id === "draw_canvas") { 
-    const drawCanvasElem = document.getElementsByClassName("grid-canvas-width")[0]
-    const patternCanvasElem = document.getElementsByClassName("grid-pattern-width")[0]
-    if(settings.id === "draw_canvas") { drawCanvasElem.classList.toggle("hide") }
-    if(settings.id === "pattern_canvas") { patternCanvasElem.classList.toggle("hide") }
-  } 
-
-  // affect draw_canvas & pattern_canvas
-  if(c["cmd"] === "canvas") { 
-    const textColor = document.getElementById("text-color");
-    const bgColor = document.getElementById("bg-color");
-
-    const currentChar = document.getElementById("current-char");
-    const currentCharBg = document.getElementById("current-char-status");
-
-    textColor.style.backgroundColor = canvasFillStyle[optionBadge.innerText].color
-    bgColor.style.backgroundColor = canvasFillStyle[optionBadge.innerText].backgroundColor
-    
-    settings.color = canvasFillStyle[settings.canvasFill].backgroundColor
-    settings.backgroundColor = canvasFillStyle[settings.canvasFill].color
-    settings.canvasFill = option
-
-    // repaint pattern-canvas
-    if(settings.id === "pattern_canvas") { 
-      window.acara.pattern.forEach(p => { 
-        p.color = canvasFillStyle[settings.canvasFill].color
-        p.backgroundColor = canvasFillStyle[settings.canvasFill].backgroundColor
-      })
+  if(isEventAllowed){
+    if(c["cmd"] === "control") {
+      if(option === "keyboard") { 
+        const controlDetailBox = document.getElementById("control-detail-box");
+        controlDetailBox.classList.remove("collapse")
+      } else if (option === "mouse") {
+        const controlDetailBox = document.getElementById("control-detail-box");
+        controlDetailBox.classList.add("collapse")
+      }
     }
-
-    currentChar.style.color = canvasFillStyle[settings.canvasFill].color 
-    currentCharBg.style.backgroundColor = canvasFillStyle[settings.canvasFill].backgroundColor; 
-  }  
+  
+    // affect only draw_canvas (based on settings.eventListener)
+    if(c["cmd"] === "grid") { 
+      const drawCanvasElem = document.getElementsByClassName("grid-canvas-width")[0]
+      drawCanvasElem.classList.toggle("hide") 
+    } 
+  
+    // affect draw_canvas & pattern_canvas
+    if(c["cmd"] === "canvas") { 
+      const textColor = document.getElementById("text-color");
+      const bgColor = document.getElementById("bg-color");
+  
+      const currentChar = document.getElementById("current-char");
+      const currentCharBg = document.getElementById("current-char-status");
+  
+      textColor.style.backgroundColor = canvasFillStyle[optionBadge.innerText].color
+      bgColor.style.backgroundColor = canvasFillStyle[optionBadge.innerText].backgroundColor
+      
+      settings.color = canvasFillStyle[settings.canvasFill].backgroundColor
+      settings.backgroundColor = canvasFillStyle[settings.canvasFill].color
+      settings.canvasFill = option
+  
+      // repaint
+      if(settings.id === "pattern_canvas") { 
+        window.acara.pattern.forEach(p => { 
+          p.color = canvasFillStyle[settings.canvasFill].color
+          p.backgroundColor = canvasFillStyle[settings.canvasFill].backgroundColor
+        })
+      }
+  
+      currentChar.style.color = canvasFillStyle[settings.canvasFill].color 
+      currentCharBg.style.backgroundColor = canvasFillStyle[settings.canvasFill].backgroundColor; 
+    }  
+  }
 }
 
 function setcommand(e, settings, pointer) {
   const c = cmdlist[e.key]
   if(!c) return
-  if(c.target) { 
-    setoptions(c, settings) 
-  } else {
-    settings.mode.cmd = c["cmd"]
 
-    if(c["cmd"] === "generator" && settings.id === "draw_canvas") { 
+  const cmd = c["cmd"]
+  const el = document.getElementById(cmd)
+  const rest = document.querySelector("[data-usage]")
+  rest.removeAttribute("data-usage")
+  el.setAttribute("data-usage", cmd)
+  settings.mode.cmd = cmd
+
+  if(c.target) { setoptions(c, settings); return } 
+
+  const isEventAllowed = settings.eventListener[cmd] ?? false
+
+  if(isEventAllowed) {
+    if(cmd === "generator") { 
       const form = document.getElementById("generator-form");
       form.classList.toggle("collapse"); 
     }
-
-    if(c["cmd"] === "pattern" && settings.id === "pattern_canvas") { 
+  
+    if(cmd === "pattern") { 
       const form = document.getElementById("pattern-form");
       form.classList.toggle("collapse"); 
     }
-
-    if(c["cmd"] === "draw" && settings.mode.options.control.status === "keyboard" && settings.id === "draw_canvas") {
-      pointer.pressed = true
-    }
-
-    if(c["cmd"] === "erase" && settings.mode.options.control.status === "keyboard" && settings.id === "draw_canvas") {
-      pointer.pressed = true
+  
+    if (settings.mode.options.control.status === "keyboard"){
+      if(cmd === "draw") { pointer.pressed = true }
+      if(cmd === "erase") { pointer.pressed = true }
     }
   }
-  
-  const el = document.getElementById(c["cmd"])
-  const rest = document.querySelector("[data-usage]")
-  rest.removeAttribute("data-usage")
-  el.setAttribute("data-usage", c["cmd"])
 }
 
 export function listen(settings, pointer, metrics) {
@@ -193,7 +196,7 @@ export function listen(settings, pointer, metrics) {
   })
 
   window.addEventListener('download', e => {
-    if(settings.id === "pattern_canvas") return 
+    if(!settings.eventListener['download']) return 
     const filetype = document.getElementById("download-filetype").value
     if(filetype === "img") {
       const canvas = settings.element
@@ -240,7 +243,6 @@ export function listen(settings, pointer, metrics) {
 
 function handleArrowKey(arrow, settings, pointer, metrics) {
   if(settings.id === "pattern_canvas" || settings.mode.options.control.status === "mouse") return
-  const rect = settings.element.getBoundingClientRect()
   if(arrow.axis === "x") pointer.x += metrics.cellWidth * arrow.dir
   if(arrow.axis === "y") pointer.y += metrics.lineHeight * arrow.dir 
 }

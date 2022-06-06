@@ -43,17 +43,6 @@ export const borderStyles = {
 		right       : '║',
 		bg          : ' ',
 	},
-	// fat : {
-	// 	topleft     : '█' ,
-	// 	topright    : '█',
-	// 	bottomright : '█',
-	// 	bottomleft  : '█',
-	// 	top         : '▀',
-	// 	bottom      : '▄',
-	// 	left        : '█',
-	// 	right       : '█',
-	// 	bg          : ' ',
-	// },
 	none : {
 		topleft     : ' ',
 		topright    : ' ',
