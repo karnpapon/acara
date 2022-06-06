@@ -9,7 +9,8 @@ window.acara = {
   patternSize: {cols: 8, rows: 4}
 }
 
-export function setup(){
+
+function setupFontSelector(){
   const fontSelector = document.getElementById("fontname");
   let fontname;
   let httpRequest = new XMLHttpRequest();
@@ -40,12 +41,8 @@ export function setup(){
   figlet.defaults({ fontPath: "/fonts" });
 }
 
-export function start(){
-
+function setupDOM(){
   const character = new Char();
-  
-  const output = document.getElementById("output");
-  const patternCanvas = document.getElementById("pattern-canvas");
   const currentChar = document.getElementById("current-char");
   const currentCharBg = document.getElementById("current-char-status");
   const charTableWrapper = document.getElementById("char-table-wrapper");
@@ -185,7 +182,19 @@ export function start(){
   });
 
   drawBtn.setAttribute("data-usage", "draw");
+}
 
+export function setup(){
+  setupDOM()
+  setupFontSelector()
+}
+
+export function start(){
+
+  const output = document.getElementById("output");
+  const patternCanvas = document.getElementById("pattern-canvas");
+  const menu = document.getElementById("menu");
+  const canvasContainer = document.getElementById("canvas-container")
 
   figlet.preloadFonts(["Standard"], () => {
     console.log("FIGlet loaded!");
@@ -193,7 +202,10 @@ export function start(){
     // drawing canvas
     run(prog0, { element: output })
       .catch(errorHandler)
-      .then((res) => { menu.className = "menu ready"; });
+      .then((res) => { 
+        menu.className = "menu ready"; 
+        canvasContainer.className = "canvas-container ready"
+      });
 
     // pattern brush canvas
     run(prog1, { element: patternCanvas })

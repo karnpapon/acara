@@ -92,6 +92,8 @@ button:hover {
 
 .canvas-container {
   position: relative;
+  opacity: 0;
+  transition: 600ms;
 }
 
 /* -- main grid layout ---------------------------------------------- */
@@ -272,7 +274,7 @@ button:hover {
   background-color: rgba(255, 255, 255, 0);
   color: black;
   opacity: 0;
-  transition: 200ms;
+  transition: 600ms;
   padding: 20px;
   height: calc(100vh - 40px);
   /* padding: 0 1ch 0  1ch; */
