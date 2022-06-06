@@ -157,12 +157,13 @@ export function main(coord, context, cursor, buffer) {
   if(mode.options.cursorMode.status === "pattern") {
     for (let px=0; px<window.acara.patternSize.cols; px++) {
       for (let py=0; py<window.acara.patternSize.rows; py++) {
+        const cell = window.acara.pattern[px+py*10]
         if ( coord.x  == x + px && coord.y == y + py || 
           coord.x  == x + px && coord.y == y + py) {
           return {
-            char: window.acara.pattern[px+py*10].char, 
-            color: canvasFillStyle[canvasFill].color, 
-            backgroundColor: canvasFillStyle[canvasFill].backgroundColor 
+            char: cell.char, 
+            color: cell.color, 
+            backgroundColor: cell.backgroundColor 
           }
         } 
       }
