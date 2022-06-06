@@ -35,9 +35,6 @@ export function main(coord, context, cursor, buffer) {
 
 
 import { drawBox } from '/src/modules/drawbox.js'
-// export function post(context, cursor, buffer) {
-// 	drawInfo(context, cursor, buffer, { shadowStyle : 'gray' })
-// }
 
 const boxStyle = {
   x               : 12,

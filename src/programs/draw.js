@@ -75,7 +75,7 @@ function hasWhiteSpace(c) {
       || c === '\ufeff'
 }
 
-export function getData(){ return data } 
+export function getData(){ return data} 
 export function getCols(){ return cols}
 export function getRows(){ return rows}
 
@@ -150,7 +150,7 @@ export function pre(context, cursor, buffer) {
 }
 
 export function main(coord, context, cursor, buffer) {
-  const { settings: { cursorBrush, mode, canvasFill }} = context
+  const { settings: { cursorBrush, mode, canvasFill, backgroundColor, color }} = context
 	const x = Math.floor(cursor.x) 
 	const y = Math.floor(cursor.y) 
 
@@ -177,12 +177,11 @@ export function main(coord, context, cursor, buffer) {
       // cursor mode
       if (mode.options.cursorMode.status === "none") return ''
 
-      // when cursor is hovering non-empty cell ( clearly see cursor position eg. colored cell)
       if (coord.x == x && coord.y == y) {
         return {
           char: cursorBrush.char, 
-          color: canvasFillStyle[canvasFill].color,
-          backgroundColor: canvasFillStyle[canvasFill].backgroundColor
+          color: color,
+          backgroundColor: backgroundColor
         }
       }
 
@@ -206,6 +205,17 @@ export function main(coord, context, cursor, buffer) {
         char: '', 
         color: canvasFillStyle[canvasFill].color,
         backgroundColor: canvasFillStyle[canvasFill].backgroundColor,
+      }
+    }
+
+    // when cursor is hovering non-empty cell ( clearly see cursor position eg. colored cell)
+    // this is a repeated code, but it's necessary. 
+    // otherwise current cursor letter (cursorBrush) will disappear when hovering at cell that already have a letter.
+    if (coord.x == x && coord.y == y) {
+      return {
+        char: cursorBrush.char, 
+        color: backgroundColor,
+        backgroundColor: color
       }
     }
   

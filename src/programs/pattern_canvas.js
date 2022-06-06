@@ -56,17 +56,27 @@ export function pre(context, cursor, buffer) {
 }
 
 export function main(coord, context, cursor, buffer) {
-  const { settings: { cursorBrush, mode, canvasFill }} = context
+  const { settings: { cursorBrush, mode, canvasFill, color, backgroundColor }} = context
 	const x = Math.floor(cursor.x) 
 	const y = Math.floor(cursor.y) 
 
   if(data[coord.index]) {
     const u = data[coord.index]
 
+    if (u.char === '') { 
+      if (coord.x == x && coord.y == y) {
+        return {
+          char: cursorBrush.char, 
+          color: color,
+          backgroundColor: backgroundColor
+        }
+      }
+    }
+
     if (coord.x == x && coord.y == y) return { 
       char: cursorBrush.char, 
-      color: canvasFillStyle[canvasFill].color,
-      backgroundColor: canvasFillStyle[canvasFill].backgroundColor
+      color: backgroundColor,
+      backgroundColor: color
     }
   
     // no-hovered non-empty cell rendering.
