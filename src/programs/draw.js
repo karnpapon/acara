@@ -7,7 +7,6 @@ export const settings = {
   fps : 30, 	
   eventListener: { 
     generator: true, 
-    pattern: false, 
     draw: true, 
     erase: true, 
     grid: true,

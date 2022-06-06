@@ -10,3 +10,7 @@
 - fill bg mode.
 - drag mode.
 - undo (cmd+z)
+
+
+
+- fix empty gray screen when reload page.

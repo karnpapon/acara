@@ -5,14 +5,8 @@ export const settings = {
   fps : 30, 	
   renderer : 'canvas',
   eventListener: { 
-    generator: false, 
     pattern: true, 
-    draw: false, 
-    erase: false,
-    grid: false,
-    control: false,
     canvas: true,
-    download: false,
   },
   canvasOffset : {
     x : 'auto',

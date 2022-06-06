@@ -18,7 +18,7 @@ const cmdlist = {
 }
 
 function setoptions(c, settings){
-  const isEventAllowed = settings.eventListener[c["cmd"]]
+  const isEventAllowed = settings.eventListener[c["cmd"]] ?? false
   const option = c.options[settings.mode.options[c["cmd"]].index]
   settings.mode.options[c["cmd"]].index = (settings.mode.options[c["cmd"]].index += 1) % c.options.length
   settings.mode.options[c["cmd"]].status = option
@@ -43,7 +43,6 @@ function setoptions(c, settings){
       drawCanvasElem.classList.toggle("hide") 
     } 
   
-    // affect draw_canvas & pattern_canvas
     if(c["cmd"] === "canvas") { 
       const textColor = document.getElementById("text-color");
       const bgColor = document.getElementById("bg-color");
@@ -234,7 +233,7 @@ export function listen(settings, pointer, metrics) {
 
   document.addEventListener('keyup', e => {
     if (document.activeElement.tagName === "INPUT") return
-    if(e.code === "KeyD"){ pointer.pressed = false }
+    if(e.code === "KeyD" || e.code === "KeyE"){ pointer.pressed = false }
   })
 }
 
