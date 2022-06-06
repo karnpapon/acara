@@ -52,7 +52,7 @@ export const CSSStyles = [
 	'fontWeight',
 	'letterSpacing',
 	'lineHeight',
-	'textAlign',
+	// 'textAlign',
 ]
 
 export const canvasFillStyle = {

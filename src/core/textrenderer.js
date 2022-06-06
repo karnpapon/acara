@@ -1,9 +1,3 @@
-/**
-@module   textrenderer.js
-@desc     renders to a text element
-@category renderer
-*/
-
 export default {
 	preferredElementNodeName : 'PRE',
 	render
@@ -16,11 +10,6 @@ let cols, rows
 function render(context, buffer) {
 
 	const element = context.settings.element
-
-	// Set the most used styles to the container
-	// element.style.backgroundColor = context.settings.background
-	// element.style.color = context.settings.color
-	// element.style.fontWeight = context.settings.weight
 
 	// Detect resize
 	if (context.rows != rows || context.cols != cols) {

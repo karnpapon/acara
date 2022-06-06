@@ -1,9 +1,3 @@
-/**
-@module   canvasrenderer.js
-@desc     renders to canvas
-@category renderer
-*/
-
 export default {
 	preferredElementNodeName : 'CANVAS',
 	render
@@ -55,7 +49,6 @@ function render(context, buffer) {
 	ctx.fillStyle = fg
 	ctx.textBaseline = 'top'
 
-	// Custom settings: it’s possible to center the canvas
 	if (settings.canvasOffset) {
 		const offs = settings.canvasOffset
 		const ox = Math.round(offs.x == 'auto' ? (canvas.width / scale - c * cw) / 2 : offs.x)
@@ -63,59 +56,20 @@ function render(context, buffer) {
 		ctx.translate(ox, oy)
 	}
 
-	// Center patch with cell bg color...
-	// a bit painful and needs some opt.
-	if( settings.textAlign == 'center' ) {
+  for (let j=0; j<r; j++) {
+    for (let i=0; i<c; i++) {
+      const cell = buffer[j * c + i]
+      const x = i * cw
+      const y = j * ch
+      if (cell.backgroundColor && cell.backgroundColor != bg) {
+        ctx.fillStyle = cell.backgroundColor || bg
+        ctx.fillRect(Math.round(x), y, Math.ceil(cw), ch)
+      }
+      ctx.font = (cell.fontWeight || fontWeight) + ff
+      ctx.fillStyle = cell.color || fg
+      ctx.fillText(cell.char, x, y)
+    }
+  }
 
-		for (let j=0; j<r; j++) {
-			const offs = j * c
-			const widths  = []
-			const offsets = []
-			const colors  = []
-			let totalWidth = 0
-
-			// Find width
-			for (let i=0; i<c; i++) {
-				const cell = buffer[offs + i]
-				ctx.font = (cell.fontWeight || fontWeight) + ff
-				const w = ctx.measureText(cell.char).width
-				totalWidth += w
-				widths[i] = w
-			}
-			// Draw
-			let ox = (canvas.width / scale - totalWidth) * 0.5
-			const y = j * ch
-			for (let i=0; i<c; i++) {
-				const cell = buffer[offs + i]
-				const x = ox
-				if (cell.backgroundColor && cell.backgroundColor != bg) {
-					ctx.fillStyle = cell.backgroundColor || bg
-					ctx.fillRect(Math.round(x), y, Math.ceil(widths[i]), ch)
-				}
-				ctx.font = (cell.fontWeight || fontWeight) + ff
-				ctx.fillStyle = cell.color || fg
-				ctx.fillText(cell.char, ox, y)
-
-				ox += widths[i]
-			}
-		}
-
-	// (Default) block mode
-	} else {
-		for (let j=0; j<r; j++) {
-			for (let i=0; i<c; i++) {
-				const cell = buffer[j * c + i]
-				const x = i * cw
-				const y = j * ch
-				if (cell.backgroundColor && cell.backgroundColor != bg) {
-					ctx.fillStyle = cell.backgroundColor || bg
-					ctx.fillRect(Math.round(x), y, Math.ceil(cw), ch)
-				}
-				ctx.font = (cell.fontWeight || fontWeight) + ff
-				ctx.fillStyle = cell.color || fg
-				ctx.fillText(cell.char, x, y)
-			}
-		}
-	}
 	ctx.restore()
 }

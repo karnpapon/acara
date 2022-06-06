@@ -1,9 +1,3 @@
-/**
-@module   fps
-@desc     Frames-per-second-counter class.
-@category core
-*/
-
 export default class FPS {
 	constructor() {
 		this.frames = 0

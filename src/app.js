@@ -51,7 +51,6 @@ function setupDOM(){
   const settingBtn = document.getElementById("setting");
   const settingSection = document.getElementById("setting-section");
   const aboutSectionTitle = document.getElementById("about-section");
-  const menu = document.getElementById("menu");
   const drawBtn = document.getElementById("draw");
   const downloadBtn = document.getElementById("download");
   const resetBtn = document.getElementById("reset");
