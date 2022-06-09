@@ -45,7 +45,7 @@ canvas#output,
 canvas#pattern-canvas,
 pre#output {
   font-family: 'JetBrainsMono Nerd Font Mono', 'Noto Sans Thai';
-  line-height: 1;
+  line-height: 1.25;
   position: absolute;
   left: 0;
   top: 0;
@@ -151,28 +151,28 @@ pre#output {
   background-image:
       repeating-linear-gradient(rgb(224, 224, 224) 0 1px, transparent 1px 100%),
       repeating-linear-gradient(90deg, rgb(224, 224, 224) 0 1px, transparent 1px 100%);
-  background-size: 7.22px 12px;
+  background-size: 7.22px 15.1px;
 }
 
 .grid-pattern-width, .pattern-canvas-cropped {
   width: 200px;
   height: 200px;
-  background-size: 19.22px 32px;
+  background-size: 19.22px 38px;
 }
 
 .available-area {
   width: 200px;
   height: 200px;
-  background-size: 19.22px 32px;
+  background-size: 19.22px 39px;
   margin-top: 0;
 }
 
 .grid-pattern-width {
   margin-top: 0;
-  -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" preserveAspectRatio="none"><rect width="153.76" height="128" style="fill:rgb(0,0,0);" /></svg>') 0/100% 100%,
+  -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 219" preserveAspectRatio="none"><rect width="153.76" height="128" style="fill:rgb(0,0,0);" /></svg>') 0/100% 100%,
     linear-gradient(#fff,#fff);
   -webkit-mask-composite:destination-out;
-  mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" preserveAspectRatio="none"><rect width="153.76" height="128" style="fill:rgb(0,0,0);" /></svg>') 0/100% 100%,
+  mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 219" preserveAspectRatio="none"><rect width="153.76" height="128" style="fill:rgb(0,0,0);" /></svg>') 0/100% 100%,
     linear-gradient(#fff,#fff);
   mask-composite:exclude;  
   background:rgb(0, 0, 0);

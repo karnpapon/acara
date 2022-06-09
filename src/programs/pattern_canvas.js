@@ -36,7 +36,8 @@ export function pre(context, cursor, buffer) {
         const i = x + y
         const c = (x + y) % 2
         data[x+y*cols] = {
-          char : pattern[c][i % pattern[c].length],
+          // char : pattern[c][i % pattern[c].length],
+          char : Math.random() < 0.5 ? '╱' : '╲',
           color, 
           backgroundColor
         }

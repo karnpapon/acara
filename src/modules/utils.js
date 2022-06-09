@@ -32,7 +32,7 @@ export function calcMetrics(el) {
 	if (el.nodeName == 'CANVAS') {
 		const ctx = el.getContext('2d')
 		ctx.font = fontSize + 'px ' + fontFamily
-    const textMetric = ctx.measureText(''.padEnd(69, 'X')) //TODO: calc from settings.cols
+    const textMetric = ctx.measureText(''.padEnd(69, 'x')) //TODO: calc from settings.cols
 		cellWidth = textMetric.width / 69
 		cellHeight = textMetric.fontBoundingBoxAscent + textMetric.fontBoundingBoxDescent / 69
 	} else {

@@ -82,7 +82,7 @@ function setupDOM(){
   patternAreaCol.onclick = (e) => {
     const cols = 19.22 * e.target.value
     const rows = 32 * patternAreaRow.value
-    const area = `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" preserveAspectRatio="none"><rect width="${cols}" height="${rows}" style="fill:rgb(0,0,0);" /></svg>') 0/100% 100%, linear-gradient(#fff,#fff);`
+    const area = `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 222" preserveAspectRatio="none"><rect width="${cols}" height="${rows}" style="fill:rgb(0,0,0);" /></svg>') 0/100% 100%, linear-gradient(#fff,#fff);`
     document.getElementById("pattern-canvas-overlay").setAttribute("style", `-webkit-mask: ${area}`)
     window.acara.patternSize = {cols: parseInt(e.target.value), rows: parseInt(patternAreaRow.value)}
   };
@@ -90,7 +90,7 @@ function setupDOM(){
   patternAreaRow.onclick = (e) => {
     const cols = 19.22 * patternAreaCol.value
     const rows = 32 * e.target.value
-    const area = `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" preserveAspectRatio="none"><rect width="${cols}" height="${rows}" style="fill:rgb(0,0,0);" /></svg>') 0/100% 100%, linear-gradient(#fff,#fff);`
+    const area = `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 222" preserveAspectRatio="none"><rect width="${cols}" height="${rows}" style="fill:rgb(0,0,0);" /></svg>') 0/100% 100%, linear-gradient(#fff,#fff);`
     document.getElementById("pattern-canvas-overlay").setAttribute("style", `-webkit-mask: ${area}`)
     window.acara.patternSize = {cols: parseInt(patternAreaCol.value), rows: parseInt(e.target.value)}
   };
