@@ -14,7 +14,8 @@ const cmdlist = {
   k: { cmd: "canvas", options: ["white", "black" ], target: "canvas-fill-status"},
   n: { cmd: "control", options: ["mouse", "keyboard"], target: "control-status"},
   j: { cmd: "generator", options: undefined, target: undefined},
-  p: { cmd: "pattern", options: undefined, target: undefined}
+  p: { cmd: "pattern", options: undefined, target: undefined},
+  x: { cmd: "export", options: undefined, target: undefined}
 }
 
 function setoptions(c, settings){
@@ -96,6 +97,12 @@ function setcommand(e, settings, pointer) {
       const form = document.getElementById("pattern-form");
       form.classList.toggle("collapse"); 
     }
+
+
+    if(c["cmd"] === "export") { 
+      const downloadInfo = document.getElementsByClassName("download-group")[0]
+      downloadInfo.classList.toggle("collapse") 
+    } 
   
     if (settings.mode.options.control.status === "keyboard"){
       if(cmd === "draw") { pointer.pressed = true }

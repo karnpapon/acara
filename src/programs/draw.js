@@ -13,6 +13,7 @@ export const settings = {
     control: true,
     canvas: true,
     download: true,
+    export: true,
   },
   renderer : 'canvas',
   canvasOffset : {

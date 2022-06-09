@@ -1,3 +1,6 @@
+/* ---------------------------------------- */
+/* --------------- GLOBAL ----------------- */
+
 * {
   margin: 0;
   padding: 0;
@@ -17,9 +20,7 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-strong {
-  font-weight: bolder;
-}
+strong { font-weight: bolder; }
 
 body {
   background-color: rgb(242 242 242);
@@ -33,6 +34,12 @@ hr {
   margin-bottom: 1.25rem;
   margin-top: 1.25rem;
 }
+
+button { cursor: pointer; }
+button:hover { opacity: 0.5; }
+
+/* ---------------------------------------- */
+/* ------------ MAIN CANVAS --------------- */
 
 canvas#output,
 canvas#pattern-canvas,
@@ -52,27 +59,12 @@ pre#output {
   position: relative;
 }
 
-button {
-  cursor: pointer;
-}
-
-button:hover {
-  opacity: 0.5;
-}
-
-.icon {
-  /* width: 45px; */
-  margin-right: 1rem;
-}
+.icon { margin-right: 1rem; }
 
 .icon-title-wrapper {
   display: flex;
   align-items: center;
   width: 100%;
-}
-
-.mb-4 {
-  margin-bottom: 1rem;
 }
 
 .picker {
@@ -83,11 +75,18 @@ button:hover {
   --box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(3, 1, 1, 0.08);
 }
 
-.hide {
-  display: none !important;
-}
+.hide { display: none !important; }
 
+
+
+/* -------------------------------------------------- */
+/* ------------ UTILS (tailwind-like) --------------- */
+
+.mb-4 { margin-bottom: 1rem; }
 .h-0 { height: 0; }
+.gap-4 { grid-gap: 4px;}
+.flex { display: flex;}
+.flex-wrap { flex-wrap: wrap;}
 .flex-col { flex-direction: column;}
 
 .canvas-container {
@@ -96,7 +95,8 @@ button:hover {
   transition: 600ms;
 }
 
-/* -- main grid layout ---------------------------------------------- */
+/* -------------------------------------------------- */
+/* --------------- MAIN GRID LAYOUT ----------------- */
 
 .grid {
   display: grid;
@@ -104,42 +104,21 @@ button:hover {
   position: relative;
 }
 
-.cell1,
-.cell3 {
-  height: 100vh;
-}
-
-.cell1,
-.cell2,
-.cell3 {
-  position: relative;
-}
-
-.cell1 {
-  /* width: 30%; */
-}
-
-.cell2 {
-  /* width: 80%; */
-}
+.cell1, .cell3 { height: 100vh; }
+.cell1, .cell2, .cell3 { position: relative; }
 
 .grid.one {
   grid-template-columns: 1fr;
 }
 
-.grid.one .cell2,
-.grid.one .cell3 {
-  display: none;
-}
+.grid.one .cell2, .grid.one .cell3 { display: none; }
 
-.gap-4 { grid-gap: 4px;}
 .grid.two2 { grid-template-columns: 1fr 7fr;}
 
 .grid.two {
   grid-template-columns: 1fr 1fr;
   grid-gap: 12px;
 }
-
 
 .grid.two .cell3 {
   display: none;
@@ -188,12 +167,6 @@ button:hover {
   margin-top: 0;
 }
 
-#pattern-canvas-overlay-area {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
 .grid-pattern-width {
   margin-top: 0;
   -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" preserveAspectRatio="none"><rect width="153.76" height="128" style="fill:rgb(0,0,0);" /></svg>') 0/100% 100%,
@@ -204,6 +177,10 @@ button:hover {
   mask-composite:exclude;  
   background:rgb(0, 0, 0);
 }
+
+
+/* -------------------------------------------------- */
+/* --------------- SPECIFIC SETTING ----------------- */
 
 .pattern-canvas-cropped { 
   overflow: hidden;
@@ -217,11 +194,8 @@ button:hover {
 
 .pattern-canvas-cropped > canvas { transform: translateX(-3px); margin-top: 0 !important;}
 
-
+.download-group { width: 100%;  padding-bottom: 6rem;}
 .download-group > select {  padding: 4px; width: 100%; }
-
-.flex { display: flex;}
-.flex-wrap { flex-wrap: wrap;}
 
 .char-table-wrapper { display: flex; flex-direction: column; align-items: initial !important;}
 
@@ -252,22 +226,8 @@ button:hover {
 }
 .control-status > svg { width: 10px; height: 10px; margin-left: 8px;}
 
-.control-detail-box {  
-  width: 100%;
-  padding-bottom: 8rem;
-  height: 0;
-  display: flex;
-  flex-wrap: wrap;
-  overflow: hidden;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  transition: 200ms;
-}
-
-.clickable { cursor: pointer;}
-.clickable:hover { background-color: rgb(255, 255, 255); }
-
-/* -- menu ---------------------------------------------------------- */
+/* ---------------------------------------- */
+/* ----------- MENU CONTAINER ------------- */
 
 .menu {
   font-weight: 100;
@@ -277,17 +237,12 @@ button:hover {
   transition: 600ms;
   padding: 20px;
   height: calc(100vh - 40px);
-  /* padding: 0 1ch 0  1ch; */
-  /* overflow-y: scroll; */
-  /* border-left: 1px solid #222222; */
 }
 
 .menu-flex-overflow-wrapper {
   height: calc(100vh - 40px);
   width: 100%;
-  /* width: calc(100% + 35px); */
   overflow: hidden;
-  /* background-color: beige; */
 }
 
 .menu-overflow-scroll-wrapper {
@@ -309,28 +264,33 @@ button:hover {
   padding-bottom: 1rem;
 }
 
+.menu-flex a {
+  color: inherit;
+  text-decoration: underline;
+}
+
 .menu-flex:last-child {
   box-sizing: border-box;
 }
 
-.usage>div {
+.menu__wrapper>div {
   margin-bottom: 4px;
   display: flex;
   align-items: center;
 }
 
-.usage>div>span {
+.menu__wrapper>div>span {
   margin-right: 8px;
 }
 
-.usage>div>p {
+.menu__wrapper>div>p {
   background-color: gainsboro;
   border-radius: 16px;
   padding: 3px 15px;
   margin-left: auto;
 }
 
-.usage strong {
+.menu__wrapper strong {
   font-weight: bolder;
   background-color: white;
   padding: 4px;
@@ -343,11 +303,6 @@ button:hover {
   line-height: 20px;
 }
 
-.level2,
-.hotkey {
-  color: #666;
-}
-
 .action-button {
   cursor: pointer;
   width: 100%;
@@ -357,31 +312,10 @@ button:hover {
   text-decoration: underline;
 }
 
-.row-wrap {
-  display: contents;
-}
-
-.program-cathegory {
-  color: #666;
-  padding-left: 2ch;
-  display: block;
-}
-
-.project-grid a {
-  color: pink !important;
-  padding-left: 4ch;
-}
-
-.menu-flex a {
-  color: inherit;
-  text-decoration: underline;
-}
-
-/* --------------pattern---------- */
-
-.pattern-form {
+/* ---------------------------------------- */
+/* ---------------- MENU ------------------ */
+.menu__info { 
   width: 100%;
-  padding-bottom: 16rem;
   height: 0;
   display: flex;
   flex-wrap: wrap;
@@ -390,41 +324,26 @@ button:hover {
   margin-bottom: 1rem;
   transition: 200ms;
 }
+.menu__info > button, .menu__info > div > button  { padding: 0.5rem; margin-top: 0.5rem;}
+.menu__info .input-size { width: 50%; display: flex; }
+.menu__info > div { width: 100%; }
 
-/* -------------- form ---------- */
-.generator-form {
-  width: 100%;
-  padding-bottom: 36rem;
-  height: 0;
-  display: flex;
-  flex-wrap: wrap;
-  overflow: hidden;
-  transition: 200ms;
-}
+/* ---------------------------------------- */
+/* --------------MENU-ITEMS--------------- */
 
+.control-detail-box {  padding-bottom: 8rem; }
+
+.pattern-form { padding-bottom: 16rem; }
+
+.generator-form { padding-bottom: 24rem; }
 .generator-form input {
   color: black;
   width: 100%;
   padding: 4px;
 }
 
-.generator-form button {
-  color: black;
-  padding: 0.5rem;
-  margin-top: 0.5rem;
-}
-
-.generator-form .input-size {
-  width: 50%;
-  display: flex;
-}
-
-.generator-form > div {
-  width: 100%;
-  margin-top: 1rem;
-}
-
-/* ---------- setting------- */
+/* ---------------------------------------- */
+/* ------------------ SETTING-------------- */
 .setting {
   width: 100%;
   padding-bottom: 7rem;
@@ -463,11 +382,10 @@ button:hover {
   width: 500px;
   height: 700px;
 }
-
-/* ----------char table---------- */
+/* ---------------------------------------- */
+/* -------------- CHAR TABLE--------------- */
 .char-table {
   width: 100%;
-  /* padding-bottom: 46rem; */
   height: 0;
   display: flex;
   flex-wrap: wrap;
@@ -480,12 +398,6 @@ button:hover {
   margin-left: 2rem;
   height: fit-content;
   overflow: hidden;
-  /* padding-bottom: 15rem; */
-  /* transition: 200ms; */
-}
-
-.ready {
-  opacity: 1;
 }
 
 .char-table p {
@@ -502,8 +414,8 @@ button:hover {
   background-color: black;
   color: white;
 }
-
-/* ---------- about ----------- */
+/* ---------------------------------------- */
+/* ----------------- ABOUT ---------------- */
 
 .about {
   width: 100%;
@@ -526,52 +438,22 @@ button:hover {
   text-decoration: none;
 }
 
-/* ------id------------------- */
+/* ---------------------------------------- */
+/* -----------------ID--------------------- */
 
-#charlist-title {
-  cursor: pointer;
-  user-select: none;
-}
+#charlist-title { cursor: pointer; user-select: none; }
+#generate, #resize-canvas { background-color: black; color: white; }
+#download { background-color: black; color: white; }
+#fontname { width: 100%; padding: 4px; }
+#setting, #about-section { cursor: pointer; user-select: none; }
+#current-char { user-select: none;}
+#pattern-canvas-overlay-area { position: absolute; top: 0; left: 0; }
 
-#generate,
-#resize-canvas {
-  /* background-color: #00cc55; */
-  background-color: black;
-  color: white;
-}
-
-#reset {
-  /* background-color: #ff8b50; */
-  /* background-color: #c9c9c9; */
-}
-
-#download {
-  background-color: white;
-}
-
-#fontname {
-  width: 100%;
-  padding: 4px;
-}
-
-#setting,
-#about-section {
-  cursor: pointer;
-  user-select: none;
-}
-
-/* #generator-title:hover {
-  text-decoration: underline;
-} */
-
+/* ---------------------------------------- */
+/* --------------- TEXT DECO ------------- */
 .fontname {
   margin-top: 0.25rem;
   width: 100%;
-}
-
-.collapse {
-  padding-bottom: 0;
-  margin: 0;
 }
 
 .selected-color {
@@ -595,11 +477,14 @@ button:hover {
   align-items: center;
   display: flex;
 }
+/* ---------------------------------------- */
+/* ---------------- STATE ----------------- */
 
-.hidden {
-  visibility: hidden;
-}
-
+.clickable { cursor: pointer;}
+.clickable:hover { background-color: rgb(255, 255, 255); }
+.collapse { padding-bottom: 0; margin: 0; }
+.hidden { visibility: hidden; }
 .collapse-h-full { height: 0;}
+.ready { opacity: 1; }
 
-#current-char { user-select: none;}
+/* ---------------------------------------- */

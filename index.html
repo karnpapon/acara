@@ -19,7 +19,7 @@
       <div class="menu-flex-overflow-wrapper">
         <div class="menu-overflow-scroll-wrapper">
           <nav class="menu-flex">
-            <div class="usage">
+            <div class="menu__wrapper">
               <div><strong id="draw">d</strong><span>draw</span></div>
               <div>
                 <strong class="hidden">x</strong>
@@ -52,7 +52,6 @@
                 </span>
               </div>
               <div id="char-table-wrapper" class="char-table-wrapper collapse-h-full "></div>
-
               <div>
                 <strong id="cursorMode">c</strong><span>cursor</span>
                 <p id="cursor-type">guide</p>
@@ -73,7 +72,7 @@
                 </div>
               </div>
 
-              <div id="control-detail-box" class="control-detail-box collapse">
+              <div id="control-detail-box" class="control-detail-box menu__info collapse">
                 <div class="grid two2 gap-4">
                   <p> ↑ :</p> <p>arrow up </p> 
                   <p> ↓ :</p> <p>arrow down </p> 
@@ -90,7 +89,7 @@
                   <span class="">pattern</span>
                 </div>
   
-                <form id="pattern-form" class="pattern-form collapse">
+                <form id="pattern-form" class="pattern-form menu__info collapse">
                   <div class="grid two">
                     <div class="pattern-option">
                       <div>col: </div>
@@ -112,15 +111,12 @@
                 </form>
               </div>
 
-            </div>
-
-            <div>
-              <div class="usage icon-title-wrapper">
+              <div class="icon-title-wrapper">
                 <strong id="generator">j</strong>
-                <p id="generator-title">generator</p>
+                <span id="generator-title">generator</span>
               </div>
 
-              <form id="generator-form" class="generator-form collapse">
+              <form id="generator-form" class="generator-form menu__info collapse">
                 <div>
                   <label for="title">title</label><br>
                   <input type="text" id="title" name="title" value="Sonic Thread III"><br>
@@ -151,21 +147,31 @@
                   <select name="fontname" id="fontname"></select>
                 </div>
   
-                <div class="download-group">
-                  <div>download as</div>
+                <div>
+                  <button id="generate" type="submit">generate</button>
+                  <button id="reset">reset</button>
+                </div>
+              </form>
+
+              <div class="flex-col">
+                <div class="icon-title-wrapper">
+                  <strong id="export" class="">x</strong>
+                  <span class="">export</span>
+                </div>
+  
+                <div class="download-group menu__info collapse">
+                  <div>export as</div>
                   <select name="download-filetype" id="download-filetype">
                     <option value="txt">txt</option>
                     <option value="img" selected>image</option>
                   </select>
+                  <button id="download" type="download">export</button>
                 </div>
-                
-                <div>
-                  <button id="generate" type="submit">generate</button>
-                  <button id="download" type="download">download </button>
-                  <button id="reset">reset</button>
-                </div>
-              </form>
-  
+              </div>
+
+            </div>
+
+            <div>
               <hr>
               <div>
                 <div class="icon-title-wrapper">
