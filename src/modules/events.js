@@ -15,7 +15,7 @@ const cmdlist = {
   n: { cmd: "control", options: ["mouse", "keyboard"], target: "control-status"},
   j: { cmd: "generator", options: undefined, target: undefined},
   p: { cmd: "pattern", options: undefined, target: undefined},
-  x: { cmd: "export", options: undefined, target: undefined}
+  x: { cmd: "export", options: undefined, target: undefined},
 }
 
 function setoptions(c, settings){
@@ -75,7 +75,7 @@ function setoptions(c, settings){
 function setcommand(e, settings, pointer) {
   const c = cmdlist[e.key]
   if(!c) return
-
+  
   const cmd = c["cmd"]
   const el = document.getElementById(cmd)
   const rest = document.querySelector("[data-usage]")
@@ -105,7 +105,7 @@ function setcommand(e, settings, pointer) {
     } 
   
     if (settings.mode.options.control.status === "keyboard"){
-      if(cmd === "draw") { pointer.pressed = true }
+      if(cmd === "draw" ) { pointer.pressed = true }
       if(cmd === "erase") { pointer.pressed = true }
     }
   }
@@ -233,13 +233,37 @@ export function listen(settings, pointer, metrics) {
   })
 
   document.addEventListener('keydown', e => {
+    e.preventDefault();
     if (document.activeElement.tagName === "INPUT") return
+    if (e.metaKey) {
+      const metaBtn = document.getElementById("metakey")
+      const metaInfoBox = document.getElementById("meta-detail-box")
+      metaBtn.classList.add("btn-active")
+      metaInfoBox.classList.remove("collapse")
+      settings.mode.meta = true
+    }
     if (isArrowKey(e.code)) handleArrowKey(arrowKeyToDirection(e.code), settings, pointer, metrics)
     setcommand(e, settings, pointer)
   })
 
   document.addEventListener('keyup', e => {
+    e.preventDefault();
     if (document.activeElement.tagName === "INPUT") return
+    
+    if (!e.metaKey) {
+      const metaBtn = document.getElementById("metakey")
+      const metaInfoBox = document.getElementById("meta-detail-box")
+      metaInfoBox.classList.add("collapse")
+      metaBtn.classList.remove("btn-active")
+      settings.mode.meta = false
+
+      // since keyup wont be fired when holding metaKey (cmd). 
+      // in this case when holding 'cmd' + 'd' to draw. 
+      // we have to release 'cmd' key to stop drawing, same goes for the 'erase'.
+      // https://stackoverflow.com/a/57153300
+      pointer.pressed = false 
+    }
+
     if(e.code === "KeyD" || e.code === "KeyE"){ pointer.pressed = false }
   })
 }
@@ -249,8 +273,10 @@ export function listen(settings, pointer, metrics) {
 
 function handleArrowKey(arrow, settings, pointer, metrics) {
   if(settings.id === "pattern_canvas" || settings.mode.options.control.status === "mouse") return
-  if(arrow.axis === "x") pointer.x += metrics.cellWidth * arrow.dir
-  if(arrow.axis === "y") pointer.y += metrics.lineHeight * arrow.dir 
+  const metaStepsX = settings.mode.meta ? window.acara.patternSize.cols : 1
+  const metaStepsY = settings.mode.meta ? window.acara.patternSize.rows : 1
+  if(arrow.axis === "x") pointer.x += ( metrics.cellWidth * metaStepsX) * arrow.dir
+  if(arrow.axis === "y") pointer.y += ( metrics.lineHeight * metaStepsY) * arrow.dir 
 }
 
 function arrowKeyToDirection(e){

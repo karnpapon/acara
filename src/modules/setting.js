@@ -21,7 +21,7 @@ export const defaultSettings = {
 	fps             : 30,      // fps capping
 	renderer        : "text",  
   cursorBrush     : { char: '#' },
-  mode            : { cmd: "normal", options: optionsDefault},
+  mode            : { cmd: "normal", options: optionsDefault, meta: false},
   figlet          : [""],      // ascii alphabets. 
   generateData    : { },
   canvasFill      : "white",

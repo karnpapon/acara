@@ -14,6 +14,7 @@ export const settings = {
     canvas: true,
     download: true,
     export: true,
+    meta: true
   },
   renderer : 'canvas',
   canvasOffset : {

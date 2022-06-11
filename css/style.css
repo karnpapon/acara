@@ -273,6 +273,11 @@ pre#output {
   box-sizing: border-box;
 }
 
+.menu__wrapper strong[data-usage] {
+  background-color: black;
+  color: white;
+}
+
 .menu__wrapper>div {
   margin-bottom: 4px;
   display: flex;
@@ -301,6 +306,10 @@ pre#output {
   margin-right: 0.5rem;
   text-decoration: none;
   line-height: 20px;
+}
+
+.menu__wrapper strong.btn-active {
+  background-color: black; color: white; 
 }
 
 .action-button {
@@ -410,10 +419,6 @@ pre#output {
   background-color: rgba(103, 103, 103, 0.5);
 }
 
-.usage strong[data-usage] {
-  background-color: black;
-  color: white;
-}
 /* ---------------------------------------- */
 /* ----------------- ABOUT ---------------- */
 
@@ -486,5 +491,15 @@ pre#output {
 .hidden { visibility: hidden; }
 .collapse-h-full { height: 0;}
 .ready { opacity: 1; }
+.text-box {  
+  background-color: gainsboro;
+  padding: 2px;
+  padding-left: 10px;
+  padding-right: 10px;
+  color: rgb(0, 0, 0);
+  border-radius: 4px;
+  text-decoration: none;
+  line-height: 20px;
+}
 
 /* ---------------------------------------- */
