@@ -21,7 +21,7 @@ export const settings = {
   color : 'black'
 }
 
-const pattern = ['|','-']
+// const pattern = ['|','-']
 const data = []
 let cols, rows
 
@@ -33,8 +33,8 @@ export function pre(context, cursor, buffer) {
 		rows = context.rows
     for (let x=0; x<cols; x++) {
       for (let y=0; y<rows; y++) {
-        const i = x + y
-        const c = (x + y) % 2
+        // const i = x + y
+        // const c = (x + y) % 2
         data[x+y*cols] = {
           // char : pattern[c][i % pattern[c].length],
           char : Math.random() < 0.5 ? '╱' : '╲',

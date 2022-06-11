@@ -30,18 +30,15 @@ function setoptions(c, settings){
   if(isEventAllowed){
     if(c["cmd"] === "control") {
       if(option === "keyboard") { 
-        const controlDetailBox = document.getElementById("control-detail-box");
-        controlDetailBox.classList.remove("collapse")
+        document.getElementById("control-detail-box").classList.remove("collapse");
       } else if (option === "mouse") {
-        const controlDetailBox = document.getElementById("control-detail-box");
-        controlDetailBox.classList.add("collapse")
+        document.getElementById("control-detail-box").classList.add("collapse");
       }
     }
   
     // affect only draw_canvas (based on settings.eventListener)
     if(c["cmd"] === "grid") { 
-      const drawCanvasElem = document.getElementsByClassName("grid-canvas-width")[0]
-      drawCanvasElem.classList.toggle("hide") 
+      document.getElementsByClassName("grid-canvas-width")[0].classList.toggle("hide") 
     } 
   
     if(c["cmd"] === "canvas") { 
@@ -89,19 +86,16 @@ function setcommand(e, settings, pointer) {
 
   if(isEventAllowed) {
     if(cmd === "generator") { 
-      const form = document.getElementById("generator-form");
-      form.classList.toggle("collapse"); 
+      document.getElementById("generator-form").classList.toggle("collapse");
     }
   
     if(cmd === "pattern") { 
-      const form = document.getElementById("pattern-form");
-      form.classList.toggle("collapse"); 
+      document.getElementById("pattern-form").classList.toggle("collapse");
     }
 
 
     if(c["cmd"] === "export") { 
-      const downloadInfo = document.getElementsByClassName("download-group")[0]
-      downloadInfo.classList.toggle("collapse") 
+      document.getElementsByClassName("download-group")[0].classList.toggle("collapse") 
     } 
   
     if (settings.mode.options.control.status === "keyboard"){

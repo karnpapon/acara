@@ -453,6 +453,7 @@ pre#output {
 #setting, #about-section { cursor: pointer; user-select: none; }
 #current-char { user-select: none;}
 #pattern-canvas-overlay-area { position: absolute; top: 0; left: 0; }
+#control-detail-box { margin-bottom: 0;}
 
 /* ---------------------------------------- */
 /* --------------- TEXT DECO ------------- */
