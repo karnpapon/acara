@@ -236,10 +236,8 @@ export function listen(settings, pointer, metrics) {
     e.preventDefault();
     if (document.activeElement.tagName === "INPUT") return
     if (e.metaKey) {
-      const metaBtn = document.getElementById("metakey")
-      const metaInfoBox = document.getElementById("meta-detail-box")
-      metaBtn.classList.add("btn-active")
-      metaInfoBox.classList.remove("collapse")
+      document.getElementById("metakey").classList.add("btn-active")
+      document.getElementById("meta-detail-box").classList.remove("collapse")
       settings.mode.meta = true
     }
     if (isArrowKey(e.code)) handleArrowKey(arrowKeyToDirection(e.code), settings, pointer, metrics)
@@ -251,10 +249,8 @@ export function listen(settings, pointer, metrics) {
     if (document.activeElement.tagName === "INPUT") return
     
     if (!e.metaKey) {
-      const metaBtn = document.getElementById("metakey")
-      const metaInfoBox = document.getElementById("meta-detail-box")
-      metaInfoBox.classList.add("collapse")
-      metaBtn.classList.remove("btn-active")
+      document.getElementById("metakey").classList.remove("btn-active")
+      document.getElementById("meta-detail-box").classList.add("collapse")
       settings.mode.meta = false
 
       // since keyup wont be fired when holding metaKey (cmd). 
