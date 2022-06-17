@@ -156,16 +156,22 @@
               <div class="flex-col">
                 <div class="icon-title-wrapper">
                   <strong id="export" class="">x</strong>
-                  <span class="">export</span>
+                  <span class="">import / export</span>
                 </div>
   
                 <div class="download-group menu__info collapse">
-                  <div>export as</div>
-                  <select name="download-filetype" id="download-filetype">
-                    <option value="txt">txt</option>
-                    <option value="img" selected>image</option>
-                  </select>
-                  <button id="download" type="download">export</button>
+
+                    <div>import (txt)</div>
+                    <input type='file' id='file-input' />
+                    <!-- <button id="download" type="download">load</button> -->
+
+
+                    <div>export as</div>
+                    <select name="download-filetype" id="download-filetype">
+                      <option value="txt">txt</option>
+                      <option value="img" selected>image</option>
+                    </select>
+                    <button id="download" type="download">export</button>
                 </div>
               </div>
 

@@ -85,6 +85,13 @@ export function clear(){
   data.fill({char: '', backgroundColor: "white", color: "black"})
 }
 
+// for manipulating data (eg. after loading .txt file)
+export function pushData(d) {
+  for (let i = 0; i < d.length; i++) {
+    data[i] = d[i]
+  }
+}
+
 export function pre(context, cursor, buffer) {
   const { settings: { cursorBrush, mode, generateTextTitle, figlet, color, backgroundColor } } =  context
   const titleBoxStyle = {...textStyle, ...generateTextTitle.pos, ...generateTextTitle.style}

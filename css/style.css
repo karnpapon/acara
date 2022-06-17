@@ -194,7 +194,7 @@ pre#output {
 
 .pattern-canvas-cropped > canvas { transform: translateX(-3px); margin-top: 0 !important;}
 
-.download-group { width: 100%;  padding-bottom: 6rem;}
+.download-group { width: 100%;  padding-bottom: 12rem;}
 .download-group > select {  padding: 4px; width: 100%; }
 
 .char-table-wrapper { display: flex; flex-direction: column; align-items: initial !important;}
@@ -454,7 +454,7 @@ pre#output {
 #current-char { user-select: none;}
 #pattern-canvas-overlay-area { position: absolute; top: 0; left: 0; }
 #control-detail-box { margin-bottom: 0;}
-
+#file-input { margin-bottom: 1rem;}
 /* ---------------------------------------- */
 /* --------------- TEXT DECO ------------- */
 .fontname {

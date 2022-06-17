@@ -2,7 +2,7 @@ import { clamp } from "./num.js";
 import { borderStyles } from "./drawbox.js";
 import { allColors } from "./color.js";
 import { saveBlobAsFile, saveSourceAsFile } from "./filedownload.js"
-import { clear, getData, getCols, getRows } from "../programs/draw.js";
+import { clear, getData, pushData, getCols, getRows } from "../programs/draw.js";
 import { defaultSettings, canvasFillStyle } from "./setting.js";
 import { calcMetrics, pickKey } from "./utils.js";
 
@@ -17,6 +17,10 @@ const cmdlist = {
   p: { cmd: "pattern", options: undefined, target: undefined},
   x: { cmd: "export", options: undefined, target: undefined},
 }
+
+const _listener = (el, method, types, fn) => types.split(/\s+/).forEach(type => el[method](type, fn));
+const on = (el, types, fn) => _listener(el, 'addEventListener', types, fn);
+const off = (el, types, fn) => _listener(el, 'removeEventListener', types, fn);
 
 function setoptions(c, settings){
   const isEventAllowed = settings.eventListener[c["cmd"]] ?? false
@@ -107,7 +111,7 @@ function setcommand(e, settings, pointer) {
 
 export function listen(settings, pointer, metrics) {
 
-  settings.element.addEventListener('pointermove', e => {
+  on(settings.element, 'pointermove', e => {
     if(settings.id === "draw_canvas" && settings.mode.options.control.status === "keyboard") return
     const rect = settings.element.getBoundingClientRect()
     let _x = ( e.clientX  - rect.left )
@@ -115,28 +119,13 @@ export function listen(settings, pointer, metrics) {
     pointer.x = _x
     pointer.y = _y
   })
+  on(settings.element, 'pointerdown', (e) => pointer.pressed = true)
+  on(settings.element, 'pointerup', (e) => pointer.pressed = false)
 
-  settings.element.addEventListener('pointerdown', e => {
-    pointer.pressed = true
-  })
-
-  settings.element.addEventListener('pointerup', e => {
-    pointer.pressed = false
-  })
-
-  window.addEventListener('selectchar', e => {
-    settings.cursorBrush.char = e.detail
-  })
-
-  window.addEventListener('select-text-color', e => {
-    settings.color = e.detail.color
-  })
-
-  window.addEventListener('select-bg-color', e => {
-    settings.backgroundColor = e.detail.color
-  })
-
-  window.addEventListener('resize-canvas', e => {
+  on(window, 'selectchar', (e) => settings.cursorBrush.char = e.detail)
+  on(window, 'select-text-color', (e) => settings.color = e.detail.color)
+  on(window, 'select-bg-color', (e) => settings.backgroundColor = e.detail.color)
+  on(window, 'resize-canvas', e => {
     const { w, h, fsize } = e.detail
     settings.element.style.fontSize = fsize
     settings.canvasSize = { width : w, height: h }
@@ -147,13 +136,8 @@ export function listen(settings, pointer, metrics) {
     gridEle.style.height = `${h}px`
     gridEle.style.backgroundSize = `${m.cellWidth}px ${m.cellHeight}px`
   })
-
-  window.addEventListener('clear-canvas', e => {
-    clear()
-    settings.generateData = []
-  })
-
-  window.addEventListener('generate', e => {
+  on(window, 'clear-canvas', (e) => { clear(); settings.generateData = []})
+  on(window, 'generate', e => {
     let metrics = calcMetrics(settings.element)
     settings.generateData = e.detail
     const rect = settings.element.getBoundingClientRect()
@@ -190,12 +174,12 @@ export function listen(settings, pointer, metrics) {
     }
   })
 
-  window.addEventListener('reset', e => {
+  on(window, 'reset', e => {
     settings.generateBox = JSON.parse(JSON.stringify(defaultSettings)).generateBox
     settings.generateTextTitle = JSON.parse(JSON.stringify(defaultSettings)).generateTextTitle
   })
 
-  window.addEventListener('download', e => {
+  on(window, 'download', e => {
     if(!settings.eventListener['download']) return 
     const filetype = document.getElementById("download-filetype").value
     if(filetype === "img") {
@@ -222,11 +206,9 @@ export function listen(settings, pointer, metrics) {
     }
   })
 
-  window.addEventListener('fontselect', e => {
-    settings.generateTextTitle.fontname = e.detail
-  })
+  on(window, 'fontselect', e => { settings.generateTextTitle.fontname = e.detail })
 
-  document.addEventListener('keydown', e => {
+  on(document,'keydown', e => {
     e.preventDefault();
     if (document.activeElement.tagName === "INPUT") return
     if (e.metaKey) {
@@ -238,7 +220,7 @@ export function listen(settings, pointer, metrics) {
     setcommand(e, settings, pointer)
   })
 
-  document.addEventListener('keyup', e => {
+  on(document,'keyup', e => {
     e.preventDefault();
     if (document.activeElement.tagName === "INPUT") return
     
@@ -255,6 +237,26 @@ export function listen(settings, pointer, metrics) {
     }
 
     if(e.code === "KeyD" || e.code === "KeyE"){ pointer.pressed = false }
+  })
+
+  let fileInput = document.getElementById("file-input")
+
+  // TODO: use custom extension (.aca ?) instead of `.txt` to handle extra fields (backgroundColor, color, etc))
+  on(fileInput, "change", () => {
+    const reader = new FileReader()
+    const dataObj = []
+    reader.onload = (e) => {
+      for (let x = 0; x < e.target.result.length; x++) {
+        if(e.target.result.charAt(x) !== '\n'){
+          dataObj.push({char: e.target.result.charAt(x), backgroundColor: "white", color: "black"})
+        }
+      }
+      pushData(dataObj)
+    }
+
+    for (let file of fileInput.files) {
+      reader.readAsText(file)
+    } 
   })
 }
 
