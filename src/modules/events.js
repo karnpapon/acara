@@ -203,6 +203,9 @@ export function listen(settings, pointer, metrics) {
         }
       }
       saveSourceAsFile(acc, 'export.txt')
+    } else if (filetype === "aca"){
+      const txt = getData()
+      saveSourceAsFile(JSON.stringify(txt), 'export.aca') 
     }
   })
 
@@ -240,22 +243,37 @@ export function listen(settings, pointer, metrics) {
   })
 
   let fileInput = document.getElementById("file-input")
+  const fileTypes = ['txt', 'aca']; 
 
-  // TODO: use custom extension (.aca ?) instead of `.txt` to handle extra fields (backgroundColor, color, etc))
   on(fileInput, "change", () => {
+    if (settings.id !== "draw_canvas") return
     const reader = new FileReader()
     const dataObj = []
-    reader.onload = (e) => {
-      for (let x = 0; x < e.target.result.length; x++) {
-        if(e.target.result.charAt(x) !== '\n'){
-          dataObj.push({char: e.target.result.charAt(x), backgroundColor: "white", color: "black"})
+    let isSuccess = false
+    reader.onload = () => {
+      if (reader.fileExtension === "txt") {
+        for (let x = 0; x < reader.result.length; x++) {
+          if(reader.result.charAt(x) !== '\n'){
+            dataObj.push({char: reader.result.charAt(x), backgroundColor: "white", color: "black"})
+          }
         }
+        pushData(dataObj)
       }
-      pushData(dataObj)
+
+      if (reader.fileExtension === "aca") {
+        pushData(JSON.parse(reader.result))
+      }
     }
 
     for (let file of fileInput.files) {
-      reader.readAsText(file)
+      reader.fileName = file.name
+      reader.fileExtension = file.name.split('.').pop().toLowerCase()
+      isSuccess = fileTypes.indexOf(reader.fileExtension) > -1;
+      if(isSuccess) { 
+        reader.readAsText(file)
+      } else {
+        alert("file type is not supported.")
+      }
     } 
   })
 }
@@ -305,3 +323,22 @@ function hasWhiteSpace(c) {
       || c === '\u3000'
       || c === '\ufeff'
 }
+
+// function covertObjectToBinary(obj) {
+//   let output = '',
+//       input = JSON.stringify(obj) 
+//   for (let i = 0; i < input.length; i++) {
+//       output += input[i].charCodeAt(0).toString(2) + " ";
+//   }
+//   return output.trimEnd();
+// }
+
+// function convertBinaryToObject(str) {
+//   var newBin = str.split(" ");
+//   var binCode = [];
+//   for (let i = 0; i < newBin.length; i++) {
+//       binCode.push(String.fromCharCode(parseInt(newBin[i], 2)));
+//   }
+//   let jsonString = binCode.join("");
+//   return JSON.parse(jsonString)
+// }

@@ -3,6 +3,7 @@ const mimeTypes = {
 	'txt' : 'text/plain',
 	'png' : 'image/png',
 	'jpg' : 'text/jpeg',
+	'aca' : 'text/plain',
 }
 
 // For text elements
