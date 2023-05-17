@@ -1,6 +1,7 @@
 import { run } from "/src/modules/runner.js";
 import * as prog0 from "/src/programs/draw.js";
 import * as prog1 from "/src/programs/pattern_canvas.js";
+import * as prog2 from "/src/programs/sin_char.js";
 import Char, { charsList } from "/src/modules/chars.js";
 
 // global state, shared btw run()
@@ -198,13 +199,22 @@ export function start(){
   figlet.preloadFonts(["Standard"], () => {
     console.log("FIGlet loaded!");
 
-    // drawing canvas
+    // [1] drawing canvas
     run(prog0, { element: output })
       .catch(errorHandler)
       .then((res) => { 
         menu.className = "menu ready"; 
         canvasContainer.className = "canvas-container ready"
       });
+
+    // run animation example 
+    // dont forget to comment out [1] first (line 203-208)
+    // run(prog2, { element: output })
+    // .catch(errorHandler)
+    // .then((res) => {
+    //   menu.className = "menu ready";
+    //   canvasContainer.className = "canvas-container ready";
+    // });
 
     // pattern brush canvas
     run(prog1, { element: patternCanvas })

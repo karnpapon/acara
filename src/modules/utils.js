@@ -1,11 +1,11 @@
 // Build / update the 'context' object (immutable)
-export function getContext(settings, metrics, fps) {
+export function getContext(state, settings, metrics, fps) {
 	const rect = settings.element.getBoundingClientRect()
 	const cols = settings.cols || Math.floor(rect.width / metrics.cellWidth)
 	const rows = settings.rows || Math.floor(rect.height / metrics.lineHeight)
 	return Object.freeze({
-		// frame : state.frame,
-		// time : state.time,
+		frame : state.frame,
+		time : state.time,
 		cols,
 		rows,
 		metrics,
@@ -14,7 +14,7 @@ export function getContext(settings, metrics, fps) {
 		settings,
 		// Runtime & debug data
 		runtime : Object.freeze({
-			// cycle : state.cycle,
+			cycle : state.cycle,
 			fps : fps.fps
 		})
 	})

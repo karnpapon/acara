@@ -21,7 +21,7 @@ export const settings = {
 
 export function main(coord, context, cursor, buffer) {
   const { settings: { canvasFill }} = context
-	const t = context.time * 0.0001
+	const t = context.time * 0.001
 	const x = coord.x
 	const y = coord.y
 	const o = Math.sin(x * Math.cos(t * 0.4)) * Math.sin(t) * 20
